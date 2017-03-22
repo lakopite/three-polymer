@@ -1,0 +1,163 @@
+<link rel="import" href="../polymer/polymer.html">
+<script src="../threejs/build/three.min.js"></script>
+<!--
+`three-polymer`
+Element for three.js geometry rendering
+
+    <three-polymer
+      data='{{modelGeometry}}'
+      contour=false
+      background=0x000000
+      color=0xFFFFFF>
+    </three-polymer>
+
+Data can be provided one of three ways:
+
+- Via the `data` attribute, passing in the data directly:
+
+      data='[{"vertices":[[0,0,0],[0,10,0],[0,10,10],[0,0,10]], "faces":[[0,1,2],[0,2,3]]}, {"vertices":[[0,10,10],[0,20,10],[0,20,20],[0,10,20]], "faces":[[0,1,2],[0,2,3]]}]'
+
+- Via the `data` attribute, passing in the URL to a resource containing the data, in JSON format:
+
+      data='path/to/schema.json'
+
+- Via the `data` attribute, passing in a valid data object:
+
+      data='{{modelGeometry}}'
+
+Each object within the data attribute must use the following fields:
+
+- `vertices` <b>Mandatory (must have length >= 2)</b> An array that defines the points for the element.
+- `faces` <b>Mandatory (if length(vertices) > 2)</b> An array that describes the faces for the corresponding vertices.
+
+- `{contourable_fields}` <b>Optional</b> The key/values that will be used for contouring
+- Example:
+      [
+        {
+          vertices: [[x1,y1,z1],[x2,y2,z2]...[xn,yn,zn]],
+          faces: [[f1,f1,f1],[f2,f2,f2]...[fn,fn,fn]],
+          axial: 10,
+          bm2: 20,
+          sf2: 30
+        },
+        ...
+        {
+          vertices: [[x1,y1,z1],[x2,y2,z2]...[xn,yn,zn]],
+          faces: [[f1,f1,f1],[f2,f2,f2]...[fn,fn,fn]],
+          axial: 40,
+          bm2: 50,
+          sf2: 60
+        }
+      ]
+
+@demo demo/index.html
+-->
+
+<dom-module id="three-polymer">
+  <template>
+    <style>
+      :host {
+        display: block;
+        height: 100%;
+        width: 100%;
+      }
+      #viz {
+        height: 100%;
+        width: 100%;
+        min-height: 200px;
+        min-width: 200px;
+      }
+    </style>
+    <div id="viz">
+
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'three-polymer',
+
+      properties: {
+        /**
+         * Geometry and element information for three-polymer to render
+         * See the above guidelines for a valid object
+         */
+        data: {
+          type: Array,
+          value: [],
+        },
+        /**
+         * The color to use for the scene background
+         */
+        background: {
+          type: Number,
+          value: 0x000000
+        },
+        /**
+         * The default material opacity
+         */
+        opacity: {
+          type: Number,
+          value: 0.5
+        },
+        /**
+         * The default material color for non-contoured geometry or for an element who is missing the contourBy key/value
+         */
+        color: {
+          type: Number,
+          value: 0xFFFFFF
+        },
+        /**
+         * The field to contour the geometry by.  If the field is missing from an element object, the element will be contoured by the default color property
+         */
+        contourBy: {
+          type: String,
+          value: ""
+        },
+        /**
+         * If true, three-polymer will contour the geometry using the contourBy field and the corresponding value within the data attribute
+         */
+        contour: {
+          type: Boolean,
+          value: false
+        }
+
+      },
+
+      attached: function() {
+        var w = this.$.viz.clientWidth;
+        var h = this.$.viz.clientHeight;
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color( this.background );
+        this.camera = new THREE.PerspectiveCamera( 75, w / h, 0.1, 3000);
+        this.renderer = new THREE.WebGLRenderer();
+        this.renderer.setSize( w, h );
+        Polymer.dom(this.$.viz).appendChild( this.renderer.domElement );
+        var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+        var material = new THREE.MeshBasicMaterial( {
+              color: this.color, side: THREE.DoubleSide,
+				      vertexColors: true,
+				      transparent: true,
+              opacity: this.opacity
+            } );
+        this.geo = new THREE.Mesh( geometry, material );
+
+        this.scene.add( this.geo );
+        // this.camera.up = new THREE.Vector3(0,0,1);
+        // this.camera.lookAt(new THREE.Vector3(0,0,0));
+        this.camera.position.z = 3;
+
+        function render() {
+          requestAnimationFrame( render.bind(this) );
+          this.geo.rotation.x += 0.01;
+				  this.geo.rotation.y += 0.01;
+          this.renderer.render(this.scene, this.camera );
+        }
+
+        render.call(this);
+      }
+
+    });
+  </script>
+</dom-module>
