@@ -20,12 +20,20 @@
       <h3>Basic three-polymer demo</h3>
       <demo-snippet>
         <template>
-          <three-polymer opacity=1 background=0x2e5d14></three-polymer>
+          <three-polymer
+            opacity=1
+            background="#2e5d14"
+            data='[{"vertices":[{"x": -10, "y": 0, "z": -10},{"x": -10, "y": 0, "z": 10}]},{"vertices":[{"x": -10, "y": 0, "z": 10},{"x": 10, "y": 0, "z": 10}]},{"vertices":[{"x": 10, "y": 0, "z": 10},{"x": 10, "y": 0, "z": -10}]}]'>
+          </three-polymer>
         </template>
       </demo-snippet>
       <demo-snippet>
         <template>
-          <three-polymer color=0xfaff00></three-polymer>
+          <three-polymer
+            style="height: 360px;"
+            color="#faff00"
+            data='[{"vertices":[{"x": -10, "y": 0, "z": -10},{"x": -10, "y": 0, "z": 10}]},{"vertices":[{"x": -10, "y": 0, "z": 10},{"x": 10, "y": 0, "z": 10}]},{"vertices":[{"x": 10, "y": 0, "z": 10},{"x": 10, "y": 0, "z": -10}]}]'>
+          </three-polymer>
         </template>
       </demo-snippet>
     </div>

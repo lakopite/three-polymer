@@ -7,20 +7,14 @@ Element for three.js geometry rendering
     <three-polymer
       data='{{modelGeometry}}'
       contour=false
-      background=0x000000
-      color=0xFFFFFF>
+      background="#000000"
+      color="#FFFFFF">
     </three-polymer>
 
-Data can be provided one of three ways:
+Data can be provided one of two ways:
 
 - Via the `data` attribute, passing in the data directly:
-
-      data='[{"vertices":[[0,0,0],[0,10,0],[0,10,10],[0,0,10]], "faces":[[0,1,2],[0,2,3]]}, {"vertices":[[0,10,10],[0,20,10],[0,20,20],[0,10,20]], "faces":[[0,1,2],[0,2,3]]}]'
-
-- Via the `data` attribute, passing in the URL to a resource containing the data, in JSON format:
-
-      data='path/to/schema.json'
-
+      data='[{"vertices":[{"x": 0, "y": 0, "z": 0},{"x": 10, "y": 0, "z": 0}]},{"vertices":[{"x": 10, "y": 0, "z": 0},{"x": 10, "y": 0, "z": 10}]}]'
 - Via the `data` attribute, passing in a valid data object:
 
       data='{{modelGeometry}}'
@@ -34,7 +28,7 @@ Each object within the data attribute must use the following fields:
 - Example:
       [
         {
-          vertices: [[x1,y1,z1],[x2,y2,z2]...[xn,yn,zn]],
+          vertices: [{'x': x1,'y': y1,'z': z1},{'x': x2,'y': y2,'z': z2}...{'x': xn,'y': yn,'z': zn}],
           faces: [[f1,f1,f1],[f2,f2,f2]...[fn,fn,fn]],
           axial: 10,
           bm2: 20,
@@ -42,7 +36,7 @@ Each object within the data attribute must use the following fields:
         },
         ...
         {
-          vertices: [[x1,y1,z1],[x2,y2,z2]...[xn,yn,zn]],
+          vertices: [{'x': x1,'y': y1,'z': z1},{'x': x2,'y': y2,'z': z2}...{'x': xn,'y': yn,'z': zn}],
           faces: [[f1,f1,f1],[f2,f2,f2]...[fn,fn,fn]],
           axial: 40,
           bm2: 50,
@@ -86,13 +80,14 @@ Each object within the data attribute must use the following fields:
         data: {
           type: Array,
           value: [],
+          observer: '_dataChanged'
         },
         /**
          * The color to use for the scene background
          */
         background: {
-          type: Number,
-          value: 0x000000
+          type: String,
+          value: "#000000"
         },
         /**
          * The default material opacity
@@ -105,8 +100,8 @@ Each object within the data attribute must use the following fields:
          * The default material color for non-contoured geometry or for an element who is missing the contourBy key/value
          */
         color: {
-          type: Number,
-          value: 0xFFFFFF
+          type: String,
+          value: "#FFFFFF"
         },
         /**
          * The field to contour the geometry by.  If the field is missing from an element object, the element will be contoured by the default color property
@@ -121,41 +116,173 @@ Each object within the data attribute must use the following fields:
         contour: {
           type: Boolean,
           value: false
+        },
+        /**
+         * Color spectrum for contour range
+         */
+        contourColors: {
+      		type: Array,
+      		value: ["#660066", "#663399", "#9933FF", "#9999FF", "#0066FF", "#0000FF", "#00FF00", "#ADFF2F", "#FFFF00", "#FFCC00", "#FF6633", "#FF3300", "#FF0000"]
+      	},
+
+
+        _scene: {
+      		type: THREE.Scene,
+      	},
+        _camera: {
+      		type: THREE.PerspectiveCamera,
+      	},
+      	_renderer: {
+      		type: THREE.WebGLRenderer,
+      	},
+        _mesh: {
+      		type: THREE.Mesh,
+      	},
+        _geo: {
+      		type: THREE.Geometry,
+      	},
+        _initialized: {
+          type: Boolean,
+          value: false
         }
 
       },
-
+      listeners: {
+        	'iron-resize': '_onIronResize'
+  	  },
+      _onIronResize: function() {
+  	  	if (this._renderer) {
+  			   var w = this.$.viz.clientWidth;
+  			   var h = this.$.viz.clientHeight;
+  			   this._renderer.setSize(w,h);
+  			   this._camera.aspect = w / h;
+  			   this._camera.updateProjectionMatrix();
+  		  }
+  	  },
       attached: function() {
         var w = this.$.viz.clientWidth;
         var h = this.$.viz.clientHeight;
-        this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color( this.background );
-        this.camera = new THREE.PerspectiveCamera( 75, w / h, 0.1, 3000);
-        this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setSize( w, h );
-        Polymer.dom(this.$.viz).appendChild( this.renderer.domElement );
-        var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-        var material = new THREE.MeshBasicMaterial( {
-              color: this.color, side: THREE.DoubleSide,
-				      vertexColors: true,
-				      transparent: true,
-              opacity: this.opacity
-            } );
-        this.geo = new THREE.Mesh( geometry, material );
-
-        this.scene.add( this.geo );
-        // this.camera.up = new THREE.Vector3(0,0,1);
-        // this.camera.lookAt(new THREE.Vector3(0,0,0));
-        this.camera.position.z = 3;
+        this._scene = new THREE.Scene();
+        this._scene.background = new THREE.Color( this._fromHexString(this.background) );
+        this._camera = new THREE.PerspectiveCamera( 75, w / h, 0.1, 3000);
+        this._renderer = new THREE.WebGLRenderer();
+        this._renderer.setSize( w, h );
+        Polymer.dom(this.$.viz).appendChild( this._renderer.domElement );
 
         function render() {
           requestAnimationFrame( render.bind(this) );
-          this.geo.rotation.x += 0.01;
-				  this.geo.rotation.y += 0.01;
-          this.renderer.render(this.scene, this.camera );
+          this._camera.updateProjectionMatrix();
+          this._renderer.render(this._scene, this._camera );
         }
 
         render.call(this);
+
+        this.set('_initialized',true);
+        this.processGeometry();
+      },
+      _dataChanged: function(data) {
+        this.processGeometry();
+      },
+      _makeElementConnection: function(v1, v2) {
+        //Eventually set these from material dimensions
+        var XW = 0.5;
+        var YW = 0.5;
+        var ZW = 0.5;
+        var x1 = v1.x;
+        var y1 = v1.y;
+        var z1 = v1.z;
+        var x2 = v2.x;
+        var y2 = v2.y;
+        var z2 = v2.z;
+
+        var subGeometry = new THREE.Geometry();
+
+        if (x1 !== x2 && y1 === y2 && z1 === z2) {
+      // 		if (this.parameter_payload.material === "Concrete") {
+        // 	ZW = parseFloat(this.parameter_payload.beam_depth)/2;
+        // 	YW = parseFloat(this.parameter_payload.beam_width)/2;
+        // 	XW = parseFloat(this.parameter_payload.column_depth)/2;
+        // }
+          subGeometry.vertices.push(new THREE.Vector3(x1-XW,y1-YW,z1-ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x1-XW,y1+YW,z1-ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x1-XW,y1+YW,z1+ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x1-XW,y1-YW,z1+ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x2+XW,y2-YW,z2-ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x2+XW,y2+YW,z2-ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x2+XW,y2+YW,z2+ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x2+XW,y2-YW,z2+ZW));
+        }
+        else if (x1 === x2 && y1 !== y2 && z1 === z2) {
+          // if (this.parameter_payload.material === "Concrete") {
+          // 	ZW = parseFloat(this.parameter_payload.beam_depth)/2;
+          // 	XW = parseFloat(this.parameter_payload.beam_width)/2;
+          // 	YW = parseFloat(this.parameter_payload.column_width)/2;
+          // }
+          subGeometry.vertices.push(new THREE.Vector3(x1-XW,y1-YW,z1-ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x1-XW,y1-YW,z1+ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x1+XW,y1-YW,z1+ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x1+XW,y1-YW,z1-ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x2-XW,y2+YW,z2-ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x2-XW,y2+YW,z2+ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x2+XW,y2+YW,z2+ZW));
+          subGeometry.vertices.push(new THREE.Vector3(x2+XW,y2+YW,z2-ZW));
+        }
+        else {
+          // if (this.parameter_payload.material === "Concrete") {
+          // 	XW = (elementType === "Brace") ? parseFloat(this.parameter_payload.brace_depth)/2 : parseFloat(this.parameter_payload.column_depth)/2;
+          // 	YW = (elementType === "Brace") ? parseFloat(this.parameter_payload.brace_width)/2 : parseFloat(this.parameter_payload.column_width)/2;
+          // }
+          subGeometry.vertices.push(new THREE.Vector3(x1-XW,y1-YW,z1));
+          subGeometry.vertices.push(new THREE.Vector3(x1-XW,y1+YW,z1));
+          subGeometry.vertices.push(new THREE.Vector3(x1+XW,y1+YW,z1));
+          subGeometry.vertices.push(new THREE.Vector3(x1+XW,y1-YW,z1));
+          subGeometry.vertices.push(new THREE.Vector3(x2-XW,y2-YW,z2));
+          subGeometry.vertices.push(new THREE.Vector3(x2-XW,y2+YW,z2));
+          subGeometry.vertices.push(new THREE.Vector3(x2+XW,y2+YW,z2));
+          subGeometry.vertices.push(new THREE.Vector3(x2+XW,y2-YW,z2));
+        }
+        subGeometry.faces.push(new THREE.Face3(0,1,2));
+        subGeometry.faces.push(new THREE.Face3(2,3,0));
+        subGeometry.faces.push(new THREE.Face3(2,3,6));
+        subGeometry.faces.push(new THREE.Face3(3,6,7));
+        subGeometry.faces.push(new THREE.Face3(1,2,6));
+        subGeometry.faces.push(new THREE.Face3(1,5,6));
+        subGeometry.faces.push(new THREE.Face3(0,1,5));
+        subGeometry.faces.push(new THREE.Face3(0,4,5));
+        subGeometry.faces.push(new THREE.Face3(0,3,7));
+        subGeometry.faces.push(new THREE.Face3(0,4,7));
+        subGeometry.faces.push(new THREE.Face3(4,5,6));
+        subGeometry.faces.push(new THREE.Face3(6,7,4));
+
+        return subGeometry
+      },
+      processGeometry() {
+        if (this._initialized) {
+          var material = new THREE.MeshBasicMaterial( {
+                color: this._fromHexString(this.color),
+                side: THREE.DoubleSide,
+  				      vertexColors: true,
+  				      transparent: true,
+                opacity: this.opacity
+              } );
+          var geometry = new THREE.Geometry();
+          for (var i in this.data) {
+            var intermediateMesh = new THREE.Mesh(this._makeElementConnection(this.data[i].vertices[0], this.data[i].vertices[1]), material);
+            intermediateMesh.updateMatrix();
+            geometry.merge(intermediateMesh.geometry,intermediateMesh.matrix)
+          }
+          this.set('_geo',geometry);
+          this.set('_mesh',new THREE.Mesh(this._geo, material))
+          this._scene.children = [this._mesh];
+          this._mesh.geometry.computeBoundingSphere();
+          this._camera.position.set(0,this._mesh.geometry.boundingSphere.radius * -2.5,0);
+  	  		this._camera.up = new THREE.Vector3(0,0,1);
+  			  this._camera.lookAt(new THREE.Vector3(0,0,0));
+          console.log(this._mesh);
+        }
+      },
+      _fromHexString: function(hexstring) {
+        return parseInt(hexstring.replace("#",""),16)
       }
 
     });
