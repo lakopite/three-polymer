@@ -6,7 +6,7 @@ Element for three.js geometry rendering
 
     <three-polymer
       data='{{modelGeometry}}'
-      contour=false
+      contour='default'
       background="#000000"
       color="#FFFFFF">
     </three-polymer>
@@ -23,24 +23,29 @@ Each object within the data attribute must use the following fields:
 
 - `vertices` <b>Mandatory (must have length >= 2)</b> An array that defines the points for the element.
 - `faces` <b>Mandatory (if length(vertices) > 2)</b> An array that describes the faces for the corresponding vertices.
-
-- `{contourable_fields}` <b>Optional</b> The key/values that will be used for contouring
+- `type` <b>Optional</b> type of element, used if `contour` is set to `type`
+- `color` <b>Optional</b> element color, used if `contour` is set to `inherit`
+- `{contourable_fields}` <b>Optional</b> The key/values that will be used if `contour` is set to `range`
 - Example:
       [
         {
           vertices: [{'x': x1,'y': y1,'z': z1},{'x': x2,'y': y2,'z': z2}...{'x': xn,'y': yn,'z': zn}],
           faces: [[f1,f1,f1],[f2,f2,f2]...[fn,fn,fn]],
-          axial: 10,
-          bm2: 20,
-          sf2: 30
+          color: '#FF00FF',
+          type: 'wall'
+          axial: 10, //contourable field
+          bm2: 20, //contourable field
+          sf2: 30 //contourable field
         },
         ...
         {
           vertices: [{'x': x1,'y': y1,'z': z1},{'x': x2,'y': y2,'z': z2}...{'x': xn,'y': yn,'z': zn}],
           faces: [[f1,f1,f1],[f2,f2,f2]...[fn,fn,fn]],
-          axial: 40,
-          bm2: 50,
-          sf2: 60
+          color: '#FF00FF',
+          type: 'wall'
+          axial: 40, //contourable field
+          bm2: 50, //contourable field
+          sf2: 60 //contourable field
         }
       ]
 
@@ -111,11 +116,18 @@ Each object within the data attribute must use the following fields:
           value: ""
         },
         /**
-         * If true, three-polymer will contour the geometry using the contourBy field and the corresponding value within the data attribute
+         * Sets the contour type for the dataset. Valid values are:
+         * - `default` (contours all geometry w/ the component-wide @color prop),
+         * - `range` (uses the contourBy field and contourColors field to contour each element with respect to its specified force value)
+         * - `type` (uses the typeMap to contour each element by its respective type attribute)
+         * - `inherit` (contours each element by its respective color attribute)
+         *
+         *An invalid contour value will be set to the `default` mode
+         *For non-default modes, if necessary data is missing for an element, it will use the component-wide @color prop
          */
         contour: {
-          type: Boolean,
-          value: false
+          type: String,
+          value: "default"
         },
         /**
          * Color spectrum for contour range
@@ -124,7 +136,16 @@ Each object within the data attribute must use the following fields:
       		type: Array,
       		value: ["#660066", "#663399", "#9933FF", "#9999FF", "#0066FF", "#0000FF", "#00FF00", "#ADFF2F", "#FFFF00", "#FFCC00", "#FF6633", "#FF3300", "#FF0000"]
       	},
-
+        /**
+         * Object to describe how to contour an element type, used when `contour` is set to `type`
+         */
+        typeMap: {
+          type: Object,
+          value: {
+            'wall': '#FFFF00',
+            'floor': '#0066FF'
+          }
+        },
 
         _scene: {
       		type: THREE.Scene,
