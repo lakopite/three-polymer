@@ -1,0 +1,31 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+
+<dom-module id="three-material">
+  <script>
+    class ThreeMaterial extends Polymer.Element {
+
+      static get is() {
+        return 'three-material';
+      }
+
+      static get properties() {
+        return {
+          color: String,
+          opacity: {type: Number, value: 0.8}
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.object = new THREE.MeshBasicMaterial({
+          side: THREE.DoubleSide,
+          vertexColors: THREE.FaceColors,
+          transparent: true,
+          opacity: this.opacity
+        });
+      }
+    }
+
+    window.customElements.define(ThreeMaterial.is, ThreeMaterial);
+  </script>
+</dom-module>

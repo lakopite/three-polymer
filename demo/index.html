@@ -1,41 +1,42 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>three-polymer demo</title>
+  <title>three-polymer demo</title>
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../bower_components/iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../bower_components/iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../three-parent.html">
+  <link rel="import" href="../three-lattice.html">
+  <link rel="import" href="../three-camera.html">
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../three-polymer.html">
-
-    <style is="custom-style" include="demo-pages-shared-styles">
-    </style>
-  </head>
-  <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic three-polymer demo</h3>
-      <demo-snippet>
-        <template>
-          <three-polymer
-            opacity=1
-            background="#2e5d14"
-            data='[{"vertices":[{"x": -10, "y": 0, "z": -10},{"x": -10, "y": 0, "z": 10}]},{"vertices":[{"x": -10, "y": 0, "z": 10},{"x": 10, "y": 0, "z": 10}]},{"vertices":[{"x": 10, "y": 0, "z": 10},{"x": 10, "y": 0, "z": -10}]}]'>
-          </three-polymer>
-        </template>
-      </demo-snippet>
-      <demo-snippet>
-        <template>
-          <three-polymer
-            style="height: 360px;"
-            color="#faff00"
-            data='[{"vertices":[{"x": -10, "y": 0, "z": -10},{"x": -10, "y": 0, "z": 10}]},{"vertices":[{"x": -10, "y": 0, "z": 10},{"x": 10, "y": 0, "z": 10}]},{"vertices":[{"x": 10, "y": 0, "z": 10},{"x": 10, "y": 0, "z": -10}]}]'>
-          </three-polymer>
-        </template>
-      </demo-snippet>
-    </div>
-  </body>
+  <style is="custom-style" include="demo-pages-shared-styles"></style>
+</head>
+<body>
+<div class="vertical-section-container centered">
+  <h3>three-polymer demo</h3>
+  <demo-snippet>
+    <template>
+      <three-parent
+        id="parent"
+        background-color="#F5F5F5"
+        height="360"
+        width="360"
+        focal-element-id="triangle">
+        <three-lattice
+          id="triangle"
+          slot="lattice"
+          contour-by="axial"
+          data='[{"vertices":[[-10, 0, -10],[-10, 0, 10]], "result": {"axial": 10}},{"vertices":[[-10, 0, 10],[10, 0, 10]], "result": {"axial": 40}},{"vertices":[[10, 0, 10],[10, 0, -10]], "result": {"axial": 100}}]'
+          color="#00BFA5">
+        </three-lattice>
+        <three-camera id="camera" slot="camera"></three-camera>
+      </three-parent>
+    </template>
+  </demo-snippet>
+</div>
+</body>
 </html>

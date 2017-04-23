@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-camera test</title>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/web-component-tester/browser.js"></script>
+  <script src="/bower_components/threejs/build/three.min.js"></script>
+  <link rel="import" href="../three-camera.html">
+  <link rel="import" href="../three-lattice.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-camera
+      id="id"
+      focal-element-id="element-to-look-at">
+    </three-camera>
+  </template>
+</test-fixture>
+
+<script>
+  // TODO: the scene should be responsible for pointing the camera at the mesh
+  // TODO: the camera isn't smart enough to know where the mesh is
+
+  describe('<three-camera>', () => {
+    it('instantiating the element works', () => {
+      let element = fixture('basic');
+      expect(element.localName).to.equal('three-camera');
+      expect(element.focalElementId).to.equal('element-to-look-at');
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-parent test</title>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/web-component-tester/browser.js"></script>
+  <script src="/bower_components/threejs/build/three.min.js"></script>
+  <link rel="import" href="../three-material.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-material color="#696969"></three-material>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-material>', () => {
+    it('instantiating the element works', () => {
+      let element = fixture('basic');
+      expect(element.localName).to.equal('three-material');
+    });
+
+    it('has its properties', () => {
+      let element = fixture('basic');
+      expect(element.color).to.equal("#696969")
+    })
+  });
+</script>
+</body>
+</html>

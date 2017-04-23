@@ -1,0 +1,93 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+<script src="/bower_components/threejs/build/three.min.js"></script>
+
+<!--
+`three-parent`
+@demo demo/index.html
+-->
+
+<dom-module id="three-parent">
+  <template>
+    <slot id="latticeSlot" name="lattice"></slot>
+    <slot id="cameraSlot" name="camera"></slot>
+  </template>
+  <script>
+    class ThreeParent extends Polymer.Element {
+
+      static get is() {
+        return 'three-parent';
+      }
+
+      static get properties() {
+        return {
+          width: Number,
+          height: Number,
+          backgroundColor: String,
+          focalElementId: String,
+          focalGeometry: String,
+        }
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener('three-lattice-ready', e => this.handleThreeLatticeReady(e));
+        this.addEventListener('three-camera-ready', e => this.handleThreeCameraReady(e));
+        this.renderer = new THREE.WebGLRenderer({antialias: true});
+        this.renderer.setSize(this.width, this.height);
+        this.scene = new THREE.Scene;
+        this.scene.background = new THREE.Color(ThreeParent._fromHexString(this.backgroundColor));
+        this.root.appendChild(this.renderer.domElement);
+        this.render();
+      }
+
+      render() {
+        if (this.camera && this.focalGeometry) {
+          console.log('rendering');
+          this.moveCamera();
+          this.camera.focus = this.focalGeometry.boundingSphere.center.toArray();
+          this.renderer.render(this.scene, this.camera.object);
+        } else console.log('no camera or focalGeometry, so no render');
+      }
+
+      // TODO: the camera is pointed in the wrong direction
+      // TODO: compare it with the camera form our last working copy
+      moveCamera() {
+        this.focalGeometry.computeBoundingSphere();
+        this.camera.position = [
+          this.focalGeometry.boundingSphere.center.x,
+          this.focalGeometry.boundingSphere.radius * -2.5,
+          this.focalGeometry.boundingSphere.center.z
+        ];
+      }
+
+      handleThreeCameraReady(e) {
+        this.add3(this.shadowRoot.querySelector('#cameraSlot').assignedNodes()[0]);
+      };
+
+      handleThreeLatticeReady(e) {
+        this.focalGeometry = this.querySelector('#' + this.focalElementId).object.geometry;
+        const child = this.shadowRoot.querySelector('#latticeSlot').assignedNodes()[0];
+        this.add3(child);
+      }
+
+      add3(child) {
+        if (child.localName === 'three-camera') {
+          this.camera = child;
+        }
+        this.scene.add(child.object);
+        this.render();
+      }
+
+      remove3(child) {
+        this.scene.remove(child.object);
+        this.render();
+      }
+
+      static _fromHexString(hexstring) {
+        return parseInt(hexstring.replace("#", ""), 16)
+      }
+    }
+
+    window.customElements.define(ThreeParent.is, ThreeParent);
+  </script>
+</dom-module>

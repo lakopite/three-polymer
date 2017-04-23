@@ -1,0 +1,72 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+<link rel="import" href="three-object.html">
+<link rel="import" href="three-material.html">
+<link rel="import" href="three-line-geometry.html">
+
+<dom-module id="three-lattice">
+  <template>
+    <template is="dom-repeat" items="{{data}}">
+      <three-line-geometry
+        id="{{index}}"
+        vertices="{{item.vertices}}"
+        result="{{item.result}}"
+        contour-by="{{contourBy}}"
+        contour-values="{{contourValues}}"
+        contour-colors="{{contourColors}}">
+      </three-line-geometry>
+    </template>
+    <three-material id="material" color="{{color}}"></three-material>
+  </template>
+  <script>
+    class ThreeLattice extends ThreeObject {
+
+      static get is() {
+        return 'three-lattice';
+      }
+
+      static get properties() {
+        return {
+          color: String,
+          data: {type: Array, value: []},
+          geometry: {type: Object, value: new THREE.Geometry(), observer: '_geometryChanged'},
+          material: {type: Object},
+          contourBy: String,
+          contourColors: {
+            type: Array,
+            value: ["#660066", "#663399", "#9933FF", "#9999FF", "#0066FF", "#0000FF",
+              "#00FF00", "#ADFF2F", "#FFFF00", "#FFCC00", "#FF6633", "#FF3300", "#FF0000"]
+          },
+          contourValues: {type: Array, computed: 'computeContourValues(contourBy)'},
+        }
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener('three-line-geometry-ready', e => this.handleThreeLineGeometryReady(e));
+        this.material = this.$.material.object;
+        this.object = new THREE.Mesh(this.geometry);
+      }
+
+      handleThreeLineGeometryReady(e) {
+        const geometry = e.detail.object;
+        this.geometry.merge(geometry);
+      };
+
+      _geometryChanged() {
+        this.material = this.$.material.object;
+        this.object = new THREE.Mesh(this.geometry, this.material);
+      }
+
+      computeContourValues(contourBy) {
+        const length = this.contourColors.length;
+        const values = _.map(this.data, (line) => {return line.result[contourBy]});
+        const max = _.max(values);
+        const min = _.min(values);
+        let step = (max - min) / length;
+        return _.rangeRight(max, min, -step);
+      }
+    }
+
+    window.customElements.define(ThreeLattice.is, ThreeLattice);
+  </script>
+</dom-module>

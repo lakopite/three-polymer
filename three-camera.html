@@ -1,0 +1,38 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+<link rel="import" href="three-object.html">
+
+<dom-module id="three-camera">
+  <script>
+    class ThreeCamera extends ThreeObject {
+
+      static get is() {
+        return 'three-camera'
+      }
+
+      static get properties() {
+        return {
+          position: {type: Array, observer: '_positionChanged', value: [0, 0, 0]},
+          focus: {type: Array, observer: '_focusChanged', value: [0, 0, 0]},
+          object: {type: Object, value: new THREE.PerspectiveCamera()}
+        }
+      }
+
+      constructor() {
+        super();
+        this.object = new THREE.PerspectiveCamera(75, 1, 0.1, 3000);
+        this.object.up = new THREE.Vector3(0, 0, 1);
+        this.object.updateProjectionMatrix();
+      }
+
+      _positionChanged(newPosition, oldPosition) {
+        this.object.position.set(...newPosition);
+      }
+
+      _focusChanged(newPosition, oldPosition) {
+        this.object.lookAt(new THREE.Vector3().fromArray(newPosition));
+      }
+    }
+
+    window.customElements.define(ThreeCamera.is, ThreeCamera);
+  </script>
+</dom-module>

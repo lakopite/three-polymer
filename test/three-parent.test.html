@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-parent test</title>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/web-component-tester/browser.js"></script>
+  <link rel="import" href="../three-parent.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-parent
+      id="id"
+      background-color="#F5F5F2"
+      width="12"
+      height="21">
+    </three-parent>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-parent>', () => {
+    it('instantiating the element works', () => {
+      let element = fixture('basic');
+      expect(element.localName).to.equal('three-parent');
+      expect(element.backgroundColor).to.equal('#F5F5F2');
+      expect(element.width).to.equal(12);
+      expect(element.height).to.equal(21);
+    });
+  });
+</script>
+</body>
+</html>
