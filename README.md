@@ -14,7 +14,7 @@ First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polyme
 $ polymer serve
 ```
 Element documentation/demo will be found at:
-http://localhost:8080/components/three-polymer/
+http://localhost:8081/components/three-polymer/
 
 ## Running Tests
 
