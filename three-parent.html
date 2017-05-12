@@ -49,8 +49,6 @@
         } else console.log('no camera or focalGeometry, so no render');
       }
 
-      // TODO: the camera is pointed in the wrong direction
-      // TODO: compare it with the camera form our last working copy
       moveCamera() {
         this.focalGeometry.computeBoundingSphere();
         this.camera.position = [
