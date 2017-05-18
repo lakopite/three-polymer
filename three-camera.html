@@ -1,6 +1,7 @@
 <link rel="import" href="bower_components/polymer/polymer-element.html">
 <link rel="import" href="three-object.html">
 
+<!--TODO: orthographic camera-->
 <dom-module id="three-camera">
   <script>
     class ThreeCamera extends ThreeObject {
@@ -13,7 +14,10 @@
         return {
           position: {type: Array, observer: '_positionChanged', value: [0, 0, 0]},
           focus: {type: Array, observer: '_focusChanged', value: [0, 0, 0]},
-          object: {type: Object, value: new THREE.PerspectiveCamera()}
+          object: {
+            type: Object,
+            notify: true,
+          }
         }
       }
 
@@ -21,11 +25,11 @@
         super();
         this.object = new THREE.PerspectiveCamera(75, 1, 0.1, 3000);
         this.object.up = new THREE.Vector3(0, 0, 1);
-        this.object.updateProjectionMatrix();
       }
 
       _positionChanged(newPosition, oldPosition) {
         this.object.position.set(...newPosition);
+        this.object.updateProjectionMatrix();
       }
 
       _focusChanged(newPosition, oldPosition) {

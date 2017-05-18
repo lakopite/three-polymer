@@ -1,6 +1,7 @@
+<script src="bower_components/lodash/lodash.js"></script>
 <link rel="import" href="bower_components/polymer/polymer-element.html">
+<link rel="import" href="three-helpers.html">
 <link rel="import" href="three-object.html">
-<script src="/bower_components/lodash/lodash.js"></script>
 
 <dom-module id="three-line-geometry">
   <script>
@@ -15,11 +16,14 @@
         return {
           cameraNormal: {type: Array, value: [0, 1, 0]},
           stroke: {type: Number, value: 2},
-          vertices: Array,
+          vertices: {type: Array, observer: "_verticesChanged"},
           contourValues: Array,
           contourColors: Array,
           contourBy: String,
           result: Number,
+          object: {
+            type: Object,
+          }
         }
       }
 
@@ -39,7 +43,7 @@
         const v1r = v1.clone().addScaledVector(centerLineNormalVector, -1 * this.stroke / 2);
 
         let contourValue = this.getContourValue(this.contourValues, this.contourColors, this.result[this.contourBy]);
-        const color = new THREE.Color(LineGeometry._fromHexString(contourValue));
+        const color = new THREE.Color(ThreeHelpers._fromHexString(contourValue));
         const geometry = new THREE.Geometry();
         geometry.vertices.push(v0l);
         geometry.vertices.push(v0r);
@@ -47,15 +51,15 @@
         geometry.vertices.push(v1l);
         geometry.faces.push(new THREE.Face3(0, 1, 2, cameraNormalVector, color));
         geometry.faces.push(new THREE.Face3(0, 2, 3, cameraNormalVector, color));
-        this.object = geometry
+        this.object = geometry;
+      }
+
+      _verticesChanged() {
+        this.object.computeBoundingSphere();
       }
 
       getContourValue(contourValues, contourColors, value) {
         return contourColors[contourValues.findIndex((contourValue) => {return value <= contourValue})];
-      }
-
-      static _fromHexString(hexstring) {
-        return parseInt(hexstring.replace("#", ""), 16)
       }
     }
 

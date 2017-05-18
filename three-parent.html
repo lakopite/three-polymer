@@ -1,5 +1,8 @@
+<script src="bower_components/threejs/build/three.min.js"></script>
+<script src="bower_components/threejs/examples/js/controls/OrbitControls.js"></script>
 <link rel="import" href="bower_components/polymer/polymer-element.html">
-<script src="/bower_components/threejs/build/three.min.js"></script>
+<link rel="import" href="three-camera.html">
+<link rel="import" href="three-helpers.html">
 
 <!--
 `three-parent`
@@ -8,8 +11,12 @@
 
 <dom-module id="three-parent">
   <template>
+    <three-camera
+      object="{{camera}}"
+      position="{{cameraPosition}}"
+      focus="{{focus}}">
+    </three-camera>
     <slot id="latticeSlot" name="lattice"></slot>
-    <slot id="cameraSlot" name="camera"></slot>
   </template>
   <script>
     class ThreeParent extends Polymer.Element {
@@ -24,65 +31,64 @@
           height: Number,
           backgroundColor: String,
           focalElementId: String,
-          focalGeometry: String,
+          camera: {type: Object, observer: '_cameraChanged'},
+          cameraPosition: Array,
+          focus: Array,
+          mesh: Object,
         }
+      }
+
+      constructor() {
+        super();
+        this.scene = new THREE.Scene();
+        this.renderer = new THREE.WebGLRenderer({antialias: true});
       }
 
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('three-lattice-ready', e => this.handleThreeLatticeReady(e));
-        this.addEventListener('three-camera-ready', e => this.handleThreeCameraReady(e));
-        this.renderer = new THREE.WebGLRenderer({antialias: true});
+        this.addEventListener('three-lattice-changed', () => this.handleThreeLatticeChanged());
+        this.addEventListener('three-lattice-connected', e => this.handleThreeLatticeConnected(e));
         this.renderer.setSize(this.width, this.height);
-        this.scene = new THREE.Scene;
-        this.scene.background = new THREE.Color(ThreeParent._fromHexString(this.backgroundColor));
+        this.scene.background = new THREE.Color(ThreeHelpers._fromHexString(this.backgroundColor));
         this.root.appendChild(this.renderer.domElement);
-        this.render();
       }
 
       render() {
-        if (this.camera && this.focalGeometry) {
-          console.log('rendering');
-          this.moveCamera();
-          this.camera.focus = this.focalGeometry.boundingSphere.center.toArray();
-          this.renderer.render(this.scene, this.camera.object);
+        if (this.camera && this.mesh) {
+          this.renderer.render(this.scene, this.camera);
         } else console.log('no camera or focalGeometry, so no render');
       }
 
-      moveCamera() {
-        this.focalGeometry.computeBoundingSphere();
-        this.camera.position = [
-          this.focalGeometry.boundingSphere.center.x,
-          this.focalGeometry.boundingSphere.radius * -2.5,
-          this.focalGeometry.boundingSphere.center.z
-        ];
+      controlsChanged() {
+        this.render();
       }
 
-      handleThreeCameraReady(e) {
-        this.add3(this.shadowRoot.querySelector('#cameraSlot').assignedNodes()[0]);
+      _cameraChanged() {
+        console.log("_cameraChanged");
+        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.addEventListener('change', e => this.controlsChanged());
       };
 
-      handleThreeLatticeReady(e) {
-        this.focalGeometry = this.querySelector('#' + this.focalElementId).object.geometry;
-        const child = this.shadowRoot.querySelector('#latticeSlot').assignedNodes()[0];
-        this.add3(child);
+      handleThreeLatticeConnected(e) {
+        console.log("handleThreeLatticeConnected");
+        this.mesh = e.detail.object;
+        this.scene.add(this.mesh);
       }
 
-      add3(child) {
-        if (child.localName === 'three-camera') {
-          this.camera = child;
-        }
-        this.scene.add(child.object);
+      handleThreeLatticeChanged() {
+        console.log("handleThreeLatticeChanged");
+        this.moveCamera();
         this.render();
       }
 
-      remove3(child) {
-        this.scene.remove(child.object);
-        this.render();
-      }
-
-      static _fromHexString(hexstring) {
-        return parseInt(hexstring.replace("#", ""), 16)
+      moveCamera() {
+        this.mesh.geometry.computeBoundingSphere();
+        this.cameraPosition = [
+          this.mesh.geometry.boundingSphere.center.x,
+          this.mesh.geometry.boundingSphere.radius * -2.5,
+          this.mesh.geometry.boundingSphere.center.z
+        ];
+        this.focus = this.mesh.geometry.boundingSphere.center.toArray();
       }
     }
 

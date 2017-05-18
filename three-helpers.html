@@ -1,0 +1,16 @@
+<dom-module id="three-helpers">
+  <script>
+    class ThreeHelpers extends HTMLElement {
+
+      static get is() {
+        return 'three-helpers'
+      }
+
+      static _fromHexString(hexString) {
+        return parseInt(hexString.replace("#", ""), 16)
+      }
+    }
+
+    window.customElements.define(ThreeHelpers.is, ThreeHelpers);
+  </script>
+</dom-module>

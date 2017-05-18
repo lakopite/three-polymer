@@ -1,5 +1,4 @@
 <link rel="import" href="bower_components/polymer/polymer-element.html">
-<link rel="import" href="three-object.html">
 <link rel="import" href="three-material.html">
 <link rel="import" href="three-line-geometry.html">
 
@@ -12,13 +11,14 @@
         result="{{item.result}}"
         contour-by="{{contourBy}}"
         contour-values="{{contourValues}}"
-        contour-colors="{{contourColors}}">
+        contour-colors="{{contourColors}}"
+        object="{{geometry}}">
       </three-line-geometry>
     </template>
-    <three-material id="material" color="{{color}}"></three-material>
+    <three-material id="material" object="{{material}}" color="{{color}}"></three-material>
   </template>
   <script>
-    class ThreeLattice extends ThreeObject {
+    class ThreeLattice extends Polymer.Element {
 
       static get is() {
         return 'three-lattice';
@@ -28,7 +28,10 @@
         return {
           color: String,
           data: {type: Array, value: []},
-          geometry: {type: Object, value: new THREE.Geometry(), observer: '_geometryChanged'},
+          geometry: {
+            type: Object,
+            value: new THREE.Geometry()
+          },
           material: {type: Object},
           contourBy: String,
           contourColors: {
@@ -42,19 +45,17 @@
 
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('three-line-geometry-ready', e => this.handleThreeLineGeometryReady(e));
-        this.material = this.$.material.object;
-        this.object = new THREE.Mesh(this.geometry);
+        this.addEventListener('three-line-geometry-ready', e => this.handleGeometryReady(e));
+        this.object = new THREE.Mesh(this.geometry, this.material);
+        const eventInitDict = {bubbles: true, detail: {object: this.object}};
+        this.dispatchEvent(new CustomEvent('three-lattice-connected', eventInitDict));
       }
 
-      handleThreeLineGeometryReady(e) {
-        const geometry = e.detail.object;
-        this.geometry.merge(geometry);
-      };
-
-      _geometryChanged() {
-        this.material = this.$.material.object;
-        this.object = new THREE.Mesh(this.geometry, this.material);
+      handleGeometryReady(e) {
+        console.log("handleGeometryReady");
+        this.object.geometry.merge(e.detail.object);
+        this.object.geometry.elementsNeedUpdate = true;
+        this.dispatchEvent(new CustomEvent('three-lattice-changed', {bubbles: true}));
       }
 
       computeContourValues(contourBy) {
