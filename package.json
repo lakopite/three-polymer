@@ -1,7 +1,0 @@
-{
-  "name": "three-polymer",
-  "license": "BSD-3-Clause",
-  "devDependencies": {
-    "web-component-tester": "6.0.0-prerelease.8"
-  }
-}
