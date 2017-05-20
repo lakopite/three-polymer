@@ -1,0 +1,19 @@
+<dom-module id="fake-three-lattice">
+  <script>
+    class FakeThreeLattice extends HTMLElement {
+
+      static get is() {
+        return 'fake-three-lattice';
+      }
+
+      connectedCallback() {
+        let mesh = new THREE.Mesh();
+        mesh.name = 'fake-mesh';
+        const eventInitDict = {bubbles: true, detail: {object: mesh}};
+        this.dispatchEvent(new CustomEvent('three-lattice-connected', eventInitDict));
+      }
+    }
+
+    window.customElements.define(FakeThreeLattice.is, FakeThreeLattice);
+  </script>
+</dom-module>

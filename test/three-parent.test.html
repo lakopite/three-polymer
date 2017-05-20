@@ -6,6 +6,7 @@
   <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../bower_components/web-component-tester/browser.js"></script>
   <link rel="import" href="../three-parent.html">
+  <link rel="import" href="../fake-three-lattice.html">
 </head>
 <body>
 <test-fixture id="basic">
@@ -15,6 +16,7 @@
       background-color="#F5F5F2"
       width="12"
       height="21">
+      <three-lattice></three-lattice>
     </three-parent>
   </template>
 </test-fixture>
@@ -23,11 +25,10 @@
   describe('<three-parent>', () => {
 
     let element;
-    beforeEach(() => {
-      element = fixture('basic');
-    });
 
     it('instantiates the element with its default properties', () => {
+      element = fixture('basic');
+
       expect(element.localName).to.equal('three-parent');
       expect(element.backgroundColor).to.equal('#F5F5F2');
       expect(element.width).to.equal(12);
@@ -36,21 +37,15 @@
       expect(element.renderer).to.be.an.instanceOf(THREE.WebGLRenderer);
     });
 
-    // TODO
-    it('does things with mocks when it receives events', () => {
-//      element.scene = sinon.mock();
+    it('adds the mesh to the scene when the child component connects', () => {
+      replace('three-lattice').with('fake-three-lattice');
+      element = fixture('basic');
 
-//      fire event
-
-//      sinon.assert.calledOnce(element.scene);
-//      expect(element.test.callCount).to.equal(1);
-//      assert(scene.calledWith(element.renderer.domElement))
+      expect(element.mesh).to.be.an.instanceOf(THREE.Mesh);
+      expect(element.scene.children).to.have.lengthOf(1);
+      expect(element.scene.getObjectByName('fake-mesh')).to.exist;
     });
 
-    // TODO
-    it('does something with a stubbed child element', () => {
-
-    });
   });
 </script>
 </body>
