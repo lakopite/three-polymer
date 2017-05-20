@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "webcomponentsjs": "v1.0.0-rc.8",
-    "web-component-tester": "6.0.0-prerelease.8",
+    "web-component-tester": "6.0.0",
     "iron-component-page": "2.0-preview",
     "iron-demo-helpers": "2.0-preview"
   },
