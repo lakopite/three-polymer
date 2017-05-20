@@ -21,12 +21,35 @@
 
 <script>
   describe('<three-parent>', () => {
-    it('instantiates the element', () => {
-      let element = fixture('basic');
+
+    let element;
+    beforeEach(() => {
+      element = fixture('basic');
+    });
+
+    it('instantiates the element with its default properties', () => {
       expect(element.localName).to.equal('three-parent');
       expect(element.backgroundColor).to.equal('#F5F5F2');
       expect(element.width).to.equal(12);
       expect(element.height).to.equal(21);
+      expect(element.scene).to.be.an.instanceOf(THREE.Scene);
+      expect(element.renderer).to.be.an.instanceOf(THREE.WebGLRenderer);
+    });
+
+    // TODO
+    it('does things with mocks when it receives events', () => {
+//      element.scene = sinon.mock();
+
+//      fire event
+
+//      sinon.assert.calledOnce(element.scene);
+//      expect(element.test.callCount).to.equal(1);
+//      assert(scene.calledWith(element.renderer.domElement))
+    });
+
+    // TODO
+    it('does something with a stubbed child element', () => {
+
     });
   });
 </script>
