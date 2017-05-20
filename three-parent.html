@@ -34,13 +34,9 @@
           cameraPosition: Array,
           focus: Array,
           mesh: Object,
+          scene: {type: Object, value: new THREE.Scene()},
+          renderer: {type: Object, value: new THREE.WebGLRenderer({antialias: true})},
         }
-      }
-
-      constructor() {
-        super();
-        this.scene = new THREE.Scene();
-        this.renderer = new THREE.WebGLRenderer({antialias: true});
       }
 
       connectedCallback() {
