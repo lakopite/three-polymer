@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>three-parent test</title>
+  <title>three-material test</title>
   <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../bower_components/web-component-tester/browser.js"></script>
-  <script src="/bower_components/threejs/build/three.min.js"></script>
+  <script src="../bower_components/threejs/build/three.min.js"></script>
   <link rel="import" href="../three-material.html">
 </head>
 <body>
@@ -17,15 +17,11 @@
 
 <script>
   describe('<three-material>', () => {
-    it('instantiating the element works', () => {
+    it('instantiates the element', () => {
       let element = fixture('basic');
       expect(element.localName).to.equal('three-material');
+      expect(element.color).to.equal("#696969");
     });
-
-    it('has its properties', () => {
-      let element = fixture('basic');
-      expect(element.color).to.equal("#696969")
-    })
   });
 </script>
 </body>

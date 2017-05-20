@@ -5,9 +5,8 @@
   <title>three-camera test</title>
   <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../bower_components/web-component-tester/browser.js"></script>
-  <script src="bower_components/threejs/build/three.min.js"></script>
+  <script src="../bower_components/threejs/build/three.min.js"></script>
   <link rel="import" href="../three-camera.html">
-  <link rel="import" href="../three-lattice.html">
 </head>
 <body>
 <test-fixture id="basic">
@@ -17,14 +16,10 @@
 </test-fixture>
 
 <script>
-  // TODO: the scene should be responsible for pointing the camera at the mesh
-  // TODO: the camera isn't smart enough to know where the mesh is
-
   describe('<three-camera>', () => {
-    it('instantiating the element works', () => {
+    it('instantiates the element', () => {
       let element = fixture('basic');
       expect(element.localName).to.equal('three-camera');
-      expect(element.focalElementId).to.equal('element-to-look-at');
     });
   });
 </script>
