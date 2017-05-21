@@ -30,18 +30,20 @@
           width: Number,
           height: Number,
           backgroundColor: {type: String, observer: '_backgroundColorChanged'},
-          camera: {type: Object, observer: '_cameraChanged'},
+          camera: Object,
           cameraPosition: Array,
           cameraFocalPoint: Array,
           mesh: Object,
           scene: {type: Object, value: new THREE.Scene()},
           renderer: {type: Object, value: new THREE.WebGLRenderer({antialias: true})},
+          controls: Object,
         }
       }
 
       static get observers() {
         return [
-          '_sizeChanged(width, height)'
+          '_sizeChanged(width, height)',
+          '_computeControls(camera, renderer)',
         ]
       }
 
@@ -68,9 +70,8 @@
         this.scene.background = new THREE.Color().setStyle(this.backgroundColor);
       }
 
-      _cameraChanged() {
-        console.log("_cameraChanged");
-        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+      _computeControls(camera, renderer) {
+        this.controls = new THREE.OrbitControls(camera, renderer.domElement);
         this.controls.addEventListener('change', e => this.controlsChanged());
       };
 

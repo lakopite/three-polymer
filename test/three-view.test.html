@@ -37,6 +37,7 @@
       expect(element.height).to.equal(21);
       expect(element.scene).to.be.an.instanceOf(THREE.Scene);
       expect(element.renderer).to.be.an.instanceOf(THREE.WebGLRenderer);
+      expect(element.controls).to.be.an.instanceOf(THREE.OrbitControls);
     });
 
     it('appends the renderer DOM element to the view', () => {
