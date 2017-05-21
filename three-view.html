@@ -14,7 +14,7 @@
     <three-camera
       object="{{camera}}"
       position="{{cameraPosition}}"
-      focus="{{focus}}">
+      focal-point="{{cameraFocalPoint}}">
     </three-camera>
     <slot id="latticeSlot" name="lattice"></slot>
   </template>
@@ -32,7 +32,7 @@
           backgroundColor: {type: String, observer: '_backgroundColorChanged'},
           camera: {type: Object, observer: '_cameraChanged'},
           cameraPosition: Array,
-          focus: Array,
+          cameraFocalPoint: Array,
           mesh: Object,
           scene: {type: Object, value: new THREE.Scene()},
           renderer: {type: Object, value: new THREE.WebGLRenderer({antialias: true})},
@@ -88,7 +88,7 @@
           this.mesh.geometry.boundingSphere.radius * -2.5,
           this.mesh.geometry.boundingSphere.center.z
         ];
-        this.focus = this.mesh.geometry.boundingSphere.center.toArray();
+        this.cameraFocalPoint = this.mesh.geometry.boundingSphere.center.toArray();
       }
     }
 

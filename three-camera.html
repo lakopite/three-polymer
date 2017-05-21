@@ -13,7 +13,7 @@
       static get properties() {
         return {
           position: {type: Array, observer: '_positionChanged', value: [0, 0, 0]},
-          focus: {type: Array, observer: '_focusChanged', value: [0, 0, 0]},
+          focalPoint: {type: Array, observer: '_focalPointChanged', value: [0, 0, 0]},
           object: {
             type: Object,
             notify: true,
@@ -32,7 +32,7 @@
         this.object.updateProjectionMatrix();
       }
 
-      _focusChanged(newPosition, oldPosition) {
+      _focalPointChanged(newPosition, oldPosition) {
         this.object.lookAt(new THREE.Vector3().fromArray(newPosition));
       }
     }
