@@ -47,9 +47,7 @@
       }
 
       render() {
-        if (this.camera && this.mesh) {
-          this.renderer.render(this.scene, this.camera);
-        } else console.log('no camera or mesh, so no render');
+        this.renderer.render(this.scene, this.camera);
       }
 
       controlsChanged() {
