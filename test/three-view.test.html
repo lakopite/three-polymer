@@ -50,7 +50,7 @@
       expect(element.scene.children).to.have.lengthOf(1);
       expect(element.scene.getObjectByName('fake-mesh')).to.exist;
 
-      fakeThreeLattice.changeGeometry();
+      fakeThreeLattice.changeGeometry(4, [3, 2, 1]);
 
       expect(element.cameraPosition).to.deep.equal([3, -10, 1]);
       expect(element.cameraFocalPoint).to.deep.equal([3, 2, 1]);

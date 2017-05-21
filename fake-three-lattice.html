@@ -20,10 +20,10 @@
         this.dispatchEvent(new CustomEvent('lattice-connected', eventInitDict));
       }
 
-      changeGeometry() {
+      changeGeometry(geometryRadius, geometryCenter) {
         const eventInitDict = {
           bubbles: true,
-          detail: {geometryRadius: 4, geometryCenter: [3, 2, 1]}
+          detail: {geometryRadius: geometryRadius, geometryCenter: geometryCenter}
         };
         this.dispatchEvent(new CustomEvent('lattice-geometry-changed', eventInitDict));
       }
