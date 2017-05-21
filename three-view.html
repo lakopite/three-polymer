@@ -1,8 +1,7 @@
 <script src="bower_components/threejs/build/three.min.js"></script>
-<script src="bower_components/threejs/examples/js/controls/OrbitControls.js"></script>
 <link rel="import" href="bower_components/polymer/polymer-element.html">
 <link rel="import" href="three-camera.html">
-<link rel="import" href="three-helpers.html">
+<link rel="import" href="three-controls.html">
 
 <!--
 `three-view`
@@ -11,6 +10,10 @@
 
 <dom-module id="three-view">
   <template>
+    <three-controls
+      camera="{{camera}}"
+      canvas="{{canvas}}">
+    </three-controls>
     <three-camera
       object="{{camera}}"
       position="{{cameraPosition}}"
@@ -36,6 +39,7 @@
           mesh: Object,
           scene: {type: Object, value: new THREE.Scene()},
           renderer: {type: Object, value: new THREE.WebGLRenderer({antialias: true})},
+          canvas: {type: Object, computed: '_computeCanvas(renderer)'},
           controls: Object,
         }
       }
@@ -43,7 +47,6 @@
       static get observers() {
         return [
           '_sizeChanged(width, height)',
-          '_computeControls(camera, renderer)',
         ]
       }
 
@@ -51,15 +54,21 @@
         super.connectedCallback();
         this.addEventListener('lattice-connected', e => this.handleLatticeConnected(e.detail));
         this.addEventListener('lattice-geometry-changed', e => this.handleLatticeGeometryChanged(e.detail));
-        this.root.appendChild(this.renderer.domElement);
+        this.addEventListener('controls-changed', () => this.handleControlsChanged());
+        this.root.appendChild(this.canvas);
       }
 
       render() {
         this.renderer.render(this.scene, this.camera);
       }
 
-      controlsChanged() {
-        this.render();
+      updateCamera(geometryCenter, geometryRadius) {
+        this.cameraPosition = [geometryCenter[0], geometryRadius * -2.5, geometryCenter[2]];
+        this.cameraFocalPoint = geometryCenter
+      }
+
+      _computeCanvas() {
+        return this.renderer.domElement;
       }
 
       _sizeChanged() {
@@ -70,9 +79,8 @@
         this.scene.background = new THREE.Color().setStyle(this.backgroundColor);
       }
 
-      _computeControls(camera, renderer) {
-        this.controls = new THREE.OrbitControls(camera, renderer.domElement);
-        this.controls.addEventListener('change', e => this.controlsChanged());
+      handleControlsChanged() {
+        this.render();
       };
 
       handleLatticeConnected(lattice) {
@@ -85,11 +93,6 @@
         console.log("handleLatticeGeometryChanged");
         this.updateCamera(lattice.geometryCenter, lattice.geometryRadius);
         this.render();
-      }
-
-      updateCamera(geometryCenter, geometryRadius) {
-        this.cameraPosition = [geometryCenter[0], geometryRadius * -2.5, geometryCenter[2]];
-        this.cameraFocalPoint = geometryCenter
       }
     }
 

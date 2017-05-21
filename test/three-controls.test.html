@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-controls test</title>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/web-component-tester/browser.js"></script>
+  <script src="../bower_components/threejs/build/three.min.js"></script>
+  <link rel="import" href="../three-controls.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-controls></three-controls>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-controls>', () => {
+
+    it('creates the controls when it has a canvas and a camera', () => {
+      const element = fixture('basic');
+      expect(element.localName).to.equal('three-controls');
+      expect(element.object).to.not.exist;
+
+      element.camera = new THREE.PerspectiveCamera();
+      expect(element.object).to.not.exist;
+
+      element.canvas = new THREE.WebGLRenderer().domElement;
+      expect(element.object).to.be.an.instanceOf(THREE.OrbitControls);
+    });
+
+  });
+</script>
+</body>
+</html>

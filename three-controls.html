@@ -1,0 +1,34 @@
+<script src="bower_components/threejs/examples/js/controls/OrbitControls.js"></script>
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+
+<dom-module id="three-controls">
+  <script>
+    class ThreeControls extends Polymer.Element {
+
+      static get is() {
+        return 'three-controls';
+      }
+
+      static get properties() {
+        return {
+          object: {type: Object, computed: '_computeControls(camera, canvas)'},
+          camera: Object,
+          canvas: Object,
+        }
+      }
+
+      _computeControls(camera, canvas) {
+        if (!(camera && canvas)) return;
+        const controls = new THREE.OrbitControls(camera, canvas);
+        controls.addEventListener('change', () => this.controlsChanged());
+        return controls;
+      };
+
+      controlsChanged() {
+        this.dispatchEvent(new CustomEvent('controls-changed', {composed: true}));
+      }
+    }
+
+    customElements.define(ThreeControls.is, ThreeControls);
+  </script>
+</dom-module>
