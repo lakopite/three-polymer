@@ -46,6 +46,14 @@
       expect(element.scene.getObjectByName('fake-mesh')).to.exist;
     });
 
+    it('assigns the background color to the scene', () => {
+      expect(element.scene.background.getHexString().toUpperCase()).to.equal('F5F5F2');
+
+      element.backgroundColor = '#424242';
+
+      expect(element.scene.background.getHexString().toUpperCase()).to.equal('424242');
+    });
+
   });
 </script>
 </body>

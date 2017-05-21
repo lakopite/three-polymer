@@ -29,7 +29,7 @@
         return {
           width: Number,
           height: Number,
-          backgroundColor: String,
+          backgroundColor: {type: String, observer: '_backgroundColorChanged'},
           camera: {type: Object, observer: '_cameraChanged'},
           cameraPosition: Array,
           focus: Array,
@@ -44,8 +44,11 @@
         this.addEventListener('three-lattice-changed', () => this.handleThreeLatticeChanged());
         this.addEventListener('three-lattice-connected', e => this.handleThreeLatticeConnected(e));
         this.renderer.setSize(this.width, this.height);
-        this.scene.background = new THREE.Color(ThreeHelpers._fromHexString(this.backgroundColor));
         this.root.appendChild(this.renderer.domElement);
+      }
+
+      _backgroundColorChanged() {
+        this.scene.background = new THREE.Color().setStyle(this.backgroundColor);
       }
 
       render() {
