@@ -49,7 +49,7 @@
       render() {
         if (this.camera && this.mesh) {
           this.renderer.render(this.scene, this.camera);
-        } else console.log('no camera or focalGeometry, so no render');
+        } else console.log('no camera or mesh, so no render');
       }
 
       controlsChanged() {
@@ -83,7 +83,6 @@
       }
 
       moveCamera() {
-        this.mesh.geometry.computeBoundingSphere();
         this.cameraPosition = [
           this.mesh.geometry.boundingSphere.center.x,
           this.mesh.geometry.boundingSphere.radius * -2.5,

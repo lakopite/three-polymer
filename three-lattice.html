@@ -55,6 +55,7 @@
         console.log("handleGeometryReady");
         this.object.geometry.merge(e.detail.object);
         this.object.geometry.elementsNeedUpdate = true;
+        this.object.geometry.computeBoundingSphere();
         this.dispatchEvent(new CustomEvent('three-lattice-changed', {bubbles: true}));
       }
 
