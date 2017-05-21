@@ -27,8 +27,8 @@
 
       static get properties() {
         return {
-          width: Number,
-          height: Number,
+          width: {type: Number, observer: '_sizeChanged'},
+          height: {type: Number, observer: '_sizeChanged'},
           backgroundColor: {type: String, observer: '_backgroundColorChanged'},
           camera: {type: Object, observer: '_cameraChanged'},
           cameraPosition: Array,
@@ -43,12 +43,7 @@
         super.connectedCallback();
         this.addEventListener('three-lattice-changed', () => this.handleThreeLatticeChanged());
         this.addEventListener('three-lattice-connected', e => this.handleThreeLatticeConnected(e));
-        this.renderer.setSize(this.width, this.height);
         this.root.appendChild(this.renderer.domElement);
-      }
-
-      _backgroundColorChanged() {
-        this.scene.background = new THREE.Color().setStyle(this.backgroundColor);
       }
 
       render() {
@@ -59,6 +54,14 @@
 
       controlsChanged() {
         this.render();
+      }
+
+      _sizeChanged() {
+        this.renderer.setSize(this.width, this.height);
+      }
+
+      _backgroundColorChanged() {
+        this.scene.background = new THREE.Color().setStyle(this.backgroundColor);
       }
 
       _cameraChanged() {
