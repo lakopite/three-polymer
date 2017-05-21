@@ -26,9 +26,11 @@
 
     let element;
 
-    it('instantiates the element with its default properties', () => {
+    beforeEach(() => {
       element = fixture('basic');
+    });
 
+    it('instantiates the element with its default properties', () => {
       expect(element.localName).to.equal('three-view');
       expect(element.backgroundColor).to.equal('#F5F5F2');
       expect(element.width).to.equal(12);
