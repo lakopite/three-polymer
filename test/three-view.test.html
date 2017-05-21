@@ -2,34 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>three-parent test</title>
+  <title>three-view test</title>
   <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../bower_components/web-component-tester/browser.js"></script>
-  <link rel="import" href="../three-parent.html">
+  <link rel="import" href="../three-view.html">
   <link rel="import" href="../fake-three-lattice.html">
 </head>
 <body>
 <test-fixture id="basic">
   <template>
-    <three-parent
+    <three-view
       id="id"
       background-color="#F5F5F2"
       width="12"
       height="21">
       <three-lattice></three-lattice>
-    </three-parent>
+    </three-view>
   </template>
 </test-fixture>
 
 <script>
-  describe('<three-parent>', () => {
+  describe('<three-view>', () => {
 
     let element;
 
     it('instantiates the element with its default properties', () => {
       element = fixture('basic');
 
-      expect(element.localName).to.equal('three-parent');
+      expect(element.localName).to.equal('three-view');
       expect(element.backgroundColor).to.equal('#F5F5F2');
       expect(element.width).to.equal(12);
       expect(element.height).to.equal(21);

@@ -9,7 +9,7 @@
   <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../bower_components/iron-demo-helpers/demo-pages-shared-styles.html">
   <link rel="import" href="../bower_components/iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../three-parent.html">
+  <link rel="import" href="../three-view.html">
   <link rel="import" href="../three-lattice.html">
 
   <style is="custom-style" include="demo-pages-shared-styles"></style>
@@ -19,7 +19,7 @@
   <h3>three-polymer demo</h3>
   <demo-snippet>
     <template>
-      <three-parent
+      <three-view
         id="parent"
         background-color="#F5F5F5"
         height="360"
@@ -31,7 +31,7 @@
           data='[{"vertices":[[-10, 0, -10],[-10, 0, 10]], "result": {"axial": 10}},{"vertices":[[-10, 0, 10],[10, 0, 10]], "result": {"axial": 40}},{"vertices":[[10, 0, 10],[10, 0, -10]], "result": {"axial": 100}}]'
           color="#00BFA5">
         </three-lattice>
-      </three-parent>
+      </three-view>
     </template>
   </demo-snippet>
 </div>
