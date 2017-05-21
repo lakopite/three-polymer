@@ -28,11 +28,10 @@
         return {
           color: String,
           data: {type: Array, value: []},
-          geometry: {
-            type: Object,
-            value: new THREE.Geometry()
-          },
+          geometry: {type: Object, value: new THREE.Geometry()},
           material: {type: Object},
+          geometryCenter: Array,
+          geometryRadius: Number,
           contourBy: String,
           contourColors: {
             type: Array,
@@ -48,7 +47,7 @@
         this.addEventListener('three-line-geometry-ready', e => this.handleGeometryReady(e));
         this.object = new THREE.Mesh(this.geometry, this.material);
         const eventInitDict = {bubbles: true, detail: {object: this.object}};
-        this.dispatchEvent(new CustomEvent('three-lattice-connected', eventInitDict));
+        this.dispatchEvent(new CustomEvent('lattice-connected', eventInitDict));
       }
 
       handleGeometryReady(e) {
@@ -56,7 +55,13 @@
         this.object.geometry.merge(e.detail.object);
         this.object.geometry.elementsNeedUpdate = true;
         this.object.geometry.computeBoundingSphere();
-        this.dispatchEvent(new CustomEvent('three-lattice-changed', {bubbles: true}));
+        this.geometryRadius = this.object.geometry.boundingSphere.radius;
+        this.geometryCenter = this.object.geometry.boundingSphere.center.toArray();
+        const eventInitDict = {
+          bubbles: true,
+          detail: {geometryRadius: this.geometryRadius, geometryCenter: this.geometryCenter}
+        };
+        this.dispatchEvent(new CustomEvent('lattice-geometry-changed', eventInitDict));
       }
 
       computeContourValues(contourBy) {

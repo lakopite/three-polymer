@@ -1,16 +1,31 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+
 <dom-module id="fake-three-lattice">
   <script>
-    class FakeThreeLattice extends HTMLElement {
+    class FakeThreeLattice extends Polymer.Element {
 
       static get is() {
         return 'fake-three-lattice';
       }
 
+      static get properties() {
+        return {
+          object: {type: Object, value: new THREE.Mesh()},
+        }
+      }
+
       connectedCallback() {
-        let mesh = new THREE.Mesh();
-        mesh.name = 'fake-mesh';
-        const eventInitDict = {bubbles: true, detail: {object: mesh}};
-        this.dispatchEvent(new CustomEvent('three-lattice-connected', eventInitDict));
+        this.object.name = 'fake-mesh';
+        const eventInitDict = {bubbles: true, detail: {object: this.object}};
+        this.dispatchEvent(new CustomEvent('lattice-connected', eventInitDict));
+      }
+
+      changeGeometry() {
+        const eventInitDict = {
+          bubbles: true,
+          detail: {geometryRadius: 4, geometryCenter: [3, 2, 1]}
+        };
+        this.dispatchEvent(new CustomEvent('lattice-geometry-changed', eventInitDict));
       }
     }
 
