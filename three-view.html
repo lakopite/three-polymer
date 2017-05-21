@@ -27,8 +27,8 @@
 
       static get properties() {
         return {
-          width: {type: Number, observer: '_sizeChanged'},
-          height: {type: Number, observer: '_sizeChanged'},
+          width: Number,
+          height: Number,
           backgroundColor: {type: String, observer: '_backgroundColorChanged'},
           camera: {type: Object, observer: '_cameraChanged'},
           cameraPosition: Array,
@@ -37,6 +37,12 @@
           scene: {type: Object, value: new THREE.Scene()},
           renderer: {type: Object, value: new THREE.WebGLRenderer({antialias: true})},
         }
+      }
+
+      static get observers() {
+        return [
+          '_sizeChanged(width, height)'
+        ]
       }
 
       connectedCallback() {
