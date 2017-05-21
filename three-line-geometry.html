@@ -43,7 +43,7 @@
         const v1r = v1.clone().addScaledVector(centerLineNormalVector, -1 * this.stroke / 2);
 
         let contourValue = this.getContourValue(this.contourValues, this.contourColors, this.result[this.contourBy]);
-        const color = new THREE.Color(ThreeHelpers._fromHexString(contourValue));
+        const color = new THREE.Color().setStyle(contourValue);
         const geometry = new THREE.Geometry();
         geometry.vertices.push(v0l);
         geometry.vertices.push(v0r);
