@@ -1,0 +1,18 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+
+<dom-module id="fake-three-controls">
+  <script>
+    class FakeThreeControls extends Polymer.Element {
+
+      static get is() {
+        return 'fake-three-controls';
+      }
+
+      controlsChanged() {
+        this.dispatchEvent(new CustomEvent('controls-changed', {composed: true}));
+      }
+    }
+
+    customElements.define(FakeThreeControls.is, FakeThreeControls);
+  </script>
+</dom-module>

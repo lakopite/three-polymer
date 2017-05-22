@@ -2,6 +2,7 @@
 <link rel="import" href="bower_components/polymer/polymer-element.html">
 <link rel="import" href="three-camera.html">
 <link rel="import" href="three-controls.html">
+<link rel="import" href="three-renderer.html">
 
 <!--
 `three-view`
@@ -19,6 +20,14 @@
       position="{{cameraPosition}}"
       focal-point="{{cameraFocalPoint}}">
     </three-camera>
+    <three-renderer
+      id="renderer"
+      camera="{{camera}}"
+      scene="{{scene}}"
+      canvas="{{canvas}}"
+      width="{{rendererWidth}}"
+      height="{{rendererHeight}}">
+    </three-renderer>
     <slot id="latticeSlot" name="lattice"></slot>
   </template>
   <script>
@@ -30,24 +39,16 @@
 
       static get properties() {
         return {
-          width: Number,
-          height: Number,
+          rendererWidth: Number,
+          rendererHeight: Number,
           backgroundColor: {type: String, observer: '_backgroundColorChanged'},
           camera: Object,
           cameraPosition: Array,
           cameraFocalPoint: Array,
           mesh: Object,
           scene: {type: Object, value: new THREE.Scene()},
-          renderer: {type: Object, value: new THREE.WebGLRenderer({antialias: true})},
-          canvas: {type: Object, computed: '_computeCanvas(renderer)'},
-          controls: Object,
+          canvas: {type: Object, observer: '_canvasChanged'},
         }
-      }
-
-      static get observers() {
-        return [
-          '_sizeChanged(width, height)',
-        ]
       }
 
       connectedCallback() {
@@ -55,11 +56,10 @@
         this.addEventListener('lattice-connected', e => this.handleLatticeConnected(e.detail));
         this.addEventListener('lattice-geometry-changed', e => this.handleLatticeGeometryChanged(e.detail));
         this.addEventListener('controls-changed', () => this.handleControlsChanged());
-        this.root.appendChild(this.canvas);
       }
 
       render() {
-        this.renderer.render(this.scene, this.camera);
+        this.$.renderer.render();
       }
 
       updateCamera(geometryCenter, geometryRadius) {
@@ -67,16 +67,12 @@
         this.cameraFocalPoint = geometryCenter
       }
 
-      _computeCanvas() {
-        return this.renderer.domElement;
+      _canvasChanged(newCanvas, oldCanvas) {
+        this.root.appendChild(newCanvas);
       }
 
-      _sizeChanged() {
-        this.renderer.setSize(this.width, this.height);
-      }
-
-      _backgroundColorChanged() {
-        this.scene.background = new THREE.Color().setStyle(this.backgroundColor);
+      _backgroundColorChanged(newBackgroundColor, oldBackgroundColor) {
+        this.scene.background = new THREE.Color().setStyle(newBackgroundColor);
       }
 
       handleControlsChanged() {

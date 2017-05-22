@@ -7,6 +7,8 @@
   <script src="../bower_components/web-component-tester/browser.js"></script>
   <link rel="import" href="../three-view.html">
   <link rel="import" href="../fake-three-lattice.html">
+  <link rel="import" href="../fake-three-controls.html">
+  <link rel="import" href="../fake-three-renderer.html">
 </head>
 <body>
 <test-fixture id="basic">
@@ -14,9 +16,9 @@
     <three-view
       id="id"
       background-color="#F5F5F2"
-      width="12"
-      height="21">
-      <three-lattice></three-lattice>
+      renderer-width="12"
+      renderer-height="21">
+      <three-lattice slot="lattice"></three-lattice>
     </three-view>
   </template>
 </test-fixture>
@@ -33,10 +35,9 @@
     it('instantiates the element with its default properties', () => {
       expect(element.localName).to.equal('three-view');
       expect(element.backgroundColor).to.equal('#F5F5F2');
-      expect(element.width).to.equal(12);
-      expect(element.height).to.equal(21);
+      expect(element.rendererWidth).to.equal(12);
+      expect(element.rendererHeight).to.equal(21);
       expect(element.scene).to.be.an.instanceOf(THREE.Scene);
-      expect(element.renderer).to.be.an.instanceOf(THREE.WebGLRenderer);
     });
 
     it('appends the renderer DOM element to the view', () => {
@@ -49,17 +50,6 @@
       element.backgroundColor = '#424242';
 
       expect(element.scene.background.getHexString().toUpperCase()).to.equal('424242');
-    });
-
-    it('assigns the height and width to the renderer', () => {
-      expect(element.renderer.getSize().height).to.equal(21);
-      expect(element.renderer.getSize().width).to.equal(12);
-
-      element.height = 34;
-      element.width = 43;
-
-      expect(element.renderer.getSize().height).to.equal(34);
-      expect(element.renderer.getSize().width).to.equal(43);
     });
 
     it('adds the mesh to the scene when the lattice component connects, ' +
@@ -77,6 +67,18 @@
 
       expect(element.cameraPosition).to.deep.equal([3, -10, 1]);
       expect(element.cameraFocalPoint).to.deep.equal([3, 2, 1]);
+    });
+
+    it('it calls the renderer when the controls change', () => {
+      replace('three-controls').with('fake-three-controls');
+      replace('three-renderer').with('fake-three-renderer');
+      element = fixture('basic');
+      const fakeThreeControls = element.shadowRoot.querySelectorAll('fake-three-controls')[0];
+      const fakeThreeRenderer = element.shadowRoot.querySelectorAll('fake-three-renderer')[0];
+
+      fakeThreeControls.controlsChanged();
+
+      expect(fakeThreeRenderer.renderCount).to.equal(1);
     });
 
   });

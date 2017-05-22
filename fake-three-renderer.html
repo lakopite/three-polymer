@@ -1,0 +1,27 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+
+<dom-module id="fake-three-renderer">
+  <script>
+    class FakeThreeRenderer extends Polymer.Element {
+
+      static get is() {
+        return 'fake-three-renderer';
+      }
+
+      static get properties() {
+        return {
+          object: {type: Object, value: new THREE.WebGLRenderer({antialias: true})},
+          camera: Object,
+          scene: Object,
+          renderCount: {type: Number, value: 0},
+        }
+      }
+
+      render() {
+        this.renderCount += 1
+      }
+    }
+
+    customElements.define(FakeThreeRenderer.is, FakeThreeRenderer);
+  </script>
+</dom-module>

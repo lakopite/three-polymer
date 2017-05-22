@@ -1,0 +1,43 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+
+<dom-module id="three-renderer">
+  <script>
+    class ThreeRenderer extends Polymer.Element {
+
+      static get is() {
+        return 'three-renderer';
+      }
+
+      static get properties() {
+        return {
+          object: {type: Object, value: new THREE.WebGLRenderer({antialias: true})},
+          camera: Object,
+          scene: Object,
+          canvas: {type: Object, computed: '_computeCanvas(object)', notify: true},
+          width: Number,
+          height: Number,
+        }
+      }
+
+      static get observers() {
+        return [
+          '_sizeChanged(width, height)',
+        ]
+      }
+
+      render() {
+        this.object.render(this.scene, this.camera);
+      }
+
+      _computeCanvas() {
+        return this.object.domElement;
+      }
+
+      _sizeChanged(width, height) {
+        this.object.setSize(width, height);
+      }
+    }
+
+    customElements.define(ThreeRenderer.is, ThreeRenderer);
+  </script>
+</dom-module>

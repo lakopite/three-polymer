@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-renderer test</title>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/web-component-tester/browser.js"></script>
+  <script src="../bower_components/threejs/build/three.min.js"></script>
+  <link rel="import" href="../three-renderer.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-renderer height="21" width="12"></three-renderer>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-renderer>', () => {
+
+    let element;
+
+    beforeEach(() => {
+      element = fixture('basic');
+    });
+
+    it('creates the renderer', () => {
+      expect(element.localName).to.equal('three-renderer');
+      expect(element.object).to.be.an.instanceOf(THREE.WebGLRenderer);
+    });
+
+    it('assigns the height and width to the renderer', () => {
+      expect(element.object.getSize().height).to.equal(21);
+      expect(element.object.getSize().width).to.equal(12);
+
+      element.height = 34;
+      element.width = 43;
+
+      expect(element.object.getSize().height).to.equal(34);
+      expect(element.object.getSize().width).to.equal(43);
+    });
+
+  });
+</script>
+</body>
+</html>
