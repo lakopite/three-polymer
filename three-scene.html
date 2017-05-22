@@ -1,0 +1,32 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+
+<dom-module id="three-scene">
+  <script>
+    class ThreeScene extends Polymer.Element {
+
+      static get is() {
+        return 'three-scene';
+      }
+
+      static get properties() {
+        return {
+          object: {type: Object, value: new THREE.Scene(), notify: true},
+          backgroundColor: {type: String, observer: '_backgroundColorChanged'},
+          camera: Object,
+          canvas: Object,
+        }
+      }
+
+      _backgroundColorChanged(newBackgroundColor, oldBackgroundColor) {
+        this.object.background = new THREE.Color().setStyle(newBackgroundColor);
+      }
+
+      addObject(threeObject) {
+        this.object.add(threeObject);
+      }
+
+    }
+
+    customElements.define(ThreeScene.is, ThreeScene);
+  </script>
+</dom-module>

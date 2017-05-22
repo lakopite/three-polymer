@@ -3,6 +3,7 @@
 <link rel="import" href="three-camera.html">
 <link rel="import" href="three-controls.html">
 <link rel="import" href="three-renderer.html">
+<link rel="import" href="three-scene.html">
 
 <!--
 `three-view`
@@ -12,22 +13,29 @@
 <dom-module id="three-view">
   <template>
     <three-controls
-      camera="{{camera}}"
-      canvas="{{canvas}}">
+      id="controls"
+      camera="[[camera]]"
+      canvas="[[canvas]]">
     </three-controls>
     <three-camera
+      id="camera"
       object="{{camera}}"
-      position="{{cameraPosition}}"
-      focal-point="{{cameraFocalPoint}}">
+      position="[[cameraPosition]]"
+      focal-point="[[cameraFocalPoint]]">
     </three-camera>
     <three-renderer
       id="renderer"
-      camera="{{camera}}"
-      scene="{{scene}}"
       canvas="{{canvas}}"
-      width="{{rendererWidth}}"
-      height="{{rendererHeight}}">
+      camera="[[camera]]"
+      scene="[[scene]]"
+      width="[[rendererWidth]]"
+      height="[[rendererHeight]]">
     </three-renderer>
+    <three-scene
+      id="scene"
+      object="{{scene}}"
+      background-color="[[sceneBackgroundColor]]">
+    </three-scene>
     <slot id="latticeSlot" name="lattice"></slot>
   </template>
   <script>
@@ -41,12 +49,11 @@
         return {
           rendererWidth: Number,
           rendererHeight: Number,
-          backgroundColor: {type: String, observer: '_backgroundColorChanged'},
+          sceneBackgroundColor: String,
+          scene: Object,
           camera: Object,
           cameraPosition: Array,
           cameraFocalPoint: Array,
-          mesh: Object,
-          scene: {type: Object, value: new THREE.Scene()},
           canvas: {type: Object, observer: '_canvasChanged'},
         }
       }
@@ -71,18 +78,13 @@
         this.root.appendChild(newCanvas);
       }
 
-      _backgroundColorChanged(newBackgroundColor, oldBackgroundColor) {
-        this.scene.background = new THREE.Color().setStyle(newBackgroundColor);
-      }
-
       handleControlsChanged() {
         this.render();
       };
 
       handleLatticeConnected(lattice) {
         console.log("handleLatticeConnected");
-        this.mesh = lattice.object;
-        this.scene.add(this.mesh);
+        this.$.scene.addObject(lattice.object);
       }
 
       handleLatticeGeometryChanged(lattice) {

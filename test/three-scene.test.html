@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-scene test</title>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/web-component-tester/browser.js"></script>
+  <script src="../bower_components/threejs/build/three.min.js"></script>
+  <link rel="import" href="../three-scene.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-scene
+      background-color="#F2F2F2">
+    </three-scene>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-scene>', () => {
+
+    let element;
+
+    beforeEach(() => {
+      element = fixture('basic');
+    });
+
+    it('creates the controls when it has a canvas and a camera', () => {
+      expect(element.localName).to.equal('three-scene');
+      expect(element.object).to.be.an.instanceOf(THREE.Scene);
+    });
+
+    it('assigns the background color to the scene', () => {
+      expect(element.object.background.getHexString().toUpperCase()).to.equal('F2F2F2');
+
+      element.backgroundColor = '#424242';
+
+      expect(element.object.background.getHexString().toUpperCase()).to.equal('424242');
+    });
+
+    it('adds the mesh to the scene', () => {
+      const mesh = new THREE.Mesh();
+      mesh.name = 'fake-mesh';
+      element.addObject(mesh);
+
+      expect(element.object.children).to.have.lengthOf(1);
+      expect(element.object.getObjectByName('fake-mesh')).to.exist;
+    });
+
+  });
+</script>
+</body>
+</html>

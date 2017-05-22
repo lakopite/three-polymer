@@ -1,0 +1,25 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+
+<dom-module id="fake-three-scene">
+  <script>
+    class FakeThreeScene extends Polymer.Element {
+
+      static get is() {
+        return 'fake-three-scene';
+      }
+
+      static get properties() {
+        return {
+          addObjectCalled: {type: Boolean, value: false},
+        }
+      }
+
+      addObject(threeObject) {
+        this.addObjectCalled = true;
+      }
+
+    }
+
+    customElements.define(FakeThreeScene.is, FakeThreeScene);
+  </script>
+</dom-module>

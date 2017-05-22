@@ -9,13 +9,14 @@
   <link rel="import" href="../fake-three-lattice.html">
   <link rel="import" href="../fake-three-controls.html">
   <link rel="import" href="../fake-three-renderer.html">
+  <link rel="import" href="../fake-three-scene.html">
 </head>
 <body>
 <test-fixture id="basic">
   <template>
     <three-view
       id="id"
-      background-color="#F5F5F2"
+      scene-background-color="#F5F5F2"
       renderer-width="12"
       renderer-height="21">
       <three-lattice slot="lattice"></three-lattice>
@@ -34,39 +35,35 @@
 
     it('instantiates the element with its default properties', () => {
       expect(element.localName).to.equal('three-view');
-      expect(element.backgroundColor).to.equal('#F5F5F2');
+      expect(element.sceneBackgroundColor).to.equal('#F5F5F2');
       expect(element.rendererWidth).to.equal(12);
       expect(element.rendererHeight).to.equal(21);
-      expect(element.scene).to.be.an.instanceOf(THREE.Scene);
     });
 
     it('appends the renderer DOM element to the view', () => {
       expect(element.root.querySelectorAll('canvas')).to.have.lengthOf(1);
     });
 
-    it('assigns the background color to the scene', () => {
-      expect(element.scene.background.getHexString().toUpperCase()).to.equal('F5F5F2');
-
-      element.backgroundColor = '#424242';
-
-      expect(element.scene.background.getHexString().toUpperCase()).to.equal('424242');
-    });
-
-    it('adds the mesh to the scene when the lattice component connects, ' +
-      'and updates the camera when the lattice geometry changes', () => {
+    it('updates the camera when the lattice geometry changes', () => {
 
       replace('three-lattice').with('fake-three-lattice');
       element = fixture('basic');
       const fakeThreeLattice = document.getElementsByTagName('fake-three-lattice')[0];
 
-      expect(element.mesh).to.be.an.instanceOf(THREE.Mesh);
-      expect(element.scene.children).to.have.lengthOf(1);
-      expect(element.scene.getObjectByName('fake-mesh')).to.exist;
-
       fakeThreeLattice.changeGeometry(4, [3, 2, 1]);
 
       expect(element.cameraPosition).to.deep.equal([3, -10, 1]);
       expect(element.cameraFocalPoint).to.deep.equal([3, 2, 1]);
+    });
+
+    it('adds the mesh to the scene when the lattice component connects', () => {
+
+      replace('three-lattice').with('fake-three-lattice');
+      replace('three-scene').with('fake-three-scene');
+      element = fixture('basic');
+      const fakeThreeScene = element.shadowRoot.querySelectorAll('fake-three-scene')[0];
+
+      expect(fakeThreeScene.addObjectCalled).to.be.true;
     });
 
     it('it calls the renderer when the controls change', () => {
