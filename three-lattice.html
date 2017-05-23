@@ -11,8 +11,7 @@
         result="{{item.result}}"
         contour-by="{{contourBy}}"
         contour-values="{{contourValues}}"
-        contour-colors="{{contourColors}}"
-        object="{{geometry}}">
+        contour-colors="{{contourColors}}">
       </three-line-geometry>
     </template>
     <three-material id="material" object="{{material}}" color="{{color}}"></three-material>
@@ -28,8 +27,7 @@
         return {
           color: String,
           data: {type: Array, value: []},
-          geometry: {type: Object, value: new THREE.Geometry()},
-          material: {type: Object},
+          material: Object,
           geometryCenter: Array,
           geometryRadius: Number,
           contourBy: String,
@@ -39,13 +37,13 @@
               "#00FF00", "#ADFF2F", "#FFFF00", "#FFCC00", "#FF6633", "#FF3300", "#FF0000"]
           },
           contourValues: {type: Array, computed: '_computeContourValues(contourBy)'},
-          object: {type: Object, computed: '_computeObject(geometry, material)'},
+          object: {type: Object, computed: '_computeObject(material)'},
         }
       }
 
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('three-line-geometry-ready', e => this.handleGeometryReady(e));
+        this.addEventListener('three-line-geometry-ready', e => this.handleGeometryReady(e.detail));
         this.fireConnected();
       }
 
@@ -54,9 +52,9 @@
         this.dispatchEvent(new CustomEvent('lattice-connected', eventInitDict));
       }
 
-      _computeObject(geometry, material) {
-        if (!(geometry && material)) return;
-        return new THREE.Mesh(this.geometry, this.material);
+      _computeObject(material) {
+        if (!material) return;
+        return new THREE.Mesh(new THREE.Geometry(), this.material);
       }
 
       _computeContourValues(contourBy) {
@@ -64,13 +62,13 @@
         const values = _.map(this.data, (line) => {return line.result[contourBy]});
         const max = _.max(values);
         const min = _.min(values);
-        let step = (max - min) / length;
+        const step = (max - min) / length;
         return _.rangeRight(max, min, -step);
       }
 
-      handleGeometryReady(e) {
+      handleGeometryReady(geometry) {
         console.log("handleGeometryReady");
-        this.object.geometry.merge(e.detail.object);
+        this.object.geometry.merge(geometry);
         this.object.geometry.elementsNeedUpdate = true;
         this.object.geometry.computeBoundingSphere();
         this.geometryRadius = this.object.geometry.boundingSphere.radius;

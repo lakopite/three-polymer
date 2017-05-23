@@ -16,7 +16,7 @@
 
       _objectChanged() {
         const eventName = this.localName + '-ready';
-        const eventInitDict = {bubbles: true, composed: true, detail: {object: this.object}};
+        const eventInitDict = {bubbles: true, composed: true, detail: this.object};
         this.dispatchEvent(new CustomEvent(eventName, eventInitDict));
       }
     }

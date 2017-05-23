@@ -47,6 +47,14 @@
         expect(element.contourBy).to.equal('axial');
       });
 
+      it('calculates the maximum result value for each contour color', () => {
+        const expectedValues = [
+          16.92307692307695, 23.846153846153875, 30.7692307692308, 37.69230769230772,
+          44.61538461538464, 51.53846153846156, 58.46153846153848, 65.3846153846154,
+          72.30769230769232, 79.23076923076924, 86.15384615384616, 93.07692307692308, 100];
+        expect(element.contourValues).to.deep.equal(expectedValues);
+      });
+
     });
 
     describe('interactions with <three-view>', () => {
