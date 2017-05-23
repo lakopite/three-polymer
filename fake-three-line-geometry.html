@@ -1,0 +1,20 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+
+<dom-module id="fake-three-line-geometry">
+  <script>
+    class FakeThreeLineGeometry extends Polymer.Element {
+
+      static get is() {
+        return 'fake-three-line-geometry';
+      }
+
+      fireGeometryReady(geometry) {
+        const eventInitDict = {bubbles: true, composed: true, detail: geometry};
+        this.dispatchEvent(new CustomEvent('three-line-geometry-ready', eventInitDict));
+      }
+
+    }
+
+    customElements.define(FakeThreeLineGeometry.is, FakeThreeLineGeometry);
+  </script>
+</dom-module>
