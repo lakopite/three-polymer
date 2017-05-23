@@ -1,0 +1,32 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+
+<dom-module id="fake-three-view">
+  <script>
+    class FakeThreeView extends Polymer.Element {
+
+      static get is() {
+        return 'fake-three-view';
+      }
+
+      static get properties() {
+        return {
+          latticeConnectedCount: {type: Number, value: 0},
+          latticeConnectedEvent: Object,
+        }
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener('lattice-connected', event => this.handleLatticeConnected(event));
+      }
+
+      handleLatticeConnected(event) {
+        this.latticeConnectedCount += 1;
+        this.latticeConnectedEvent = event;
+      }
+
+    }
+
+    customElements.define(FakeThreeView.is, FakeThreeView);
+  </script>
+</dom-module>

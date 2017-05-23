@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-lattice test</title>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/web-component-tester/browser.js"></script>
+  <script src="../bower_components/threejs/build/three.min.js"></script>
+  <link rel="import" href="../three-lattice.html">
+  <link rel="import" href="../fake-three-view.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-lattice
+      id="lattice"
+      slot="lattice"
+      contour-by="axial"
+      data='[{"vertices":[[-10, 0, -10],[-10, 0, 10]], "result": {"axial": 10}},{"vertices":[[-10, 0, 10],[10, 0, 10]], "result": {"axial": 40}},{"vertices":[[10, 0, 10],[10, 0, -10]], "result": {"axial": 100}}]'
+      color="#00BFA5">
+    </three-lattice>
+  </template>
+</test-fixture>
+
+<test-fixture id="parent">
+  <template>
+    <fake-three-view>
+      <three-lattice></three-lattice>
+    </fake-three-view>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-lattice>', () => {
+
+    let element;
+
+    describe('itself', () => {
+
+      beforeEach(() => {
+        element = fixture('basic');
+      });
+
+      it('instantiates the element', () => {
+        expect(element.localName).to.equal('three-lattice');
+        expect(element.color).to.equal('#00BFA5');
+        expect(element.contourBy).to.equal('axial');
+      });
+
+    });
+
+    describe('interactions with <three-view>', () => {
+
+      beforeEach(() => {
+        parent = fixture('parent');
+      });
+
+      it('fires an event when it connects', () => {
+        expect(parent.latticeConnectedCount).to.equal(1);
+        expect(parent.latticeConnectedEvent.bubbles).to.be.true;
+        expect(parent.latticeConnectedEvent.detail.object).to.be.an.instanceOf(THREE.Mesh);
+      });
+
+    });
+  });
+</script>
+</body>
+</html>

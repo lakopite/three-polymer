@@ -46,6 +46,10 @@
       connectedCallback() {
         super.connectedCallback();
         this.addEventListener('three-line-geometry-ready', e => this.handleGeometryReady(e));
+        this.fireConnected();
+      }
+
+      fireConnected() {
         const eventInitDict = {bubbles: true, detail: {object: this.object}};
         this.dispatchEvent(new CustomEvent('lattice-connected', eventInitDict));
       }
