@@ -60,16 +60,16 @@
 
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('lattice-connected', e => this.handleLatticeConnected(e.detail));
-        this.addEventListener('lattice-geometry-changed', e => this.handleLatticeGeometryChanged(e.detail));
-        this.addEventListener('controls-changed', () => this.handleControlsChanged());
+        this.addEventListener('lattice-connected', e => this._handleLatticeConnected(e.detail));
+        this.addEventListener('lattice-geometry-changed', e => this._handleLatticeGeometryChanged(e.detail));
+        this.addEventListener('controls-changed', () => this._handleControlsChanged());
       }
 
-      render() {
+      _render() {
         this.$.renderer.render();
       }
 
-      updateCamera(geometryCenter, geometryRadius) {
+      _updateCamera(geometryCenter, geometryRadius) {
         this.cameraPosition = [geometryCenter[0], geometryRadius * -2.5, geometryCenter[2]];
         this.cameraFocalPoint = geometryCenter
       }
@@ -78,19 +78,19 @@
         this.root.appendChild(newCanvas);
       }
 
-      handleControlsChanged() {
-        this.render();
+      _handleControlsChanged() {
+        this._render();
       };
 
-      handleLatticeConnected(lattice) {
-        console.log("handleLatticeConnected");
+      _handleLatticeConnected(lattice) {
+        console.log("_handleLatticeConnected");
         this.$.scene.addObject(lattice.object);
       }
 
-      handleLatticeGeometryChanged(lattice) {
-        console.log("handleLatticeGeometryChanged");
-        this.updateCamera(lattice.geometryCenter, lattice.geometryRadius);
-        this.render();
+      _handleLatticeGeometryChanged(lattice) {
+        console.log("_handleLatticeGeometryChanged");
+        this._updateCamera(lattice.geometryCenter, lattice.geometryRadius);
+        this._render();
       }
     }
 

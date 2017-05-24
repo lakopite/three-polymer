@@ -50,12 +50,7 @@
       connectedCallback() {
         super.connectedCallback();
         this.addEventListener('three-line-geometry-ready', e => this._handleGeometryReady(e.detail));
-        this.fireConnected();
-      }
-
-      fireConnected() {
-        const eventInitDict = {bubbles: true, detail: {object: this.object}};
-        this.dispatchEvent(new CustomEvent('lattice-connected', eventInitDict));
+        this._fireConnected();
       }
 
       _computeObject(material) {
@@ -72,6 +67,10 @@
         return _.rangeRight(max, min, -step);
       }
 
+      _geometryChanged(geometryRadius, geometryCenter) {
+        if ((geometryRadius && geometryCenter)) this._fireGeometryChanged();
+      }
+
       _handleGeometryReady(geometry) {
         console.log("_handleGeometryReady");
         this.object.geometry.merge(geometry);
@@ -81,8 +80,12 @@
         this.geometryCenter = this.object.geometry.boundingSphere.center.toArray();
       }
 
-      _geometryChanged(geometryRadius, geometryCenter) {
-        if (!(geometryRadius && geometryCenter)) return;
+      _fireConnected() {
+        const eventInitDict = {bubbles: true, detail: {object: this.object}};
+        this.dispatchEvent(new CustomEvent('lattice-connected', eventInitDict));
+      }
+
+      _fireGeometryChanged() {
         const eventInitDict = {
           bubbles: true,
           detail: {geometryRadius: this.geometryRadius, geometryCenter: this.geometryCenter}

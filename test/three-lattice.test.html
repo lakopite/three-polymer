@@ -18,7 +18,11 @@
       id="lattice"
       slot="lattice"
       contour-by="axial"
-      data='[{"vertices":[[-10, 0, -10],[-10, 0, 10]], "result": {"axial": 10}},{"vertices":[[-10, 0, 10],[10, 0, 10]], "result": {"axial": 40}},{"vertices":[[10, 0, 10],[10, 0, -10]], "result": {"axial": 100}}]'
+      data='[
+      {"vertices":[[-10, 0, -10],[-10, 0, 10]], "result": {"axial": 10}},
+      {"vertices":[[-10, 0, 10],[10, 0, 10]], "result": {"axial": 40}},
+      {"vertices":[[10, 0, 10],[10, 0, -10]], "result": {"axial": 100}}
+      ]'
       color="#00BFA5">
     </three-lattice>
   </template>
@@ -81,7 +85,7 @@
         parent = fixture('parent');
       });
 
-      it('fires an event when it connects', () => {
+      it('tells the view when it connects', () => {
         expect(parent.latticeConnectedCount).to.equal(1);
         expect(parent.latticeConnectedEvent.bubbles).to.be.true;
         expect(parent.latticeConnectedEvent.detail.object).to.be.an.instanceOf(THREE.Mesh);

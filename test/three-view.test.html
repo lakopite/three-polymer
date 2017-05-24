@@ -73,7 +73,7 @@
       const fakeThreeControls = element.shadowRoot.querySelectorAll('fake-three-controls')[0];
       const fakeThreeRenderer = element.shadowRoot.querySelectorAll('fake-three-renderer')[0];
 
-      fakeThreeControls.controlsChanged();
+      fakeThreeControls._handleControlsChanged();
 
       expect(fakeThreeRenderer.renderCount).to.equal(1);
     });
