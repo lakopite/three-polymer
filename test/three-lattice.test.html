@@ -9,6 +9,7 @@
   <link rel="import" href="../three-lattice.html">
   <link rel="import" href="../fake-three-view.html">
   <link rel="import" href="../fake-three-line-geometry.html">
+  <link rel="import" href="../bower_components/polymer/polymer.html">
 </head>
 <body>
 <test-fixture id="basic">
@@ -54,6 +55,21 @@
           44.61538461538464, 51.53846153846156, 58.46153846153848, 65.3846153846154,
           72.30769230769232, 79.23076923076924, 86.15384615384616, 93.07692307692308, 100];
         expect(element.contourValues).to.deep.equal(expectedValues);
+      });
+
+      it('handles new geometry', (done) => {
+        replace('three-line-geometry').with('fake-three-line-geometry');
+        element = fixture('basic');
+
+        flush(() => {
+          const fakeThreeLineGeometry = element.shadowRoot.querySelector('fake-three-line-geometry');
+          fakeThreeLineGeometry.fireGeometryReady(new THREE.SphereGeometry(5).translate(6, 7, 8));
+
+          expect(element.object.geometry.elementsNeedUpdate).to.be.true;
+          expect(_.round(element.geometryRadius, 6)).to.equal(5);
+          expect(element.geometryCenter).to.deep.equal([6, 7, 8]);
+          done();
+        });
       });
 
     });
