@@ -41,9 +41,15 @@
         }
       }
 
+      static get observers() {
+        return [
+          '_geometryChanged(geometryRadius, geometryCenter)',
+        ]
+      }
+
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('three-line-geometry-ready', e => this.handleGeometryReady(e.detail));
+        this.addEventListener('three-line-geometry-ready', e => this._handleGeometryReady(e.detail));
         this.fireConnected();
       }
 
@@ -66,13 +72,17 @@
         return _.rangeRight(max, min, -step);
       }
 
-      handleGeometryReady(geometry) {
-        console.log("handleGeometryReady");
+      _handleGeometryReady(geometry) {
+        console.log("_handleGeometryReady");
         this.object.geometry.merge(geometry);
         this.object.geometry.elementsNeedUpdate = true;
         this.object.geometry.computeBoundingSphere();
         this.geometryRadius = this.object.geometry.boundingSphere.radius;
         this.geometryCenter = this.object.geometry.boundingSphere.center.toArray();
+      }
+
+      _geometryChanged(geometryRadius, geometryCenter) {
+        if (!(geometryRadius && geometryCenter)) return;
         const eventInitDict = {
           bubbles: true,
           detail: {geometryRadius: this.geometryRadius, geometryCenter: this.geometryCenter}

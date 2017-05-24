@@ -68,6 +68,7 @@
           expect(element.object.geometry.elementsNeedUpdate).to.be.true;
           expect(_.round(element.geometryRadius, 6)).to.equal(5);
           expect(element.geometryCenter).to.deep.equal([6, 7, 8]);
+
           done();
         });
       });
@@ -86,6 +87,16 @@
         expect(parent.latticeConnectedEvent.detail.object).to.be.an.instanceOf(THREE.Mesh);
       });
 
+      it('tells the view when it gets new geometry', () => {
+        const threeLattice = parent.querySelector('three-lattice');
+        threeLattice.geometryRadius = 5;
+        threeLattice.geometryCenter = [6, 7, 8];
+
+        expect(parent.geometryChangedCount).to.equal(1);
+        expect(parent.geometryChangedEvent.bubbles).to.be.true;
+        expect(parent.geometryChangedEvent.detail.geometryRadius).to.equal(5);
+        expect(parent.geometryChangedEvent.detail.geometryCenter).to.deep.equal([6, 7, 8]);
+      });
     });
   });
 </script>
