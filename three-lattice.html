@@ -8,7 +8,7 @@
       <three-line-geometry
         id="{{index}}"
         vertices="{{item.vertices}}"
-        result="{{item.result}}"
+        metadata="{{item.metadata}}"
         contour-by="{{contourBy}}"
         contour-values="{{contourValues}}"
         contour-colors="{{contourColors}}">
@@ -60,7 +60,7 @@
 
       _computeContourValues(contourBy) {
         const length = this.contourColors.length;
-        const values = _.map(this.data, (line) => {return line.result[contourBy]});
+        const values = _.map(this.data, (line) => {return line.metadata[contourBy]});
         const max = _.max(values);
         const min = _.min(values);
         const step = (max - min) / length;

@@ -19,7 +19,7 @@
           contourValues: Array,
           contourColors: Array,
           contourBy: String,
-          result: Number,
+          metadata: Object,
           object: {type: Object, value: new THREE.Geometry()}
         }
       }
@@ -39,7 +39,7 @@
         const v1l = v1.clone().addScaledVector(centerLineNormalVector, this.stroke / 2);
         const v1r = v1.clone().addScaledVector(centerLineNormalVector, -1 * this.stroke / 2);
 
-        let contourValue = this.getContourValue(this.contourValues, this.contourColors, this.result[this.contourBy]);
+        let contourValue = this.getContourValue(this.contourValues, this.contourColors, this.metadata[this.contourBy]);
         const color = new THREE.Color().setStyle(contourValue);
         const geometry = new THREE.Geometry();
         geometry.vertices.push(v0l);
