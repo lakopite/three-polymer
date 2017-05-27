@@ -15,7 +15,7 @@
         return {
           cameraNormal: {type: Array, value: [0, 1, 0]},
           stroke: {type: Number, value: 2},
-          vertices: {type: Array, observer: "_verticesChanged"},
+          vertices: Array,
           contourValues: Array,
           contourColors: Array,
           contourBy: String,
@@ -52,10 +52,6 @@
         geometry.faces.push(new THREE.Face3(0, 1, 2, cameraNormalVector, new THREE.Color().setStyle(this.color)));
         geometry.faces.push(new THREE.Face3(0, 2, 3, cameraNormalVector, new THREE.Color().setStyle(this.color)));
         this.object = geometry;
-      }
-
-      _verticesChanged() {
-        this.object.computeBoundingSphere();
       }
 
       _computeColor(contourValues, contourColors, contourBy, metadata) {
