@@ -1,10 +1,9 @@
 <script src="bower_components/lodash/lodash.js"></script>
 <link rel="import" href="bower_components/polymer/polymer-element.html">
-<link rel="import" href="three-object.html">
 
 <dom-module id="three-line-geometry">
   <script>
-    class ThreeLineGeometry extends ThreeObject {
+    class ThreeLineGeometry extends Polymer.Element {
 
       static get is() {
         return 'three-line-geometry';
@@ -25,11 +24,13 @@
             readOnly: true,
             computed: "_computeColor(contourValues, contourColors, contourBy, metadata)"
           },
-          object: {type: Object, value: new THREE.Geometry()}
+          object: {
+            type: Object,
+            observer: '_objectChanged',
+          }
         }
       }
 
-      // TODO: garbage collection?
       connectedCallback() {
         super.connectedCallback();
 
@@ -52,6 +53,12 @@
         geometry.faces.push(new THREE.Face3(0, 1, 2, cameraNormalVector, new THREE.Color().setStyle(this.color)));
         geometry.faces.push(new THREE.Face3(0, 2, 3, cameraNormalVector, new THREE.Color().setStyle(this.color)));
         this.object = geometry;
+      }
+
+      _objectChanged() {
+        const eventInitDict = {bubbles: true, composed: true, detail: this.object};
+        let customEvent = new CustomEvent('three-line-geometry-ready', eventInitDict);
+        this.dispatchEvent(customEvent);
       }
 
       _computeColor(contourValues, contourColors, contourBy, metadata) {
