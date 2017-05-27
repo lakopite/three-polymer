@@ -9,7 +9,6 @@
         return 'three-line-geometry';
       }
 
-      // TODO: deal with other camera normals
       static get properties() {
         return {
           cameraNormal: {type: Array, value: [0, 1, 0]},
@@ -33,7 +32,10 @@
 
       connectedCallback() {
         super.connectedCallback();
+        this._calculateObject();
+      }
 
+      _calculateObject() {
         const v0 = new THREE.Vector3(...this.vertices[0]);
         const v1 = new THREE.Vector3(...this.vertices[1]);
         const centerLineVector = v1.clone().sub(v0).normalize();
@@ -62,7 +64,10 @@
       }
 
       _computeColor(contourValues, contourColors, contourBy, metadata) {
-        return contourColors[contourValues.findIndex((contourValue) => {return metadata[contourBy] <= contourValue})];
+        const index = contourValues.findIndex((contourValue) => {
+          return metadata[contourBy] <= contourValue
+        });
+        return contourColors[index];
       }
     }
 

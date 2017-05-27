@@ -4,7 +4,7 @@
 
 <dom-module id="three-lattice">
   <template>
-    <template is="dom-repeat" items="{{data}}">
+    <template id="geometry" is="dom-repeat" items="{{data}}">
       <three-line-geometry
         id="{{index}}"
         vertices="{{item.vertices}}"
@@ -63,7 +63,12 @@
       connectedCallback() {
         super.connectedCallback();
         this.addEventListener('three-line-geometry-ready', e => this._handleGeometryReady(e.detail));
+        this.addEventListener('dom-change', () => this._handleDomChange());
         this._fireConnected();
+      }
+
+      _handleDomChange() {
+        console.log('_handleDomChange');
       }
 
       _computeObject(material) {
