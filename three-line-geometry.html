@@ -20,6 +20,11 @@
           contourColors: Array,
           contourBy: String,
           metadata: Object,
+          color: {
+            type: String,
+            readOnly: true,
+            computed: "_computeColor(contourValues, contourColors, contourBy, metadata)"
+          },
           object: {type: Object, value: new THREE.Geometry()}
         }
       }
@@ -39,15 +44,13 @@
         const v1l = v1.clone().addScaledVector(centerLineNormalVector, this.stroke / 2);
         const v1r = v1.clone().addScaledVector(centerLineNormalVector, -1 * this.stroke / 2);
 
-        let contourValue = this.getContourValue(this.contourValues, this.contourColors, this.metadata[this.contourBy]);
-        const color = new THREE.Color().setStyle(contourValue);
         const geometry = new THREE.Geometry();
         geometry.vertices.push(v0l);
         geometry.vertices.push(v0r);
         geometry.vertices.push(v1r);
         geometry.vertices.push(v1l);
-        geometry.faces.push(new THREE.Face3(0, 1, 2, cameraNormalVector, color));
-        geometry.faces.push(new THREE.Face3(0, 2, 3, cameraNormalVector, color));
+        geometry.faces.push(new THREE.Face3(0, 1, 2, cameraNormalVector, new THREE.Color().setStyle(this.color)));
+        geometry.faces.push(new THREE.Face3(0, 2, 3, cameraNormalVector, new THREE.Color().setStyle(this.color)));
         this.object = geometry;
       }
 
@@ -55,8 +58,8 @@
         this.object.computeBoundingSphere();
       }
 
-      getContourValue(contourValues, contourColors, value) {
-        return contourColors[contourValues.findIndex((contourValue) => {return value <= contourValue})];
+      _computeColor(contourValues, contourColors, contourBy, metadata) {
+        return contourColors[contourValues.findIndex((contourValue) => {return metadata[contourBy] <= contourValue})];
       }
     }
 
