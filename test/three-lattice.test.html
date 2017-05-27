@@ -19,9 +19,9 @@
       slot="lattice"
       contour-by="axial"
       data='[
-      {"vertices":[[-10, 0, -10],[-10, 0, 10]], "metadata": {"axial": 10}},
-      {"vertices":[[-10, 0, 10],[10, 0, 10]], "metadata": {"axial": 40}},
-      {"vertices":[[10, 0, 10],[10, 0, -10]], "metadata": {"axial": 100}}
+      {"vertices":[[-10, 0, -10],[-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}},
+      {"vertices":[[-10, 0, 10],[10, 0, 10]], "metadata": {"axial": 40, "flexure": 20}},
+      {"vertices":[[10, 0, 10],[10, 0, -10]], "metadata": {"axial": 100, "flexure": 55}}
       ]'
       color="#00BFA5">
     </three-lattice>
@@ -53,12 +53,20 @@
         expect(element.contourBy).to.equal('axial');
       });
 
-      it('calculates the maximum result value for each contour color', () => {
-        const expectedValues = [
+      it('changes colors when contourBy is updated', () => {
+        expect(element.contourValues).to.deep.equal([
           16.92307692307695, 23.846153846153875, 30.7692307692308, 37.69230769230772,
           44.61538461538464, 51.53846153846156, 58.46153846153848, 65.3846153846154,
-          72.30769230769232, 79.23076923076924, 86.15384615384616, 93.07692307692308, 100];
-        expect(element.contourValues).to.deep.equal(expectedValues);
+          72.30769230769232, 79.23076923076924, 86.15384615384616, 93.07692307692308, 100
+        ]);
+
+        element.contourBy = "flexure";
+
+        expect(element.contourValues).to.deep.equal([
+          22.69230769230768, 25.384615384615373, 28.076923076923066, 30.76923076923076,
+          33.46153846153845, 36.153846153846146, 38.84615384615384, 41.53846153846153,
+          44.230769230769226, 46.92307692307692, 49.61538461538461, 52.30769230769231, 55
+        ]);
       });
 
       it('handles new geometry', (done) => {
@@ -76,7 +84,6 @@
           done();
         });
       });
-
     });
 
     describe('interactions with <three-view>', () => {
