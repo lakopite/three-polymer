@@ -20,6 +20,7 @@
     it('instantiates the element', () => {
       let element = fixture('basic');
       expect(element.localName).to.equal('three-material');
+      expect(element.opacity).to.equal(1.0);
       expect(element.color).to.equal("#696969");
     });
   });

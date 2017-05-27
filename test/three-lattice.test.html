@@ -51,6 +51,10 @@
         expect(element.localName).to.equal('three-lattice');
         expect(element.color).to.equal('#00BFA5');
         expect(element.contourBy).to.equal('axial');
+        expect(element.contourColors).to.deep.equal(
+          ["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688", "#4CAF50",
+            "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"]
+        )
       });
 
       it('changes colors when contourBy is updated', () => {

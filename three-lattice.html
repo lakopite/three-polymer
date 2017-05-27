@@ -33,8 +33,21 @@
           contourBy: String,
           contourColors: {
             type: Array,
-            value: ["#660066", "#663399", "#9933FF", "#9999FF", "#0066FF", "#0000FF",
-              "#00FF00", "#ADFF2F", "#FFFF00", "#FFCC00", "#FF6633", "#FF3300", "#FF0000"]
+            value: [
+              "#9C27B0",
+              "#673AB7",
+              "#3F51B5",
+              "#2196F3",
+              "#00BCD4",
+              "#009688",
+              "#4CAF50",
+              "#8BC34A",
+              "#FFEB3B",
+              "#FFC107",
+              "#FF9800",
+              "#FF5722",
+              "#F44336"
+            ]
           },
           contourValues: {type: Array, computed: '_computeContourValues(contourBy)'},
           object: {type: Object, computed: '_computeObject(material)'},
