@@ -10,12 +10,17 @@
 
       static get properties() {
         return {
-          addObjectCalled: {type: Boolean, value: false},
+          addCallCount: {type: Number, value: 0},
+          removeCallCount: {type: Number, value: 0},
         }
       }
 
       addObject(threeObject) {
-        this.addObjectCalled = true;
+        this.addCallCount += 1;
+      }
+
+      removeAllObjects() {
+        this.removeCallCount += 1;
       }
 
     }

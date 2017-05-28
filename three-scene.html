@@ -22,7 +22,13 @@
       }
 
       addObject(threeObject) {
+        threeObject.name = "mesh";
         this.object.add(threeObject);
+      }
+
+      removeAllObjects() {
+        const mesh = this.object.getObjectByName("mesh");
+        this.object.remove(mesh);
       }
 
     }

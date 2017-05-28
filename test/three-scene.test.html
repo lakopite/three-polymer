@@ -39,13 +39,15 @@
       expect(element.object.background.getHexString().toUpperCase()).to.equal('424242');
     });
 
-    it('adds the mesh to the scene', () => {
-      const mesh = new THREE.Mesh();
-      mesh.name = 'fake-mesh';
-      element.addObject(mesh);
+    it('adds and removes the mesh to and from the scene', () => {
+      element.addObject(new THREE.Mesh());
 
       expect(element.object.children).to.have.lengthOf(1);
-      expect(element.object.getObjectByName('fake-mesh')).to.exist;
+      expect(element.object.getObjectByName('mesh')).to.exist;
+
+      element.removeAllObjects();
+
+      expect(element.object.children).to.have.lengthOf(0);
     });
 
   });

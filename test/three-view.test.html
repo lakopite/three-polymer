@@ -56,22 +56,26 @@
       expect(element.cameraFocalPoint).to.deep.equal([3, 2, 1]);
     });
 
-    it('adds the mesh to the scene when the lattice component connects', () => {
-
+    it('removes the old mesh form the scene and adds the new mesh to the scene ' +
+      'when the lattice sends us a new mesh', () => {
       replace('three-lattice').with('fake-three-lattice');
       replace('three-scene').with('fake-three-scene');
       element = fixture('basic');
-      const fakeThreeScene = element.shadowRoot.querySelectorAll('fake-three-scene')[0];
+      const fakeThreeScene = element.shadowRoot.querySelector('fake-three-scene');
+      const fakeThreeLattice = document.getElementsByTagName('fake-three-lattice')[0];
 
-      expect(fakeThreeScene.addObjectCalled).to.be.true;
+      fakeThreeLattice.fireLatticeChanged(new THREE.Mesh());
+
+      expect(fakeThreeScene.addCallCount).to.equal(1);
+      expect(fakeThreeScene.removeCallCount).to.equal(1);
     });
 
     it('it calls the renderer when the controls change', () => {
       replace('three-controls').with('fake-three-controls');
       replace('three-renderer').with('fake-three-renderer');
       element = fixture('basic');
-      const fakeThreeControls = element.shadowRoot.querySelectorAll('fake-three-controls')[0];
-      const fakeThreeRenderer = element.shadowRoot.querySelectorAll('fake-three-renderer')[0];
+      const fakeThreeControls = element.shadowRoot.querySelector('fake-three-controls');
+      const fakeThreeRenderer = element.shadowRoot.querySelector('fake-three-renderer');
 
       fakeThreeControls._handleControlsChanged();
 

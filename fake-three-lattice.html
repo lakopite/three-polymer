@@ -14,10 +14,9 @@
         }
       }
 
-      connectedCallback() {
-        this.object.name = 'fake-mesh';
-        const eventInitDict = {bubbles: true, detail: {object: this.object}};
-        this.dispatchEvent(new CustomEvent('lattice-connected', eventInitDict));
+      fireLatticeChanged(mesh) {
+        const eventInitDict = {bubbles: true, detail: {object: mesh}};
+        this.dispatchEvent(new CustomEvent('lattice-changed', eventInitDict));
       }
 
       changeGeometry(geometryRadius, geometryCenter) {

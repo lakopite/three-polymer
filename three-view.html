@@ -84,6 +84,7 @@
 
       _handleLatticeChanged(lattice) {
         console.log("_handleLatticeChanged");
+        this.$.scene.removeAllObjects();
         this.$.scene.addObject(lattice.object);
       }
 
