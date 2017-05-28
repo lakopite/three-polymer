@@ -50,7 +50,11 @@
             ]
           },
           contourValues: {type: Array, computed: '_computeContourValues(contourBy)'},
-          object: {type: Object, computed: '_computeObject(material)'},
+          object: {
+            type: Object,
+            computed: '_computeObject(data, material)',
+            observer: '_objectChanged',
+          },
         }
       }
 
@@ -63,16 +67,11 @@
       connectedCallback() {
         super.connectedCallback();
         this.addEventListener('three-line-geometry-ready', e => this._handleGeometryReady(e.detail));
-        this.addEventListener('dom-change', () => this._handleDomChange());
-        this._fireConnected();
       }
 
-      _handleDomChange() {
-        console.log('_handleDomChange');
-      }
-
-      _computeObject(material) {
-        return new THREE.Mesh(new THREE.Geometry(), this.material);
+      _computeObject(data, material) {
+        if (!(data && material)) return;
+        return new THREE.Mesh(new THREE.Geometry(), material);
       }
 
       _computeContourValues(contourBy) {
@@ -97,9 +96,9 @@
         this.geometryCenter = this.object.geometry.boundingSphere.center.toArray();
       }
 
-      _fireConnected() {
-        const eventInitDict = {bubbles: true, detail: {object: this.object}};
-        this.dispatchEvent(new CustomEvent('lattice-connected', eventInitDict));
+      _objectChanged(newObject, oldObject) {
+        const eventInitDict = {bubbles: true, detail: {object: newObject}};
+        this.dispatchEvent(new CustomEvent('lattice-changed', eventInitDict));
       }
 
       _fireGeometryChanged() {

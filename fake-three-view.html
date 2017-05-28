@@ -10,8 +10,8 @@
 
       static get properties() {
         return {
-          latticeConnectedCount: {type: Number, value: 0},
-          latticeConnectedEvent: Object,
+          latticeChangedCount: {type: Number, value: 0},
+          latticeChangedEvent: Object,
           geometryChangedCount: {type: Number, value: 0},
           geometryChangedEvent: Object,
         }
@@ -19,13 +19,13 @@
 
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('lattice-connected', event => this._handleLatticeConnected(event));
+        this.addEventListener('lattice-changed', event => this._handleLatticeChanged(event));
         this.addEventListener('lattice-geometry-changed', event => this._handleGeometryChanged(event));
       }
 
-      _handleLatticeConnected(event) {
-        this.latticeConnectedCount += 1;
-        this.latticeConnectedEvent = event;
+      _handleLatticeChanged(event) {
+        this.latticeChangedCount += 1;
+        this.latticeChangedEvent = event;
       }
 
       _handleGeometryChanged(event) {

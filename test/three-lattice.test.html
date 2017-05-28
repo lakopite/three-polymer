@@ -31,7 +31,9 @@
 <test-fixture id="parent">
   <template>
     <fake-three-view>
-      <three-lattice></three-lattice>
+      <three-lattice
+        data='[{"vertices":[[10, 0, 10],[10, 0, -10]], "metadata": {"flexure": 55}}]'>
+      </three-lattice>
     </fake-three-view>
   </template>
 </test-fixture>
@@ -92,18 +94,23 @@
 
     describe('interactions with <three-view>', () => {
 
+      let parent, threeLattice;
       beforeEach(() => {
         parent = fixture('parent');
+        threeLattice = parent.querySelector('three-lattice');
       });
 
-      it('tells the view when it connects', () => {
-        expect(parent.latticeConnectedCount).to.equal(1);
-        expect(parent.latticeConnectedEvent.bubbles).to.be.true;
-        expect(parent.latticeConnectedEvent.detail.object).to.be.an.instanceOf(THREE.Mesh);
+      it('sends the view a new mesh when the data changes', () => {
+        expect(parent.latticeChangedCount).to.equal(1);
+        expect(parent.latticeChangedEvent.bubbles).to.be.true;
+        expect(parent.latticeChangedEvent.detail.object).to.be.an.instanceOf(THREE.Mesh);
+
+        threeLattice.data = [];
+
+        expect(parent.latticeChangedCount).to.equal(2);
       });
 
       it('tells the view when it gets new geometry', () => {
-        const threeLattice = parent.querySelector('three-lattice');
         threeLattice.geometryRadius = 5;
         threeLattice.geometryCenter = [6, 7, 8];
 
