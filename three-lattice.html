@@ -70,7 +70,7 @@
       }
 
       _computeObject(data, material) {
-        if (!(data && material)) return;
+        if (!(data && material && data.length > 0)) return;
         return new THREE.Mesh(new THREE.Geometry(), material);
       }
 

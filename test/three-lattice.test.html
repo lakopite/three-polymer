@@ -38,6 +38,14 @@
   </template>
 </test-fixture>
 
+<test-fixture id="empty">
+  <template>
+    <fake-three-view>
+      <three-lattice data='[]'></three-lattice>
+    </fake-three-view>
+  </template>
+</test-fixture>
+
 <script>
   describe('<three-lattice>', () => {
 
@@ -98,6 +106,13 @@
       beforeEach(() => {
         parent = fixture('parent');
         threeLattice = parent.querySelector('three-lattice');
+      });
+
+      it('does not alert the view if there is no data', () => {
+        parent = fixture('empty');
+        threeLattice = parent.querySelector('three-lattice');
+
+        expect(parent.latticeChangedCount).to.equal(0);
       });
 
       it('sends the view a new mesh when the data changes', () => {

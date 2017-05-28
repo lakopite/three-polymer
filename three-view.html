@@ -63,9 +63,11 @@
         this.addEventListener('lattice-changed', e => this._handleLatticeChanged(e.detail));
         this.addEventListener('lattice-geometry-changed', e => this._handleLatticeGeometryChanged(e.detail));
         this.addEventListener('controls-changed', () => this._handleControlsChanged());
+        this._render();
       }
 
       _render() {
+        console.log('_render');
         this.$.renderer.render();
       }
 

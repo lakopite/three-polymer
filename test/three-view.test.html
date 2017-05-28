@@ -58,6 +58,8 @@
 
     it('removes the old mesh form the scene and adds the new mesh to the scene ' +
       'when the lattice sends us a new mesh', () => {
+      replace('three-renderer').with('fake-three-renderer');
+      replace('three-controls').with('fake-three-controls');
       replace('three-lattice').with('fake-three-lattice');
       replace('three-scene').with('fake-three-scene');
       element = fixture('basic');
@@ -79,7 +81,7 @@
 
       fakeThreeControls._handleControlsChanged();
 
-      expect(fakeThreeRenderer.renderCount).to.equal(1);
+      expect(fakeThreeRenderer.renderCount).to.equal(2);
     });
 
   });
