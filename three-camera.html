@@ -13,11 +13,15 @@
           position: {type: Array, observer: '_positionChanged', value: [0, 0, 0]},
           object: {
             type: Object,
-            value: new THREE.PerspectiveCamera(75, 1, 0.1, 3000),
+            computed: '_computeObject()',
             observer: '_objectChanged',
             notify: true,
           },
         }
+      }
+
+      _computeObject() {
+        return new THREE.PerspectiveCamera(75, 1, 0.1, 3000);
       }
 
       _objectChanged(newObject, oldObject) {
