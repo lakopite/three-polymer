@@ -32,6 +32,7 @@
       }
 
       _computeObject(vertices, cameraNormal, stroke, color) {
+//        console.log('_computeObject with new color:', color);
         const v0 = new THREE.Vector3(...vertices[0]);
         const v1 = new THREE.Vector3(...vertices[1]);
         const centerLineVector = v1.clone().sub(v0).normalize();
@@ -61,6 +62,10 @@
         let customEvent = new CustomEvent('three-line-geometry-changed', eventInitDict);
         this.dispatchEvent(customEvent);
       }
+
+      // TODO: changes to contour-by are currently only adding geometry to the mesh
+      // TODO: the latest geometry is drawn on top, and so render it okay
+      // TODO: this should be fixed for performance
 
       // TODO: color should get computed one layer up
       // TODO: the line should only know about its metadata, value, and color

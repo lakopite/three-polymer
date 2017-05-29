@@ -10,7 +10,7 @@
 
       static get properties() {
         return {
-          object: {type: Object, value: new THREE.WebGLRenderer({antialias: true})},
+          object: {type: Object, computed: '_computeObject()'},
           camera: Object,
           scene: Object,
           canvas: {type: Object, computed: '_computeCanvas(object)', notify: true},
@@ -23,6 +23,10 @@
         return [
           '_sizeChanged(width, height)',
         ]
+      }
+
+      _computeObject() {
+        return new THREE.WebGLRenderer({antialias: true})
       }
 
       render() {

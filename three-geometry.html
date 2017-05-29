@@ -6,7 +6,6 @@
     <template id="geometry" is="dom-repeat" items="{{data}}" as="line">
       <three-line-geometry
         on-three-line-geometry-changed="_handleLineGeometryChanged"
-        id="{{index}}"
         vertices="{{line.vertices}}"
         metadata="{{line.metadata}}"
         contour-by="{{contourBy}}"
@@ -48,8 +47,12 @@
             ]
           },
           contourValues: {type: Array, computed: '_computeContourValues(contourBy, data)'},
-          object: {type: Object, value: new THREE.Geometry(), notify: true},
+          object: {type: Object, computed: '_computeObject()', notify: true},
         }
+      }
+
+      _computeObject() {
+        return new THREE.Geometry();
       }
 
       _dataChanged(newData, oldData) {
@@ -68,12 +71,9 @@
 
         if (contourValues.length === 14) contourValues = _.drop(contourValues);
 
-        console.log(contourValues);
         return contourValues;
       }
 
-      // TODO: is this merging of geometry going to prevent us from changing the color
-      // TODO: of the geometry faces?
       _handleLineGeometryChanged(e) {
 //        console.log("_handleLineGeometryChanged");
         const geometry = e.detail;

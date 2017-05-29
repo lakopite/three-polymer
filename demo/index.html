@@ -20,12 +20,33 @@
   <demo-snippet>
     <template>
       <three-view
-        id="parent"
+        id="view-one"
         scene-background-color="#F5F5F5"
         renderer-height="360"
         renderer-width="360">
         <three-lattice
-          id="frame"
+          id="frame-one"
+          slot="lattice"
+          contour-by="flexure"
+          data='[
+            {"vertices":[[-10, 0, -10],[-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}},
+            {"vertices":[[-30, 0, 10],[-10, 0, 10]], "metadata": {"axial": 30, "flexure": 30}},
+            {"vertices":[[-30, 0, -10],[-30, 0, 10]], "metadata": {"axial": 60, "flexure": 10}}
+          ]'
+          color="#00BFA5">
+        </three-lattice>
+      </three-view>
+    </template>
+  </demo-snippet>
+  <demo-snippet>
+    <template>
+      <three-view
+        id="view-two"
+        scene-background-color="#F5F5F5"
+        renderer-height="360"
+        renderer-width="360">
+        <three-lattice
+          id="frame-two"
           slot="lattice"
           contour-by="flexure"
           data='[

@@ -10,8 +10,6 @@
 @demo demo/index.html
 -->
 
-<!--TODO: make it so we can update the data and get the controls to refocus properly-->
-<!--TODO: back-fill tests after this is working-->
 <dom-module id="three-view">
   <template>
     <three-controls
@@ -22,7 +20,6 @@
       focal-point="[[cameraFocalPoint]]">
     </three-controls>
     <three-renderer
-      id="renderer"
       canvas="{{canvas}}"
       camera="[[camera]]"
       scene="[[scene]]"
@@ -30,7 +27,6 @@
       height="[[rendererHeight]]">
     </three-renderer>
     <three-scene
-      id="scene"
       object="{{scene}}"
       background-color="[[sceneBackgroundColor]]">
     </three-scene>
@@ -66,7 +62,7 @@
 
       _render() {
 //        console.log('_render');
-        this.$.renderer.render();
+        this.shadowRoot.querySelector('three-renderer').render();
       }
 
       _updateCamera(geometryCenter, geometryRadius) {
@@ -85,8 +81,9 @@
 
       _handleLatticeChanged(lattice) {
 //        console.log("_handleLatticeChanged");
-        this.$.scene.removeAllObjects();
-        if (lattice.object) this.$.scene.addObject(lattice.object);
+        const scene = this.shadowRoot.querySelector('three-scene');
+        scene.removeAllObjects();
+        if (lattice.object) scene.addObject(lattice.object);
         this._render();
       }
 

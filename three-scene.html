@@ -10,9 +10,13 @@
 
       static get properties() {
         return {
-          object: {type: Object, value: new THREE.Scene(), notify: true},
+          object: {type: Object, computed: '_computeScene()', notify: true},
           backgroundColor: {type: String, observer: '_backgroundColorChanged'},
         }
+      }
+
+      _computeScene() {
+        return new THREE.Scene();
       }
 
       _backgroundColorChanged(newBackgroundColor, oldBackgroundColor) {
@@ -20,11 +24,13 @@
       }
 
       addObject(threeObject) {
+//        console.log('addObject:', threeObject);
         threeObject.name = "mesh";
         this.object.add(threeObject);
       }
 
       removeAllObjects() {
+//        console.log('removeAllObjects');
         const mesh = this.object.getObjectByName("mesh");
         this.object.remove(mesh);
       }
