@@ -47,7 +47,7 @@
               "#F44336"
             ]
           },
-          contourValues: {type: Array, computed: '_computeContourValues(contourBy)'},
+          contourValues: {type: Array, computed: '_computeContourValues(contourBy, data)'},
           object: {type: Object, value: new THREE.Geometry(), notify: true},
         }
       }
@@ -57,13 +57,19 @@
         this.object = new THREE.Geometry();
       }
 
-      _computeContourValues(contourBy) {
+      _computeContourValues(contourBy, data) {
         const length = this.contourColors.length;
-        const values = _.map(this.data, (line) => {return line.metadata[contourBy]});
+        const values = _.map(data, (line) => {return line.metadata[contourBy]});
         const max = _.max(values);
         const min = _.min(values);
         const step = (max - min) / length;
-        return _.rangeRight(max, min, -step);
+        let contourValues = _.rangeRight(max, min, -step)
+          .map((it) => {return _.round(it, 4)});
+
+        if (contourValues.length === 14) contourValues = _.drop(contourValues);
+
+        console.log(contourValues);
+        return contourValues;
       }
 
       // TODO: is this merging of geometry going to prevent us from changing the color
