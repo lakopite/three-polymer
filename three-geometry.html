@@ -1,15 +1,14 @@
 <link rel="import" href="bower_components/polymer/polymer-element.html">
 <link rel="import" href="three-line-geometry.html">
 
-<!--TODO: use 'as='-->
 <dom-module id="three-geometry">
   <template>
-    <template id="geometry" is="dom-repeat" items="{{data}}">
+    <template id="geometry" is="dom-repeat" items="{{data}}" as="line">
       <three-line-geometry
         on-three-line-geometry-changed="_handleLineGeometryChanged"
         id="{{index}}"
-        vertices="{{item.vertices}}"
-        metadata="{{item.metadata}}"
+        vertices="{{line.vertices}}"
+        metadata="{{line.metadata}}"
         contour-by="{{contourBy}}"
         contour-values="{{contourValues}}"
         contour-colors="{{contourColors}}">
