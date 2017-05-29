@@ -87,7 +87,9 @@
       _handleLatticeChanged(lattice) {
         console.log("_handleLatticeChanged");
         this.$.scene.removeAllObjects();
-        this.$.scene.addObject(lattice.object);
+        this.$.controls.updateControls(this.camera);
+        if (lattice.object) this.$.scene.addObject(lattice.object);
+        this._render();
       }
 
       _handleLatticeGeometryChanged(lattice) {
