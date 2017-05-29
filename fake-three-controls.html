@@ -11,6 +11,10 @@
       _handleControlsChanged() {
         this.dispatchEvent(new CustomEvent('controls-changed', {composed: true}));
       }
+
+      updateControls() {
+
+      }
     }
 
     customElements.define(FakeThreeControls.is, FakeThreeControls);

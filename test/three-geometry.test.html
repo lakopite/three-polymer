@@ -2,28 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>three-line-geometry test</title>
+  <title>three-geometry test</title>
   <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../bower_components/web-component-tester/browser.js"></script>
   <script src="../bower_components/threejs/build/three.min.js"></script>
-  <link rel="import" href="../three-line-geometry.html">
+  <link rel="import" href="../three-geometry.html">
+  <link rel="import" href="../fake-three-line-geometry.html">
+  <link rel="import" href="../bower_components/polymer/polymer.html">
 </head>
 <body>
 <test-fixture id="basic">
   <template>
-    <three-line-geometry
-      id="id"
-      vertices="[[-10, 0, -10],[-10, 0, 10]]"
-      metadata='{"axial": 27, "flexure": 37}'
+    <three-geometry
+      id="geometry"
       contour-by="axial"
-      contour-values="[10,20,30,40]"
-      contour-colors='["#9C27B0","#00BCD4","#CDDC39","#FF5722"]'>
-    </three-line-geometry>
+      data='[
+      {"vertices":[[-10, 0, -10],[-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}},
+      {"vertices":[[-10, 0, 10],[10, 0, 10]], "metadata": {"axial": 40, "flexure": 20}},
+      {"vertices":[[10, 0, 10],[10, 0, -10]], "metadata": {"axial": 100, "flexure": 55}}
+      ]'>
+    </three-geometry>
   </template>
 </test-fixture>
 
 <script>
-  describe('<three-line-geometry>', () => {
+  describe('<three-geometry>', () => {
 
     let element;
 
@@ -32,22 +35,53 @@
     });
 
     it('instantiates the element', () => {
-      expect(element.localName).to.equal('three-line-geometry');
-      expect(element.vertices).to.deep.equal([[-10, 0, -10], [-10, 0, 10]]);
-      expect(element.metadata).to.deep.equal({"axial": 27, "flexure": 37});
+      expect(element.localName).to.equal('three-geometry');
       expect(element.contourBy).to.equal('axial');
-      expect(element.contourValues).to.deep.equal([10, 20, 30, 40]);
-      expect(element.contourColors).to.deep.equal(["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]);
+      expect(element.contourColors).to.deep.equal(
+        ["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688", "#4CAF50",
+          "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"]
+      );
+      expect(element.object).to.be.an.instanceOf(THREE.Geometry);
     });
 
-    it('calculates the color of the line when the contourBy changes', () => {
-      expect(element.color).to.equal("#CDDC39");
+    it('calculates contourValues based on contourBy', () => {
+      expect(element.contourValues).to.deep.equal([
+        16.92307692307695, 23.846153846153875, 30.7692307692308, 37.69230769230772,
+        44.61538461538464, 51.53846153846156, 58.46153846153848, 65.3846153846154,
+        72.30769230769232, 79.23076923076924, 86.15384615384616, 93.07692307692308, 100
+      ]);
 
       element.contourBy = "flexure";
 
-      expect(element.color).to.equal("#FF5722");
+      expect(element.contourValues).to.deep.equal([
+        22.69230769230768, 25.384615384615373, 28.076923076923066, 30.76923076923076,
+        33.46153846153845, 36.153846153846146, 38.84615384615384, 41.53846153846153,
+        44.230769230769226, 46.92307692307692, 49.61538461538461, 52.30769230769231, 55
+      ]);
     });
 
+    it('makes a new object when there is a wholesale data change', () => {
+      element.data = [];
+
+      expect(element.object.vertices).to.have.lengthOf(0);
+      expect(element.object.faces).to.have.lengthOf(0);
+    });
+
+    it('handles new geometry', (done) => {
+      replace('three-line-geometry').with('fake-three-line-geometry');
+      element = fixture('basic');
+
+      flush(() => {
+        const fakeThreeLineGeometry = element.shadowRoot.querySelector('fake-three-line-geometry');
+        fakeThreeLineGeometry.fireObjectChanged(new THREE.SphereGeometry(5).translate(6, 7, 8));
+
+        expect(element.object.elementsNeedUpdate).to.be.true;
+        expect(_.round(element.radius, 6)).to.equal(5);
+        expect(element.center).to.deep.equal([6, 7, 8]);
+
+        done();
+      });
+    });
   });
 </script>
 </body>

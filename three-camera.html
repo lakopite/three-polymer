@@ -11,28 +11,26 @@
       static get properties() {
         return {
           position: {type: Array, observer: '_positionChanged', value: [0, 0, 0]},
-          focalPoint: {type: Array, observer: '_focalPointChanged', value: [0, 0, 0]},
           object: {
             type: Object,
+            value: new THREE.PerspectiveCamera(75, 1, 0.1, 3000),
+            observer: '_objectChanged',
             notify: true,
-          }
+          },
         }
       }
 
-      constructor() {
-        super();
-        this.object = new THREE.PerspectiveCamera(75, 1, 0.1, 3000);
+      _objectChanged(newObject, oldObject) {
+//        console.log('_objectChanged within camera to:', newObject);
         this.object.up = new THREE.Vector3(0, 0, 1);
       }
 
       _positionChanged(newPosition, oldPosition) {
+//        console.log('_positionChanged');
         this.object.position.set(...newPosition);
         this.object.updateProjectionMatrix();
       }
 
-      _focalPointChanged(newPosition, oldPosition) {
-        this.object.lookAt(new THREE.Vector3().fromArray(newPosition));
-      }
     }
 
     customElements.define(ThreeCamera.is, ThreeCamera);

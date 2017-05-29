@@ -10,19 +10,17 @@
 @demo demo/index.html
 -->
 
+<!--TODO: make it so we can update the data and get the controls to refocus properly-->
+<!--TODO: back-fill tests after this is working-->
 <dom-module id="three-view">
   <template>
     <three-controls
       id="controls"
-      camera="[[camera]]"
-      canvas="[[canvas]]">
-    </three-controls>
-    <three-camera
-      id="camera"
-      object="{{camera}}"
-      position="[[cameraPosition]]"
+      camera="{{camera}}"
+      canvas="[[canvas]]"
+      camera-position="[[cameraPosition]]"
       focal-point="[[cameraFocalPoint]]">
-    </three-camera>
+    </three-controls>
     <three-renderer
       id="renderer"
       canvas="{{canvas}}"
@@ -67,13 +65,14 @@
       }
 
       _render() {
-        console.log('_render');
+//        console.log('_render');
         this.$.renderer.render();
       }
 
       _updateCamera(geometryCenter, geometryRadius) {
+//        console.log("_updateCamera");
         this.cameraPosition = [geometryCenter[0], geometryRadius * -2.5, geometryCenter[2]];
-        this.cameraFocalPoint = geometryCenter
+        this.cameraFocalPoint = geometryCenter;
       }
 
       _canvasChanged(newCanvas, oldCanvas) {
@@ -85,15 +84,14 @@
       };
 
       _handleLatticeChanged(lattice) {
-        console.log("_handleLatticeChanged");
+//        console.log("_handleLatticeChanged");
         this.$.scene.removeAllObjects();
-        this.$.controls.updateControls(this.camera);
         if (lattice.object) this.$.scene.addObject(lattice.object);
         this._render();
       }
 
       _handleLatticeGeometryChanged(lattice) {
-        console.log("_handleLatticeGeometryChanged");
+//        console.log("_handleLatticeGeometryChanged");
         this._updateCamera(lattice.geometryCenter, lattice.geometryRadius);
         this._render();
       }

@@ -56,8 +56,11 @@
       expect(element.cameraFocalPoint).to.deep.equal([3, 2, 1]);
     });
 
+    // TODO: if the user wants to be able to change the color by updating the contourBy
+    // TODO: we will have to trash the entire mesh
     it('removes the old mesh form the scene and adds the new mesh to the scene ' +
-      'when the lattice sends us a new mesh', () => {
+      'when the lattice sends us a new mesh. we need to recreate the mesh from' +
+      'scratch on any update to data, so the contour colors can be recalculated', () => {
       replace('three-renderer').with('fake-three-renderer');
       replace('three-controls').with('fake-three-controls');
       replace('three-lattice').with('fake-three-lattice');

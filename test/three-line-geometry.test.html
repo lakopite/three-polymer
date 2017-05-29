@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-line-geometry test</title>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/web-component-tester/browser.js"></script>
+  <script src="../bower_components/threejs/build/three.min.js"></script>
+  <link rel="import" href="../three-line-geometry.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-line-geometry
+      id="id"
+      vertices="[[-10, 0, -10],[-10, 0, 10]]"
+      metadata='{"axial": 27, "flexure": 37}'
+      contour-by="axial"
+      contour-values="[10,20,30,40]"
+      contour-colors='["#9C27B0","#00BCD4","#CDDC39","#FF5722"]'>
+    </three-line-geometry>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-line-geometry>', () => {
+
+    let element;
+
+    beforeEach(() => {
+      element = fixture('basic');
+    });
+
+    it('instantiates the element', () => {
+      expect(element.localName).to.equal('three-line-geometry');
+      expect(element.vertices).to.deep.equal([[-10, 0, -10], [-10, 0, 10]]);
+      expect(element.metadata).to.deep.equal({"axial": 27, "flexure": 37});
+      expect(element.contourBy).to.equal('axial');
+      expect(element.contourValues).to.deep.equal([10, 20, 30, 40]);
+      expect(element.contourColors).to.deep.equal(["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]);
+    });
+
+    it('calculates the color of the line when the contourBy changes', () => {
+      expect(element.color).to.equal("#CDDC39");
+
+      element.contourBy = "flexure";
+
+      expect(element.color).to.equal("#FF5722");
+    });
+
+  });
+</script>
+</body>
+</html>

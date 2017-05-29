@@ -8,9 +8,9 @@
         return 'fake-three-line-geometry';
       }
 
-      fireGeometryReady(geometry) {
+      fireObjectChanged(geometry) {
         const eventInitDict = {bubbles: true, composed: true, detail: geometry};
-        this.dispatchEvent(new CustomEvent('three-line-geometry-ready', eventInitDict));
+        this.dispatchEvent(new CustomEvent('three-line-geometry-changed', eventInitDict));
       }
 
     }

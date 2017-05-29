@@ -2,6 +2,13 @@
 <link rel="import" href="bower_components/polymer/polymer-element.html">
 
 <dom-module id="three-controls">
+  <template>
+    <three-camera
+      id="camera"
+      object="{{camera}}"
+      position="[[cameraPosition]]">
+    </three-camera>
+  </template>
   <script>
     class ThreeControls extends Polymer.Element {
 
@@ -12,8 +19,10 @@
       static get properties() {
         return {
           object: {type: Object, computed: '_computeControls(camera, canvas)'},
-          camera: Object,
+          camera: {type: Object, notify: true},
           canvas: Object,
+          focalPoint: {type: Array, observer: '_focalPointChanged'},
+          cameraPosition: Array,
         }
       }
 
@@ -23,6 +32,12 @@
         controls.addEventListener('change', () => this._handleControlsChanged());
         return controls;
       };
+
+      _focalPointChanged(newFocalPoint, oldFocalPoint) {
+//        console.log('_focalPointChanged to:', newFocalPoint);
+        this.object.target.set(...newFocalPoint);
+        this.object.update();
+      }
 
       _handleControlsChanged() {
         this.dispatchEvent(new CustomEvent('controls-changed', {composed: true}));

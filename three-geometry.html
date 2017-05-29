@@ -1,0 +1,85 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+<link rel="import" href="three-line-geometry.html">
+
+<!--TODO: use 'as='-->
+<dom-module id="three-geometry">
+  <template>
+    <template id="geometry" is="dom-repeat" items="{{data}}">
+      <three-line-geometry
+        on-three-line-geometry-changed="_handleLineGeometryChanged"
+        id="{{index}}"
+        vertices="{{item.vertices}}"
+        metadata="{{item.metadata}}"
+        contour-by="{{contourBy}}"
+        contour-values="{{contourValues}}"
+        contour-colors="{{contourColors}}">
+      </three-line-geometry>
+    </template>
+  </template>
+  <script>
+    class ThreeGeometry extends Polymer.Element {
+
+      static get is() {
+        return 'three-geometry';
+      }
+
+      static get properties() {
+        return {
+          data: {type: Array, observer: '_dataChanged'},
+          center: {type: Array, notify: true},
+          radius: {type: Number, notify: true},
+          contourBy: String,
+          contourColors: {
+            type: Array,
+            readOnly: true,
+            value: [
+              "#9C27B0",
+              "#673AB7",
+              "#3F51B5",
+              "#2196F3",
+              "#00BCD4",
+              "#009688",
+              "#4CAF50",
+              "#8BC34A",
+              "#FFEB3B",
+              "#FFC107",
+              "#FF9800",
+              "#FF5722",
+              "#F44336"
+            ]
+          },
+          contourValues: {type: Array, computed: '_computeContourValues(contourBy)'},
+          object: {type: Object, value: new THREE.Geometry(), notify: true},
+        }
+      }
+
+      _dataChanged(newData, oldData) {
+//        console.log('_dataChanged to:', newData);
+        this.object = new THREE.Geometry();
+      }
+
+      _computeContourValues(contourBy) {
+        const length = this.contourColors.length;
+        const values = _.map(this.data, (line) => {return line.metadata[contourBy]});
+        const max = _.max(values);
+        const min = _.min(values);
+        const step = (max - min) / length;
+        return _.rangeRight(max, min, -step);
+      }
+
+      // TODO: is this merging of geometry going to prevent us from changing the color
+      // TODO: of the geometry faces?
+      _handleLineGeometryChanged(e) {
+//        console.log("_handleLineGeometryChanged");
+        const geometry = e.detail;
+        this.object.merge(geometry);
+        this.object.elementsNeedUpdate = true;
+        this.object.computeBoundingSphere();
+        this.radius = this.object.boundingSphere.radius;
+        this.center = this.object.boundingSphere.center.toArray();
+      }
+    }
+
+    customElements.define(ThreeGeometry.is, ThreeGeometry);
+  </script>
+</dom-module>

@@ -25,45 +25,48 @@
           },
           object: {
             type: Object,
+            computed: "_computeObject(vertices, cameraNormal, stroke, color)",
             observer: '_objectChanged',
           }
         }
       }
 
-      connectedCallback() {
-        super.connectedCallback();
-        this._calculateObject();
-      }
-
-      _calculateObject() {
-        const v0 = new THREE.Vector3(...this.vertices[0]);
-        const v1 = new THREE.Vector3(...this.vertices[1]);
+      _computeObject(vertices, cameraNormal, stroke, color) {
+        const v0 = new THREE.Vector3(...vertices[0]);
+        const v1 = new THREE.Vector3(...vertices[1]);
         const centerLineVector = v1.clone().sub(v0).normalize();
-        const cameraNormalVector = new THREE.Vector3(...this.cameraNormal).normalize();
+        const cameraNormalVector = new THREE.Vector3(...cameraNormal).normalize();
         const centerLineNormalVector = centerLineVector.clone().applyAxisAngle(cameraNormalVector, Math.PI / 2);
 
-        const v0l = v0.clone().addScaledVector(centerLineNormalVector, this.stroke / 2);
-        const v0r = v0.clone().addScaledVector(centerLineNormalVector, -1 * this.stroke / 2);
-        const v1l = v1.clone().addScaledVector(centerLineNormalVector, this.stroke / 2);
-        const v1r = v1.clone().addScaledVector(centerLineNormalVector, -1 * this.stroke / 2);
+        const v0l = v0.clone().addScaledVector(centerLineNormalVector, stroke / 2);
+        const v0r = v0.clone().addScaledVector(centerLineNormalVector, -1 * stroke / 2);
+        const v1l = v1.clone().addScaledVector(centerLineNormalVector, stroke / 2);
+        const v1r = v1.clone().addScaledVector(centerLineNormalVector, -1 * stroke / 2);
 
         const geometry = new THREE.Geometry();
-        geometry.vertices.push(v0l);
-        geometry.vertices.push(v0r);
-        geometry.vertices.push(v1r);
-        geometry.vertices.push(v1l);
-        geometry.faces.push(new THREE.Face3(0, 1, 2, cameraNormalVector, new THREE.Color().setStyle(this.color)));
-        geometry.faces.push(new THREE.Face3(0, 2, 3, cameraNormalVector, new THREE.Color().setStyle(this.color)));
-        this.object = geometry;
+        geometry.vertices.push(v0l, v0r, v1r, v1l);
+
+        const threeColor = new THREE.Color().setStyle(color);
+        geometry.faces.push(
+          new THREE.Face3(0, 1, 2, cameraNormalVector, threeColor),
+          new THREE.Face3(0, 2, 3, cameraNormalVector, threeColor)
+        );
+
+        return geometry;
       }
 
       _objectChanged() {
+//        console.log('_objectChanged to:', this.object);
         const eventInitDict = {bubbles: true, composed: true, detail: this.object};
-        let customEvent = new CustomEvent('three-line-geometry-ready', eventInitDict);
+        let customEvent = new CustomEvent('three-line-geometry-changed', eventInitDict);
         this.dispatchEvent(customEvent);
       }
 
+      // TODO: color should get computed one layer up
+      // TODO: the line should only know about its metadata, value, and color
+      // TODO: the value can be a computed property
       _computeColor(contourValues, contourColors, contourBy, metadata) {
+        if (!(contourValues && contourColors && contourBy && metadata)) return;
         const index = contourValues.findIndex((contourValue) => {
           return metadata[contourBy] <= contourValue
         });

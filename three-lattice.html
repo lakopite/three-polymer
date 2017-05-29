@@ -1,19 +1,16 @@
 <link rel="import" href="bower_components/polymer/polymer-element.html">
 <link rel="import" href="three-material.html">
-<link rel="import" href="three-line-geometry.html">
+<link rel="import" href="three-geometry.html">
 
 <dom-module id="three-lattice">
   <template>
-    <template id="geometry" is="dom-repeat" items="{{data}}">
-      <three-line-geometry
-        id="{{index}}"
-        vertices="{{item.vertices}}"
-        metadata="{{item.metadata}}"
-        contour-by="{{contourBy}}"
-        contour-values="{{contourValues}}"
-        contour-colors="{{contourColors}}">
-      </three-line-geometry>
-    </template>
+    <three-geometry
+      data="{{data}}"
+      object="{{geometry}}"
+      center="{{geometryCenter}}"
+      radius="{{geometryRadius}}"
+      contour-by="{{contourBy}}">
+    </three-geometry>
     <three-material id="material" object="{{material}}" color="{{color}}"></three-material>
   </template>
   <script>
@@ -26,33 +23,14 @@
       static get properties() {
         return {
           color: String,
-          data: {type: Array, value: []},
+          data: Array,
           material: Object,
           geometryCenter: Array,
           geometryRadius: Number,
           contourBy: String,
-          contourColors: {
-            type: Array,
-            value: [
-              "#9C27B0",
-              "#673AB7",
-              "#3F51B5",
-              "#2196F3",
-              "#00BCD4",
-              "#009688",
-              "#4CAF50",
-              "#8BC34A",
-              "#FFEB3B",
-              "#FFC107",
-              "#FF9800",
-              "#FF5722",
-              "#F44336"
-            ]
-          },
-          contourValues: {type: Array, computed: '_computeContourValues(contourBy)'},
           object: {
             type: Object,
-            computed: '_computeObject(data, material)',
+            computed: '_computeObject(geometry, material)',
             observer: '_objectChanged',
           },
         }
@@ -64,49 +42,25 @@
         ]
       }
 
-      connectedCallback() {
-        super.connectedCallback();
-        this.addEventListener('three-line-geometry-ready', e => this._handleGeometryReady(e.detail));
-      }
-
-      _computeObject(data, material) {
-        if (!(data && material && data.length > 0)) return;
-        return new THREE.Mesh(new THREE.Geometry(), material);
-      }
-
-      _computeContourValues(contourBy) {
-        const length = this.contourColors.length;
-        const values = _.map(this.data, (line) => {return line.metadata[contourBy]});
-        const max = _.max(values);
-        const min = _.min(values);
-        const step = (max - min) / length;
-        return _.rangeRight(max, min, -step);
+      _computeObject(geometry, material) {
+//        console.log('_computeObject');
+        if (!(geometry && material)) return;
+        return new THREE.Mesh(geometry, material);
       }
 
       _geometryChanged(geometryRadius, geometryCenter) {
-        if ((geometryRadius && geometryCenter)) this._fireGeometryChanged();
-      }
-
-      _handleGeometryReady(geometry) {
-        console.log("_handleGeometryReady");
-        this.object.geometry.merge(geometry);
-        this.object.geometry.elementsNeedUpdate = true;
-        this.object.geometry.computeBoundingSphere();
-        this.geometryRadius = this.object.geometry.boundingSphere.radius;
-        this.geometryCenter = this.object.geometry.boundingSphere.center.toArray();
-      }
-
-      _objectChanged(newObject, oldObject) {
-        const eventInitDict = {bubbles: true, detail: {object: newObject}};
-        this.dispatchEvent(new CustomEvent('lattice-changed', eventInitDict));
-      }
-
-      _fireGeometryChanged() {
+//        console.log('_geometryChanged');
+        if (!(geometryRadius && geometryCenter)) return;
         const eventInitDict = {
           bubbles: true,
           detail: {geometryRadius: this.geometryRadius, geometryCenter: this.geometryCenter}
         };
         this.dispatchEvent(new CustomEvent('lattice-geometry-changed', eventInitDict));
+      }
+
+      _objectChanged(newObject, oldObject) {
+        const eventInitDict = {bubbles: true, detail: {object: newObject}};
+        this.dispatchEvent(new CustomEvent('lattice-changed', eventInitDict));
       }
     }
 
