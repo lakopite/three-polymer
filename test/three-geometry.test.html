@@ -77,6 +77,16 @@
       ]);
     });
 
+    it('calculates the stroke of the line', () => {
+      element.radius = 10;
+
+      expect(element.stroke).to.equal(1);
+    });
+
+    it('updates all of the lines when the stroke changes', () => {
+      // TODO
+    });
+
     it('handles new geometry', (done) => {
       replace('three-line-geometry').with('fake-three-line-geometry');
       element = fixture('basic');

@@ -17,9 +17,11 @@
       camera="{{camera}}"
       canvas="[[canvas]]"
       camera-position="[[cameraPosition]]"
-      focal-point="[[cameraFocalPoint]]">
+      camera-target="[[geometryPosition]]"
+      geometry-radius="[[geometryRadius]]">
     </three-controls>
     <three-renderer
+      id="renderer"
       canvas="{{canvas}}"
       camera="[[camera]]"
       scene="[[scene]]"
@@ -27,6 +29,7 @@
       height="[[rendererHeight]]">
     </three-renderer>
     <three-scene
+      id="scene"
       object="{{scene}}"
       background-color="[[sceneBackgroundColor]]">
     </three-scene>
@@ -46,8 +49,8 @@
           sceneBackgroundColor: String,
           scene: Object,
           camera: Object,
-          cameraPosition: Array,
-          cameraFocalPoint: Array,
+          geometryRadius: Number,
+          geometryPosition: Array,
           canvas: {type: Object, observer: '_canvasChanged'},
         }
       }
@@ -62,13 +65,7 @@
 
       _render() {
 //        console.log('_render');
-        this.shadowRoot.querySelector('three-renderer').render();
-      }
-
-      _updateCamera(geometryCenter, geometryRadius) {
-//        console.log("_updateCamera");
-        this.cameraPosition = [geometryCenter[0], geometryRadius * -2.5, geometryCenter[2]];
-        this.cameraFocalPoint = geometryCenter;
+        this.$.renderer.render();
       }
 
       _canvasChanged(newCanvas, oldCanvas) {
@@ -81,7 +78,7 @@
 
       _handleLatticeChanged(lattice) {
 //        console.log("_handleLatticeChanged");
-        const scene = this.shadowRoot.querySelector('three-scene');
+        const scene = this.$.scene;
         scene.removeAllObjects();
         if (lattice.object) scene.addObject(lattice.object);
         this._render();
@@ -89,7 +86,8 @@
 
       _handleLatticeGeometryChanged(lattice) {
 //        console.log("_handleLatticeGeometryChanged");
-        this._updateCamera(lattice.geometryCenter, lattice.geometryRadius);
+        this.geometryPosition = lattice.geometryCenter;
+        this.geometryRadius = lattice.geometryRadius;
         this._render();
       }
     }

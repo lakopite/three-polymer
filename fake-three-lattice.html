@@ -8,12 +8,6 @@
         return 'fake-three-lattice';
       }
 
-      static get properties() {
-        return {
-          object: {type: Object, value: new THREE.Mesh()},
-        }
-      }
-
       fireLatticeChanged(mesh) {
         const eventInitDict = {bubbles: true, detail: {object: mesh}};
         this.dispatchEvent(new CustomEvent('lattice-changed', eventInitDict));

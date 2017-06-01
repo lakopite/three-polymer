@@ -11,16 +11,39 @@
 <body>
 <test-fixture id="basic">
   <template>
-    <three-camera id="id"></three-camera>
+    <three-camera
+      geometry-radius="10"
+      target-position="[30,50,40]">
+    </three-camera>
   </template>
 </test-fixture>
 
 <script>
   describe('<three-camera>', () => {
-    it('instantiates the element', () => {
-      let element = fixture('basic');
-      expect(element.localName).to.equal('three-camera');
+
+    let element;
+
+    beforeEach(() => {
+      element = fixture('basic');
     });
+
+    it('instantiates the element and computed geometry', () => {
+      expect(element.localName).to.equal('three-camera');
+      expect(element.geometryRadius).to.equal(10);
+      expect(element.targetPosition).to.deep.equal([30, 50, 40]);
+      expect(element.position).to.deep.equal([30, -25, 40]);
+      expect(element.distanceToTarget).to.equal(75);
+    });
+
+    it('computes the frustum properly', () => {
+      expect(element.object.left).to.equal(-15);
+      expect(element.object.right).to.equal(15);
+      expect(element.object.top).to.equal(15);
+      expect(element.object.bottom).to.equal(-15);
+      expect(element.object.near).to.equal(55);
+      expect(element.object.far).to.equal(95);
+    });
+
   });
 </script>
 </body>

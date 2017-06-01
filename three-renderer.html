@@ -25,12 +25,13 @@
         ]
       }
 
-      _computeObject() {
-        return new THREE.WebGLRenderer({antialias: true})
+      render() {
+        if (!(this.scene && this.camera)) return;
+        this.object.render(this.scene, this.camera);
       }
 
-      render() {
-        this.object.render(this.scene, this.camera);
+      _computeObject() {
+        return new THREE.WebGLRenderer({antialias: true})
       }
 
       _computeCanvas() {

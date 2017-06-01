@@ -6,7 +6,8 @@
     <three-camera
       id="camera"
       object="{{camera}}"
-      position="[[cameraPosition]]">
+      geometry-radius="[[geometryRadius]]"
+      target-position="[[cameraTarget]]">
     </three-camera>
   </template>
   <script>
@@ -21,8 +22,8 @@
           object: {type: Object, computed: '_computeControls(camera, canvas)'},
           camera: {type: Object, notify: true},
           canvas: Object,
-          focalPoint: {type: Array, observer: '_focalPointChanged'},
-          cameraPosition: Array,
+          geometryRadius: Number,
+          cameraTarget: {type: Array, observer: '_cameraTargetChanged'},
         }
       }
 
@@ -33,9 +34,9 @@
         return controls;
       };
 
-      _focalPointChanged(newFocalPoint, oldFocalPoint) {
-//        console.log('_focalPointChanged to:', newFocalPoint);
-        this.object.target.set(...newFocalPoint);
+      _cameraTargetChanged(newTarget) {
+        if (!this.object) return;
+        this.object.target.set(...newTarget);
         this.object.update();
       }
 

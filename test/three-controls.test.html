@@ -11,7 +11,10 @@
 <body>
 <test-fixture id="basic">
   <template>
-    <three-controls></three-controls>
+    <three-controls
+      camera-target="[1,2,3]"
+      geometry-radius="4">
+    </three-controls>
   </template>
 </test-fixture>
 
@@ -22,6 +25,8 @@
       const element = fixture('basic');
       expect(element.localName).to.equal('three-controls');
       expect(element.object).to.not.exist;
+      expect(element.geometryRadius).to.equal(4);
+      expect(element.cameraTarget).to.deep.equal([1, 2, 3]);
 
       element.camera = new THREE.PerspectiveCamera();
       expect(element.object).to.not.exist;

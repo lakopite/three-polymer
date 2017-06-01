@@ -8,6 +8,7 @@
         on-three-line-geometry-changed="_handleLineGeometryChanged"
         vertices="{{line.vertices}}"
         metadata="{{line.metadata}}"
+        stroke="[[stroke]]"
         contour-by="{{contourBy}}"
         contour-values="{{contourValues}}"
         contour-colors="{{contourColors}}">
@@ -26,6 +27,11 @@
           data: {type: Array, observer: '_dataChanged'},
           center: {type: Array, notify: true},
           radius: {type: Number, notify: true},
+          stroke: {
+            type: Number,
+            computed: '_computeStroke(radius)',
+            observer: '_strokeChanged',
+          },
           contourBy: String,
           contourColors: {
             type: Array,
@@ -53,6 +59,14 @@
 
       _computeObject() {
         return new THREE.Geometry();
+      }
+
+      _computeStroke(radius) {
+        return radius / 10;
+      }
+
+      _strokeChanged() {
+
       }
 
       _dataChanged(newData, oldData) {

@@ -10,11 +10,20 @@
 
       static get properties() {
         return {
-          object: {type: Object, value: new THREE.WebGLRenderer({antialias: true})},
+          object: {type: Object, computed: '_computeObject()'},
           camera: Object,
           scene: Object,
+          canvas: {type: Object, computed: '_computeCanvas(object)', notify: true},
           renderCount: {type: Number, value: 0},
         }
+      }
+
+      _computeObject() {
+        return new THREE.WebGLRenderer({antialias: true})
+      }
+
+      _computeCanvas() {
+        return this.object.domElement;
       }
 
       render() {
