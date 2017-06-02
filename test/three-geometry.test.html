@@ -100,6 +100,22 @@
       });
     });
 
+    it('does not calculate the stroke of the line if there is no geometry', (done) => {
+      replace('three-line-geometry').with('fake-three-line-geometry');
+      element = fixture('basic');
+      element.stroke = 0.1;
+      element.radius = undefined;
+
+      flush(() => {
+        const fakeThreeLineGeometry = element.shadowRoot.querySelector('fake-three-line-geometry');
+        fakeThreeLineGeometry.fireDomChange();
+
+        expect(element.stroke).to.equal(0.1);
+
+        done();
+      });
+    });
+
     it('handles new geometry', (done) => {
       replace('three-line-geometry').with('fake-three-line-geometry');
       element = fixture('basic');

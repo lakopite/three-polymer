@@ -59,7 +59,7 @@
       }
 
       _updateStroke() {
-        if (!this._linesAreDoneRendering()) return;
+        if (!this._linesAreDoneRendering() || !this.radius) return;
         this.stroke = this.radius / 10;
       }
 
@@ -76,7 +76,7 @@
         const length = this.contourColors.length;
         const values = _.map(data, (line) => {return line.metadata[contourBy]});
 
-        if(values.length === 1) return new Array(length).fill(values[0]);
+        if (values.length === 1) return new Array(length).fill(values[0]);
 
         const max = _.max(values);
         const min = _.min(values);
