@@ -75,6 +75,9 @@
       _computeContourValues(contourBy, data) {
         const length = this.contourColors.length;
         const values = _.map(data, (line) => {return line.metadata[contourBy]});
+
+        if(values.length === 1) return new Array(length).fill(values[0]);
+
         const max = _.max(values);
         const min = _.min(values);
         const step = (max - min) / length;

@@ -58,6 +58,14 @@
       ]);
     });
 
+    it('calculates contourValues for a single line', () => {
+      element.data = [{"vertices": [[-10, 0, -10], [-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}}];
+
+      expect(element.contourValues).to.deep.equal([
+        10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10
+      ]);
+    });
+
     it('makes a new object when there is a wholesale data change', () => {
       element.data = [];
 
