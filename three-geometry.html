@@ -49,17 +49,13 @@
             ]
           },
           contourValues: {type: Array, computed: '_computeContourValues(contourBy, data)'},
-          object: {type: Object, computed: '_computeObject()', notify: true},
+          object: {type: Object, notify: true},
         }
       }
 
       connectedCallback() {
         super.connectedCallback();
         this.addEventListener('dom-change', () => this._updateStroke());
-      }
-
-      _computeObject() {
-        return new THREE.Geometry();
       }
 
       _updateStroke() {
@@ -93,6 +89,7 @@
       _handleLineGeometryChanged(e) {
 //        console.log("_handleLineGeometryChanged");
         const geometry = e.detail;
+        if (!geometry) return;
         this.object.merge(geometry);
         this.object.elementsNeedUpdate = true;
         this.object.computeBoundingSphere();
