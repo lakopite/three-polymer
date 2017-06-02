@@ -13,6 +13,10 @@
         this.dispatchEvent(new CustomEvent('three-line-geometry-changed', eventInitDict));
       }
 
+      fireDomChange() {
+        this.dispatchEvent(new CustomEvent('dom-change'));
+      }
+
     }
 
     customElements.define(FakeThreeLineGeometry.is, FakeThreeLineGeometry);

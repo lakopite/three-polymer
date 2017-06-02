@@ -12,7 +12,7 @@
       static get properties() {
         return {
           cameraNormal: {type: Array, value: [0, 1, 0]},
-          stroke: {type: Number, value: 2},
+          stroke: {type: Number, value: 0.1, observer: '_strokeChanged'},
           vertices: Array,
           contourValues: Array,
           contourColors: Array,
@@ -21,7 +21,7 @@
           color: {
             type: String,
             readOnly: true,
-            computed: "_computeColor(contourValues, contourColors, contourBy, metadata)"
+            computed: "_computeColor(contourValues, contourColors, contourBy, metadata)",
           },
           object: {
             type: Object,
@@ -32,7 +32,8 @@
       }
 
       _computeObject(vertices, cameraNormal, stroke, color) {
-//        console.log('_computeObject with new color:', color);
+        if (!(vertices && cameraNormal && stroke && color)) return;
+//        console.log("_computeObject with:", vertices, cameraNormal, stroke, color);
         const v0 = new THREE.Vector3(...vertices[0]);
         const v1 = new THREE.Vector3(...vertices[1]);
         const centerLineVector = v1.clone().sub(v0).normalize();
@@ -66,6 +67,8 @@
       // TODO: changes to contour-by are currently only adding geometry to the mesh
       // TODO: the latest geometry is drawn on top, and so render it okay
       // TODO: this should be fixed for performance
+
+      // TODO: the same thing is happening when we redraw the line with a new stroke
 
       // TODO: color should get computed one layer up
       // TODO: the line should only know about its metadata, value, and color

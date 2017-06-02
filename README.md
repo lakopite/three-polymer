@@ -18,3 +18,8 @@ $ polymer test -l chrome
 $ polymer serve
 ```
 navigate to http://localhost:8081/components/three-polymer/
+
+#### How big is the codebase?
+```
+$ cloc --exclude-dir=.idea,bower_components .
+```

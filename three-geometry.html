@@ -3,7 +3,7 @@
 
 <dom-module id="three-geometry">
   <template>
-    <template id="geometry" is="dom-repeat" items="{{data}}" as="line">
+    <template id="geometry" is="dom-repeat" items="{{data}}" as="line" initial-count="1">
       <three-line-geometry
         on-three-line-geometry-changed="_handleLineGeometryChanged"
         vertices="{{line.vertices}}"
@@ -27,11 +27,7 @@
           data: {type: Array, observer: '_dataChanged'},
           center: {type: Array, notify: true},
           radius: {type: Number, notify: true},
-          stroke: {
-            type: Number,
-            computed: '_computeStroke(radius)',
-            observer: '_strokeChanged',
-          },
+          stroke: Number,
           contourBy: String,
           contourColors: {
             type: Array,
@@ -57,16 +53,22 @@
         }
       }
 
+      connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener('dom-change', () => this._updateStroke());
+      }
+
       _computeObject() {
         return new THREE.Geometry();
       }
 
-      _computeStroke(radius) {
-        return radius / 10;
+      _updateStroke() {
+        if (!this._linesAreDoneRendering()) return;
+        this.stroke = this.radius / 10;
       }
 
-      _strokeChanged() {
-
+      _linesAreDoneRendering() {
+        return (this.$.geometry.items.length === this.$.geometry.renderedItemCount);
       }
 
       _dataChanged(newData, oldData) {
