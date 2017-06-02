@@ -11,10 +11,7 @@
 <body>
 <test-fixture id="basic">
   <template>
-    <three-camera
-      geometry-radius="10"
-      target-position="[30,50,40]">
-    </three-camera>
+    <three-camera></three-camera>
   </template>
 </test-fixture>
 
@@ -27,15 +24,19 @@
       element = fixture('basic');
     });
 
-    it('instantiates the element and computed geometry', () => {
+    it('instantiates the element if the scene is empty', () => {
       expect(element.localName).to.equal('three-camera');
-      expect(element.geometryRadius).to.equal(10);
-      expect(element.targetPosition).to.deep.equal([30, 50, 40]);
-      expect(element.position).to.deep.equal([30, -25, 40]);
-      expect(element.distanceToTarget).to.equal(75);
+      expect(element.targetPosition).to.deep.equal([0, 0, 0]);
+      expect(element.geometryRadius).to.equal(0);
+      expect(element.position).to.deep.equal([0, 0, 0]);
     });
 
     it('computes the frustum properly', () => {
+      element.targetPosition = [30, 50, 40];
+      element.geometryRadius = 10;
+
+      expect(element.position).to.deep.equal([30, -25, 40]);
+      expect(element.distanceToTarget).to.equal(75);
       expect(element.object.left).to.equal(-15);
       expect(element.object.right).to.equal(15);
       expect(element.object.top).to.equal(15);

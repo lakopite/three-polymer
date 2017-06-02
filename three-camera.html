@@ -10,8 +10,8 @@
 
       static get properties() {
         return {
-          targetPosition: Array,
-          geometryRadius: Number,
+          targetPosition: {type: Array, value: [0, 0, 0]},
+          geometryRadius: {type: Number, value: -0},
           position: {
             type: Array,
             computed: '_computePosition(targetPosition, geometryRadius)',
