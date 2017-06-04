@@ -1,0 +1,5 @@
+[
+  {"vertices": [[-10, 0, -10], [-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}},
+  {"vertices": [[-30, 0, 10], [-10, 0, 10]], "metadata": {"axial": 30, "flexure": 30}},
+  {"vertices": [[-30, 0, -10], [-30, 0, 10]], "metadata": {"axial": 60, "flexure": 10}}
+]

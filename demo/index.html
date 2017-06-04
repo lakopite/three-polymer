@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-
   <title>three-polymer demo</title>
+  <style is="custom-style" include="demo-pages-shared-styles"></style>
 
   <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+
   <link rel="import" href="../bower_components/iron-demo-helpers/demo-pages-shared-styles.html">
   <link rel="import" href="../bower_components/iron-demo-helpers/demo-snippet.html">
   <link rel="import" href="../three-view.html">
   <link rel="import" href="../three-lattice.html">
-
-  <style is="custom-style" include="demo-pages-shared-styles"></style>
 </head>
 <body>
 <div class="vertical-section-container centered">
@@ -71,22 +71,8 @@
 </div>
 </body>
 <script>
-  document.getElementById("frame-one").setAttribute("data", '[' +
-    '{"vertices":[[-10, 0, -10],[-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}},' +
-    '{"vertices":[[-30, 0, 10],[-10, 0, 10]], "metadata": {"axial": 30, "flexure": 30}},' +
-    '{"vertices":[[-30, 0, -10],[-30, 0, 10]], "metadata": {"axial": 60, "flexure": 10}}' +
-    ']');
-  document.getElementById("frame-two").setAttribute("data", '[' +
-    '{"vertices":[[-10, 0, -10],[-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}},' +
-    '{"vertices":[[-10, 0, 10],[10, 0, 10]], "metadata": {"axial": 40, "flexure": 20}},' +
-    '{"vertices":[[-30, 0, 10],[-10, 0, 10]], "metadata": {"axial": 30, "flexure": 30}},' +
-    '{"vertices":[[-30, 0, -10],[-30, 0, 10]], "metadata": {"axial": 60, "flexure": 10}},' +
-    '{"vertices":[[10, 0, 10],[10, 0, -10]], "metadata": {"axial": 100, "flexure": 55}}' +
-    ']');
-  document.getElementById("frame-three").setAttribute("data", '[' +
-    '{"vertices": [[5835.114, 246, 1802.999], [5806.597, 492, 1805.971]], "metadata": {"meta_steelorconc": "Steel", "meta_length": 247.7, "meta_propname_1": "Chords", "meta_groupid": 47, "meta_vol": 10576, "meta_propnum": 213, "meta_propname_2": "W27X146", "meta_propname_0": "OuterEdge", "meta_st7id": 0, "beamnum": 1, "meta_propname": "OuterEdge_Chords_W27X146", "meta_mass": 2993}},' +
-    '{"vertices": [[5806.597, 492, 1805.971], [5778.079, 738, 1808.943]], "metadata": {"meta_steelorconc": "Steel", "meta_length": 247.7, "meta_propname_1": "Chords", "meta_groupid": 47, "meta_vol": 10576, "meta_propnum": 213, "meta_propname_2": "W27X146", "meta_propname_0": "OuterEdge", "meta_st7id": 0, "beamnum": 2, "meta_propname": "OuterEdge_Chords_W27X146", "meta_mass": 2993}},' +
-    '{"vertices": [[5835.114, 246, 1502.999], [5820.856, 369, 1504.485]], "metadata": {"meta_steelorconc": "Steel", "meta_length": 123.8, "meta_propname_1": "Chords", "meta_groupid": 47, "meta_vol": 5286, "meta_propnum": 213, "meta_propname_2": "W27X146", "meta_propname_0": "OuterEdge", "meta_st7id": 0, "beamnum": 3, "meta_propname": "OuterEdge_Chords_W27X146", "meta_mass": 1496}}' +
-    ']');
+  $.getJSON("frame-one.json", data => document.getElementById("frame-one").setAttribute("data", JSON.stringify(data)));
+  $.getJSON("frame-two.json", data => document.getElementById("frame-two").setAttribute("data", JSON.stringify(data)));
+  $.getJSON("frame-three.json", data => document.getElementById("frame-three").setAttribute("data", JSON.stringify(data)));
 </script>
 </html>
