@@ -1,4 +1,5 @@
 <script src="bower_components/threejs/build/three.min.js"></script>
+<script src="bower_components/stats.js/build/stats.min.js"></script>
 <link rel="import" href="bower_components/polymer/polymer-element.html">
 <link rel="import" href="three-camera.html">
 <link rel="import" href="three-controls.html">
@@ -12,6 +13,7 @@
 
 <dom-module id="three-view">
   <template>
+    <div id="stats"></div>
     <three-controls
       id="controls"
       camera="{{camera}}"
@@ -52,6 +54,12 @@
           geometryRadius: Number,
           geometryPosition: Array,
           canvas: {type: Object, observer: '_canvasChanged'},
+          showStats: {type: Boolean, value: false},
+          stats: {
+            type: Object,
+            computed: '_computeStats(showStats)',
+            observer: '_statsChanged',
+          },
         }
       }
 
@@ -65,7 +73,22 @@
 
       _render() {
 //        console.log('_render');
+        if (this.stats) this.stats.update();
         this.$.renderer.render();
+      }
+
+      _computeStats(showStats) {
+        if (!showStats) return;
+        const stats = new Stats();
+        stats.setMode(0);
+        stats.dom.style.position = 'relative';
+        stats.dom.style.left = '0px';
+        stats.dom.style.top = '0px';
+        return stats;
+      }
+
+      _statsChanged(newStats) {
+        this.$.stats.appendChild(newStats.dom);
       }
 
       _canvasChanged(newCanvas, oldCanvas) {

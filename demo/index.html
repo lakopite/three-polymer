@@ -20,15 +20,16 @@
   <demo-snippet>
     <template>
       <three-view
-        id="view-one"
+        id="view-three"
+        show-stats="true"
         scene-background-color="#F5F5F5"
-        renderer-height="360"
-        renderer-width="360">
+        renderer-height="700"
+        renderer-width="700">
         <three-lattice
-          id="frame-one"
+          id="frame-three"
           slot="lattice"
-          contour-by="flexure"
           data='[]'
+          contour-by="beamnum"
           color="#00BFA5">
         </three-lattice>
       </three-view>
@@ -54,15 +55,15 @@
   <demo-snippet>
     <template>
       <three-view
-        id="view-three"
+        id="view-one"
         scene-background-color="#F5F5F5"
         renderer-height="360"
         renderer-width="360">
         <three-lattice
-          id="frame-three"
+          id="frame-one"
           slot="lattice"
+          contour-by="flexure"
           data='[]'
-          contour-by="beamnum"
           color="#00BFA5">
         </three-lattice>
       </three-view>
@@ -71,8 +72,8 @@
 </div>
 </body>
 <script>
-  $.getJSON("frame-one.json", data => document.getElementById("frame-one").setAttribute("data", JSON.stringify(data)));
-  $.getJSON("frame-two.json", data => document.getElementById("frame-two").setAttribute("data", JSON.stringify(data)));
   $.getJSON("frame-three.json", data => document.getElementById("frame-three").setAttribute("data", JSON.stringify(data)));
+  $.getJSON("frame-two.json", data => document.getElementById("frame-two").setAttribute("data", JSON.stringify(data)));
+  $.getJSON("frame-one.json", data => document.getElementById("frame-one").setAttribute("data", JSON.stringify(data)));
 </script>
 </html>
