@@ -60,6 +60,13 @@
             computed: '_computeStats(showStats)',
             observer: '_statsChanged',
           },
+          millisWhenRendered: {type: Number, value: 0},
+          maximumFramesPerSecond: {type: Number, value: 60, readOnly: true},
+          minimumMillisBetweenFrames: {
+            type: Number,
+            computed: '_computeMinimumMillisBetweenFrames(maximumFramesPerSecond)',
+            readOnly: true,
+          },
         }
       }
 
@@ -72,7 +79,8 @@
       }
 
       _render() {
-//        console.log('_render');
+        // TODO: we are calling render far too many times when the model is being constructed
+        console.log('_render');
         if (this.stats) this.stats.update();
         this.$.renderer.render();
       }
@@ -91,13 +99,21 @@
         this.$.stats.appendChild(newStats.dom);
       }
 
-      _canvasChanged(newCanvas, oldCanvas) {
+      _canvasChanged(newCanvas) {
         this.root.appendChild(newCanvas);
       }
 
+      _computeMinimumMillisBetweenFrames(maximumFramesPerSecond) {
+        return 1000 / maximumFramesPerSecond;
+      }
+
       _handleControlsChanged() {
-        this._render();
-      };
+        let millisNow = performance.now();
+        if (millisNow > this.millisWhenRendered + this.minimumMillisBetweenFrames) {
+          this._render();
+          this.millisWhenRendered = millisNow;
+        }
+      }
 
       _handleLatticeChanged(lattice) {
 //        console.log("_handleLatticeChanged");

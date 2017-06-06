@@ -99,7 +99,7 @@
       expect(fakeThreeScene.addCallCount).to.equal(0);
     });
 
-    it('it calls the renderer when the controls change', () => {
+    it('only calls the renderer once when the controls change multiple times in close succession', () => {
       replace('three-controls').with('fake-three-controls');
       replace('three-renderer').with('fake-three-renderer');
       replace('three-lattice').with('fake-three-lattice');
@@ -108,11 +108,14 @@
       const fakeThreeControls = element.shadowRoot.querySelector('fake-three-controls');
       const fakeThreeRenderer = element.shadowRoot.querySelector('fake-three-renderer');
 
-      fakeThreeControls._handleControlsChanged();
+      expect(fakeThreeRenderer.renderCount).to.equal(1);
+
+      fakeThreeControls.fireControlsChanged();
+      fakeThreeControls.fireControlsChanged();
+      fakeThreeControls.fireControlsChanged();
 
       expect(fakeThreeRenderer.renderCount).to.equal(2);
     });
-
   });
 </script>
 </body>

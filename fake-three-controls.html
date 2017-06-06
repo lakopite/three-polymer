@@ -8,12 +8,8 @@
         return 'fake-three-controls';
       }
 
-      _handleControlsChanged() {
+      fireControlsChanged() {
         this.dispatchEvent(new CustomEvent('controls-changed', {composed: true}));
-      }
-
-      updateControls() {
-
       }
     }
 
