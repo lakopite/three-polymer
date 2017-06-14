@@ -1,0 +1,71 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="three-material.html">
+<link rel="import" href="three-line-geometry.html">
+
+<dom-module id="three-mesh">
+  <template>
+    <three-line-geometry
+      stroke="[[stroke]]"
+      vertices="[[vertices]]"
+      object="{{geometry}}">
+    </three-line-geometry>
+    <three-material id="material" object="{{material}}" color="[[color]]"></three-material>
+  </template>
+  <script>
+    class ThreeMesh extends Polymer.Element {
+
+      static get is() {
+        return 'three-mesh';
+      }
+
+      static get properties() {
+        return {
+          contourValues: Array,
+          contourColors: Array,
+          contourBy: String,
+          metadata: Object,
+          color: {
+            type: String,
+            readOnly: true,
+            observer: '_colorChanged',
+            computed: '_computeColor(contourValues, contourColors, contourBy, metadata)',
+          },
+          geometry: Object,
+          vertices: Array,
+          material: Object,
+          object: {
+            type: Object,
+            computed: '_computeMesh(geometry, material)',
+            observer: '_meshChanged'
+          },
+          stroke: Number,
+        }
+      }
+
+      _computeMesh(geometry, material) {
+//        console.log('_computeMesh', geometry, material);
+        if (!(geometry && material)) return;
+        return new THREE.Mesh(geometry, material);
+      }
+
+      _computeColor(contourValues, contourColors, contourBy, metadata) {
+//        console.log('_computeColor with:', contourValues, contourColors, contourBy, metadata);
+        if (!(contourValues && contourColors && contourBy && metadata)) return;
+        const index = contourValues.findIndex((contourValue) => {
+          return metadata[contourBy] <= contourValue
+        });
+        return contourColors[index];
+      }
+
+      _meshChanged() {
+        this.dispatchEvent(new CustomEvent('mesh-change', {composed: true, bubbles: true}));
+      }
+
+      _colorChanged() {
+        this.dispatchEvent(new CustomEvent('material-change', {composed: true, bubbles: true}));
+      }
+    }
+
+    customElements.define(ThreeMesh.is, ThreeMesh);
+  </script>
+</dom-module>

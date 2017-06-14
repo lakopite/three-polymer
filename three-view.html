@@ -19,8 +19,7 @@
       camera="{{camera}}"
       canvas="[[canvas]]"
       camera-position="[[cameraPosition]]"
-      camera-target="[[geometryPosition]]"
-      geometry-radius="[[geometryRadius]]">
+      model-geometry="[[modelGeometry]]">
     </three-controls>
     <three-renderer
       id="renderer"
@@ -35,7 +34,11 @@
       object="{{scene}}"
       background-color="[[sceneBackgroundColor]]">
     </three-scene>
-    <slot id="latticeSlot" name="lattice"></slot>
+    <slot
+      id="modelSlot"
+      name="model"
+      meshes="[[meshes]]">
+    </slot>
   </template>
   <script>
     class ThreeView extends Polymer.Element {
@@ -51,8 +54,9 @@
           sceneBackgroundColor: String,
           scene: Object,
           camera: Object,
-          geometryRadius: Number,
-          geometryPosition: Array,
+          modelRadius: Number,
+          modelPosition: Array,
+          modelGeometry: Object,
           canvas: {type: Object, observer: '_canvasChanged'},
           showStats: {type: Boolean, value: false},
           stats: {
@@ -67,20 +71,23 @@
             computed: '_computeMinimumMillisBetweenFrames(maximumFramesPerSecond)',
             readOnly: true,
           },
+          model: {type: Object},
         }
       }
 
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('lattice-changed', e => this._handleLatticeChanged(e.detail));
-        this.addEventListener('lattice-geometry-changed', e => this._handleLatticeGeometryChanged(e.detail));
+        this.addEventListener('new-model', e => this._handleNewModel(e));
+        this.addEventListener('new-mesh-within-model', () => this._handleNewMeshWithinModel());
+        this.addEventListener('model-boundaries-change', e => this._handleModelBoundariesChange(e));
         this.addEventListener('controls-changed', () => this._handleControlsChanged());
+        this.addEventListener('material-change', () => this._handleMaterialChange());
         this._render();
       }
 
+      // TODO: we are calling render far too many times when the model is being constructed
       _render() {
-        // TODO: we are calling render far too many times when the model is being constructed
-        console.log('_render');
+//        console.log('_render');
         if (this.stats) this.stats.update();
         this.$.renderer.render();
       }
@@ -93,6 +100,10 @@
         stats.dom.style.left = '0px';
         stats.dom.style.top = '0px';
         return stats;
+      }
+
+      _handleMaterialChange() {
+        this._render();
       }
 
       _statsChanged(newStats) {
@@ -108,25 +119,32 @@
       }
 
       _handleControlsChanged() {
-        let millisNow = performance.now();
+        const millisNow = performance.now();
         if (millisNow > this.millisWhenRendered + this.minimumMillisBetweenFrames) {
           this._render();
           this.millisWhenRendered = millisNow;
         }
       }
 
-      _handleLatticeChanged(lattice) {
-//        console.log("_handleLatticeChanged");
+      _handleNewModel(event) {
+        this.model = event.target.object;
         const scene = this.$.scene;
         scene.removeAllObjects();
-        if (lattice.object) scene.addObject(lattice.object);
+        if (this.model === undefined) return;
+        scene.addObject(this.model);
         this._render();
       }
 
-      _handleLatticeGeometryChanged(lattice) {
-//        console.log("_handleLatticeGeometryChanged");
-        this.geometryPosition = lattice.geometryCenter;
-        this.geometryRadius = lattice.geometryRadius;
+      _handleNewMeshWithinModel() {
+        this._render();
+      }
+
+      _handleModelBoundariesChange(event) {
+//        console.log('_handleModelBoundariesChange');
+        this.modelGeometry = {
+          position: event.target.position,
+          radius: event.target.radius,
+        };
         this._render();
       }
     }

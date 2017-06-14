@@ -19,9 +19,11 @@
   describe('<three-material>', () => {
     it('instantiates the element', () => {
       let element = fixture('basic');
+
       expect(element.localName).to.equal('three-material');
-      expect(element.opacity).to.equal(1.0);
-      expect(element.color).to.equal("#696969");
+      expect(element.object.opacity).to.equal(1.0);
+      expect(element.object.transparent).to.be.true;
+      expect(element.object.color.getHexString()).to.equal("696969");
     });
   });
 </script>

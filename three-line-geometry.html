@@ -12,28 +12,19 @@
       static get properties() {
         return {
           cameraNormal: {type: Array, value: [0, 1, 0]},
-          stroke: {type: Number, value: 0.1},
+          stroke: {type: Number, value: 1},
           vertices: Array,
-          contourValues: Array,
-          contourColors: Array,
-          contourBy: String,
-          metadata: Object,
-          color: {
-            type: String,
-            readOnly: true,
-            computed: "_computeColor(contourValues, contourColors, contourBy, metadata)",
-          },
           object: {
             type: Object,
-            computed: "_computeObject(vertices, cameraNormal, stroke, color)",
-            observer: '_objectChanged',
+            computed: '_computeGeometry(vertices, cameraNormal, stroke)',
+            notify: true,
           }
         }
       }
 
-      _computeObject(vertices, cameraNormal, stroke, color) {
-        if (!(vertices && cameraNormal && stroke && color)) return;
-//        console.log("_computeObject with:", vertices, cameraNormal, stroke, color);
+      _computeGeometry(vertices, cameraNormal, stroke) {
+        if (!(vertices && cameraNormal && stroke)) return;
+//        console.log("_computeGeometry with:", vertices, cameraNormal, stroke);
         const v0 = new THREE.Vector3(...vertices[0]);
         const v1 = new THREE.Vector3(...vertices[1]);
         const centerLineVector = v1.clone().sub(v0).normalize();
@@ -48,37 +39,12 @@
         const geometry = new THREE.Geometry();
         geometry.vertices.push(v0l, v0r, v1r, v1l);
 
-        const threeColor = new THREE.Color().setStyle(color);
         geometry.faces.push(
-          new THREE.Face3(0, 1, 2, cameraNormalVector, threeColor),
-          new THREE.Face3(0, 2, 3, cameraNormalVector, threeColor)
+          new THREE.Face3(0, 1, 2, cameraNormalVector),
+          new THREE.Face3(0, 2, 3, cameraNormalVector)
         );
 
         return geometry;
-      }
-
-      _objectChanged() {
-//        console.log('_objectChanged to:', this.object);
-        const eventInitDict = {bubbles: true, composed: true, detail: this.object};
-        let customEvent = new CustomEvent('three-line-geometry-changed', eventInitDict);
-        this.dispatchEvent(customEvent);
-      }
-
-      // TODO: changes to contour-by are currently only adding geometry to the mesh
-      // TODO: the latest geometry is drawn on top, and so render it okay
-      // TODO: this should be fixed for performance
-
-      // TODO: the same thing is happening when we redraw the line with a new stroke
-
-      // TODO: color should get computed one layer up
-      // TODO: the line should only know about its metadata, value, and color
-      // TODO: the value can be a computed property
-      _computeColor(contourValues, contourColors, contourBy, metadata) {
-        if (!(contourValues && contourColors && contourBy && metadata)) return;
-        const index = contourValues.findIndex((contourValue) => {
-          return metadata[contourBy] <= contourValue
-        });
-        return contourColors[index];
       }
     }
 

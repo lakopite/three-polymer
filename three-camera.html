@@ -10,61 +10,42 @@
 
       static get properties() {
         return {
-          targetPosition: {type: Array, value: [0, 0, 0]},
-          geometryRadius: {type: Number, value: -0},
-          position: {
-            type: Array,
-            computed: '_computePosition(targetPosition, geometryRadius)',
-            observer: '_positionChanged',
-          },
-          distanceToTarget: {
-            type: Number,
-            computed: '_computeDistanceToTarget(position, targetPosition)',
-          },
-          frustum: {
-            type: Array,
-            computed: '_computeFrustum(geometryRadius, distanceToTarget)'
-          },
+          modelGeometry: Object,
+          position: Array,
+          distanceToTarget: Number,
+          frustum: Array,
           object: {
             type: Object,
-            computed: '_computeCamera(frustum)',
+            computed: '_computeCamera(modelGeometry)',
             notify: true,
           },
         }
       }
 
-      _computePosition(targetPosition, geometryRadius) {
-        return [targetPosition[0], -2.5 * geometryRadius, targetPosition[2]];
-      }
+      _computeCamera(modelGeometry) {
+//        console.log('_computeCamera');
+        const modelPosition = modelGeometry.position;
+        const modelRadius = modelGeometry.radius;
+        this.position = [modelPosition[0], -2.5 * modelRadius, modelPosition[2]];
 
-      _computeDistanceToTarget(position, targetPosition) {
-        let v1 = new THREE.Vector3(...position);
-        let v2 = new THREE.Vector3(...targetPosition);
-        return v1.distanceTo(v2);
-      }
+        const v1 = new THREE.Vector3(...this.position);
+        const v2 = new THREE.Vector3(...modelPosition);
+        this.distanceToTarget = v1.distanceTo(v2);
 
-      _computeFrustum(geometryRadius, distanceToTarget) {
-        return [
-          geometryRadius * -1.5,
-          geometryRadius * 1.5,
-          geometryRadius * 1.5,
-          geometryRadius * -1.5,
-          distanceToTarget - 2 * geometryRadius,
-          distanceToTarget + 2 * geometryRadius
+        this.frustum = [
+          modelRadius * -1.5,
+          modelRadius * 1.5,
+          modelRadius * 1.5,
+          modelRadius * -1.5,
+          this.distanceToTarget - 2 * modelRadius,
+          this.distanceToTarget + 2 * modelRadius
         ];
-      }
 
-      _computeCamera(frustum) {
-        let camera = new THREE.OrthographicCamera(...frustum);
+        const camera = new THREE.OrthographicCamera(...this.frustum);
         camera.up = new THREE.Vector3(0, 0, 1);
+        camera.position.set(...this.position);
         return camera;
       }
-
-      _positionChanged(newPosition) {
-        this.object.position.set(...newPosition);
-        this.object.updateProjectionMatrix();
-      }
-
     }
 
     customElements.define(ThreeCamera.is, ThreeCamera);

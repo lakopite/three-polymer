@@ -1,0 +1,28 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="fake-three-mesh">
+  <script>
+    class FakeThreeMesh extends Polymer.Element {
+
+      static get is() {
+        return 'fake-three-mesh';
+      }
+
+      static get properties() {
+        return {
+          object: {
+            type: Object,
+            observer: '_meshChanged',
+          },
+          vertices: {type: Array},
+        }
+      }
+
+      _meshChanged() {
+        this.dispatchEvent(new CustomEvent('mesh-change', {composed: true, bubbles: true}));
+      }
+    }
+
+    customElements.define(FakeThreeMesh.is, FakeThreeMesh);
+  </script>
+</dom-module>

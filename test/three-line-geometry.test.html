@@ -12,12 +12,7 @@
 <test-fixture id="basic">
   <template>
     <three-line-geometry
-      id="id"
-      vertices="[[-10, 0, -10],[-10, 0, 10]]"
-      metadata='{"axial": 27, "flexure": 37}'
-      contour-by="axial"
-      contour-values="[10,20,30,40]"
-      contour-colors='["#9C27B0","#00BCD4","#CDDC39","#FF5722"]'>
+      vertices="[[-10, 0, -10],[-10, 0, 10]]">
     </three-line-geometry>
   </template>
 </test-fixture>
@@ -33,21 +28,10 @@
 
     it('instantiates the element', () => {
       expect(element.localName).to.equal('three-line-geometry');
+      expect(element.cameraNormal).to.deep.equal([0, 1, 0]);
+      expect(element.stroke).to.equal(1);
       expect(element.vertices).to.deep.equal([[-10, 0, -10], [-10, 0, 10]]);
-      expect(element.metadata).to.deep.equal({"axial": 27, "flexure": 37});
-      expect(element.contourBy).to.equal('axial');
-      expect(element.contourValues).to.deep.equal([10, 20, 30, 40]);
-      expect(element.contourColors).to.deep.equal(["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]);
     });
-
-    it('calculates the color of the line when the contourBy changes', () => {
-      expect(element.color).to.equal("#CDDC39");
-
-      element.contourBy = "flexure";
-
-      expect(element.color).to.equal("#FF5722");
-    });
-
   });
 </script>
 </body>

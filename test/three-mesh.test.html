@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-line-geometry test</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../threejs/build/three.min.js"></script>
+  <link rel="import" href="../three-mesh.html">
+  <link rel="import" href="../fake-three-model.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-mesh
+      vertices="[[-10, 0, -10],[-10, 0, 10]]"
+      metadata='{"axial": 27, "flexure": 37}'
+      stroke="2"
+      contour-by="axial"
+      contour-values="[10, 20, 30, 40]"
+      contour-colors='["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]'>
+    </three-mesh>
+  </template>
+</test-fixture>
+
+<test-fixture id="parent">
+  <template>
+    <fake-three-model>
+      <three-mesh
+        vertices="[[-10, 0, -10],[-10, 0, 10]]"
+        metadata='{"axial": 27, "flexure": 37}'
+        stroke="2"
+        contour-by="axial"
+        contour-values="[10, 20, 30, 40]"
+        contour-colors='["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]'>
+      </three-mesh>
+    </fake-three-model>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-mesh>', () => {
+
+    let element, parent;
+
+    describe('itself', () => {
+
+      it('calculates the color of the line when the contourBy changes', () => {
+        element = fixture('basic');
+        expect(element.color).to.equal("#CDDC39");
+
+        element.contourBy = "flexure";
+
+        expect(element.color).to.equal("#FF5722");
+      });
+
+      it('tells the view when its colors changes', () => {
+
+      });
+
+    });
+
+    describe('interactions with parent', () => {
+
+      it('tells the model when its object changes', () => {
+        parent = fixture('parent');
+        let threeMesh = parent.querySelector('three-mesh');
+        expect(parent.handleMeshChangeCount).to.equal(1);
+
+        threeMesh.geometry = new THREE.Geometry();
+
+        expect(parent.handleMeshChangeCount).to.equal(2);
+      });
+
+    });
+
+  });
+</script>
+</body>
+</html>

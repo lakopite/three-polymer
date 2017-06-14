@@ -26,25 +26,20 @@
 
     it('instantiates the element if the scene is empty', () => {
       expect(element.localName).to.equal('three-camera');
-      expect(element.targetPosition).to.deep.equal([0, 0, 0]);
-      expect(element.geometryRadius).to.equal(0);
-      expect(element.position).to.deep.equal([0, 0, 0]);
     });
 
     it('computes the frustum properly', () => {
-      element.targetPosition = [30, 50, 40];
-      element.geometryRadius = 10;
+      element.modelGeometry = {position: [30, 50, 40], radius: 10};
 
-      expect(element.position).to.deep.equal([30, -25, 40]);
+      expect(element.object.position.x).to.equal(30);
+      expect(element.object.position.y).to.equal(-25);
+      expect(element.object.position.z).to.equal(40);
       expect(element.distanceToTarget).to.equal(75);
-      expect(element.object.left).to.equal(-15);
-      expect(element.object.right).to.equal(15);
-      expect(element.object.top).to.equal(15);
-      expect(element.object.bottom).to.equal(-15);
-      expect(element.object.near).to.equal(55);
-      expect(element.object.far).to.equal(95);
+      expect(element.frustum).to.deep.equal([-15, 15, 15, -15, 55, 95]);
+      expect(element.object.up.x).to.equal(0);
+      expect(element.object.up.y).to.equal(0);
+      expect(element.object.up.z).to.equal(1);
     });
-
   });
 </script>
 </body>

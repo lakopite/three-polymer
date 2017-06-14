@@ -10,29 +10,36 @@
 
       static get properties() {
         return {
-          latticeChangedCount: {type: Number, value: 0},
-          latticeChangedEvent: Object,
-          geometryChangedCount: {type: Number, value: 0},
-          geometryChangedEvent: Object,
+          newModelCount: {type: Number, value: 0},
+          newModelEvent: Object,
+          newMeshWithinModelCount: {type: Number, value: 0},
+          newMeshWithinModelEvent: Object,
+          boundariesChangedCount: {type: Number, value: 0},
+          boundariesChangedEvent: Object,
         }
       }
 
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('lattice-changed', event => this._handleLatticeChanged(event));
-        this.addEventListener('lattice-geometry-changed', event => this._handleGeometryChanged(event));
+        this.addEventListener('new-model', event => this._handleNewModel(event));
+        this.addEventListener('new-mesh-within-model', (event) => this._handleNewMeshWithinModel(event));
+        this.addEventListener('model-boundaries-change', event => this._handleModelBoundariesChanged(event));
       }
 
-      _handleLatticeChanged(event) {
-        this.latticeChangedCount += 1;
-        this.latticeChangedEvent = event;
+      _handleNewModel(event) {
+        this.newModelCount += 1;
+        this.newModelEvent = event;
       }
 
-      _handleGeometryChanged(event) {
-        this.geometryChangedCount += 1;
-        this.geometryChangedEvent = event;
+      _handleNewMeshWithinModel(event) {
+        this.newMeshWithinModelCount += 1;
+        this.newMeshWithinModelEvent = event;
       }
 
+      _handleModelBoundariesChanged(event) {
+        this.boundariesChangedCount += 1;
+        this.boundariesChangedEvent = event;
+      }
     }
 
     customElements.define(FakeThreeView.is, FakeThreeView);

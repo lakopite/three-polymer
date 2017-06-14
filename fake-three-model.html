@@ -1,0 +1,42 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="fake-three-model">
+  <script>
+    class FakeThreeModel extends Polymer.Element {
+
+      static get is() {
+        return 'fake-three-model';
+      }
+
+      static get properties() {
+        return {
+          object: Object,
+          position: Array,
+          radius: Number,
+          handleMeshChangeCount: {type: Number, value: 0},
+        }
+      }
+
+      connectedCallback() {
+        this.addEventListener('mesh-change', () => this._handleMeshChange());
+      }
+
+      _objectChanged() {
+        this.dispatchEvent(new CustomEvent('new-model', {bubbles: true}));
+      }
+
+      _boundariesChanged(position, radius) {
+        this.position = position;
+        this.radius = radius;
+        this.dispatchEvent(new CustomEvent('model-boundaries-change', {bubbles: true}));
+      }
+
+      _handleMeshChange() {
+        this.handleMeshChangeCount += 1;
+        this.dispatchEvent(new CustomEvent('new-mesh-within-model', {bubbles: true}));
+      }
+    }
+
+    customElements.define(FakeThreeModel.is, FakeThreeModel);
+  </script>
+</dom-module>

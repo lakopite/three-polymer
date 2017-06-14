@@ -12,46 +12,46 @@
   <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
   <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
   <link rel="import" href="../three-view.html">
-  <link rel="import" href="../three-lattice.html">
+  <link rel="import" href="../three-model.html">
 </head>
 <body>
 <div class="vertical-section-container centered">
   <h3>three-polymer demo</h3>
-  <demo-snippet>
-    <template>
-      <three-view
-        id="view-three"
-        show-stats="true"
-        scene-background-color="#F5F5F5"
-        renderer-height="700"
-        renderer-width="700">
-        <three-lattice
-          id="frame-three"
-          slot="lattice"
-          data='[]'
-          contour-by="beamnum"
-          color="#00BFA5">
-        </three-lattice>
-      </three-view>
-    </template>
-  </demo-snippet>
-  <demo-snippet>
-    <template>
-      <three-view
-        id="view-two"
-        scene-background-color="#F5F5F5"
-        renderer-height="360"
-        renderer-width="360">
-        <three-lattice
-          id="frame-two"
-          slot="lattice"
-          contour-by="flexure"
-          data='[]'
-          color="#00BFA5">
-        </three-lattice>
-      </three-view>
-    </template>
-  </demo-snippet>
+  <!--<demo-snippet>-->
+    <!--<template>-->
+      <!--<three-view-->
+        <!--id="view-three"-->
+        <!--show-stats="true"-->
+        <!--scene-background-color="#F5F5F5"-->
+        <!--renderer-height="700"-->
+        <!--renderer-width="700">-->
+        <!--<three-lattice-->
+          <!--id="frame-three"-->
+          <!--slot="lattice"-->
+          <!--data='[]'-->
+          <!--contour-by="beamnum"-->
+          <!--color="#00BFA5">-->
+        <!--</three-lattice>-->
+      <!--</three-view>-->
+    <!--</template>-->
+  <!--</demo-snippet>-->
+  <!--<demo-snippet>-->
+    <!--<template>-->
+      <!--<three-view-->
+        <!--id="view-two"-->
+        <!--scene-background-color="#F5F5F5"-->
+        <!--renderer-height="360"-->
+        <!--renderer-width="360">-->
+        <!--<three-lattice-->
+          <!--id="frame-two"-->
+          <!--slot="lattice"-->
+          <!--contour-by="flexure"-->
+          <!--data='[]'-->
+          <!--color="#00BFA5">-->
+        <!--</three-lattice>-->
+      <!--</three-view>-->
+    <!--</template>-->
+  <!--</demo-snippet>-->
   <demo-snippet>
     <template>
       <three-view
@@ -59,21 +59,21 @@
         scene-background-color="#F5F5F5"
         renderer-height="360"
         renderer-width="360">
-        <three-lattice
+        <three-model
           id="frame-one"
-          slot="lattice"
+          slot="model"
           contour-by="flexure"
           data='[]'
           color="#00BFA5">
-        </three-lattice>
+        </three-model>
       </three-view>
     </template>
   </demo-snippet>
 </div>
 </body>
 <script>
-  $.getJSON("frame-three.json", data => document.getElementById("frame-three").setAttribute("data", JSON.stringify(data)));
-  $.getJSON("frame-two.json", data => document.getElementById("frame-two").setAttribute("data", JSON.stringify(data)));
+//  $.getJSON("frame-three.json", data => document.getElementById("frame-three").setAttribute("data", JSON.stringify(data)));
+//  $.getJSON("frame-two.json", data => document.getElementById("frame-two").setAttribute("data", JSON.stringify(data)));
   $.getJSON("frame-one.json", data => document.getElementById("frame-one").setAttribute("data", JSON.stringify(data)));
 </script>
 </html>

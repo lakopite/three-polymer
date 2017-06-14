@@ -1,0 +1,152 @@
+<script src="../lodash/lodash.js"></script>
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="three-mesh.html">
+
+<dom-module id="three-model">
+  <template>
+    <template
+      id="meshes"
+      is="dom-repeat"
+      items="{{data}}"
+      as="line"
+      initial-count="1"
+      target-framerate="30">
+      <three-mesh
+        on-mesh-change="_handleMeshChange"
+        vertices="[[line.vertices]]"
+        metadata="[[line.metadata]]"
+        stroke="[[stroke]]"
+        contour-by="[[contourBy]]"
+        contour-values="[[contourValues]]"
+        contour-colors="[[contourColors]]">
+      </three-mesh>
+    </template>
+  </template>
+  <script>
+    class ThreeModel extends Polymer.Element {
+
+      static get is() {
+        return 'three-model';
+      }
+
+      static get properties() {
+        return {
+          data: {type: Array, observer: '_dataChanged'},
+          object: {type: Object, observer: '_objectChanged'},
+          numberOfMeshes: {
+            type: Number,
+            value: 0,
+            observer: '_numberOfMeshesChanged',
+          },
+          position: Array,
+          radius: Number,
+          contourBy: String,
+          stroke: {type: Number, computed: '_computeStroke(radius)'},
+          contourColors: {
+            type: Array,
+            readOnly: true,
+            value: [
+              "#9C27B0",
+              "#673AB7",
+              "#3F51B5",
+              "#2196F3",
+              "#00BCD4",
+              "#009688",
+              "#4CAF50",
+              "#8BC34A",
+              "#FFEB3B",
+              "#FFC107",
+              "#FF9800",
+              "#FF5722",
+              "#F44336"
+            ]
+          },
+          contourValues: {
+            type: Array,
+            computed: '_computeContourValues(contourBy, contourColors, data)',
+          },
+          boundaries: {type: Object, observer: '_boundariesChanged'},
+        }
+      }
+
+      _objectChanged() {
+//        console.log('_objectChanged');
+        this.dispatchEvent(new CustomEvent('new-model', {bubbles: true}));
+      }
+
+      _dataChanged() {
+        const group = new THREE.Group();
+        group.name = "mesh";
+        this.boundaries = undefined;
+        this.object = group;
+      }
+
+      _handleMeshChange(event) {
+        const mesh = event.target.object;
+        this._updateBoundaries(event.target.vertices);
+        this.object.add(mesh);
+        this.numberOfMeshes = this.object.children.length;
+      }
+
+      _computeStroke(radius) {
+        return radius / 10
+      }
+
+      _numberOfMeshesChanged() {
+        this.dispatchEvent(new CustomEvent('new-mesh-within-model', {bubbles: true}));
+      }
+
+      _updateBoundaries(vertices) {
+//        console.log('_updateBoundaries', vertices);
+        const v0 = vertices[0];
+        const v1 = vertices[1];
+
+        this.boundaries = {
+          xMax: _.max([this.boundaries ? this.boundaries.xMax : 0, v0[0], v1[0]]),
+          xMin: _.min([this.boundaries ? this.boundaries.xMin : 0, v0[0], v1[0]]),
+          yMax: _.max([this.boundaries ? this.boundaries.yMax : 0, v0[1], v1[1]]),
+          yMin: _.min([this.boundaries ? this.boundaries.yMin : 0, v0[1], v1[1]]),
+          zMax: _.max([this.boundaries ? this.boundaries.zMax : 0, v0[2], v1[2]]),
+          zMin: _.min([this.boundaries ? this.boundaries.zMin : 0, v0[2], v1[2]]),
+        }
+      }
+
+      _boundariesChanged(boundaries) {
+//        console.log('_boundariesChanged', boundaries);
+        this.position = [
+          (boundaries.xMin + boundaries.xMax) / 2,
+          (boundaries.yMin + boundaries.yMax) / 2,
+          (boundaries.zMin + boundaries.zMax) / 2
+        ];
+
+        this.radius = _.max([
+          boundaries.xMax - this.position[0],
+          boundaries.yMax - this.position[1],
+          boundaries.zMax - this.position[2]
+        ]);
+
+        this.dispatchEvent(new CustomEvent('model-boundaries-change', {bubbles: true}));
+      }
+
+      _computeContourValues(contourBy, contourColors, data) {
+//        console.log('_computeContourValues');
+        const length = contourColors.length;
+        const values = _.map(data, (line) => {return line.metadata[contourBy]});
+
+        if (values.length === 1) return new Array(length).fill(values[0]);
+
+        const max = _.max(values);
+        const min = _.min(values);
+        const step = (max - min) / length;
+        let contourValues = _.rangeRight(max, min, -step)
+          .map((it) => {return _.round(it, 4)});
+
+        if (contourValues.length === 14) contourValues = _.drop(contourValues);
+
+        return contourValues;
+      }
+    }
+
+    customElements.define(ThreeModel.is, ThreeModel);
+  </script>
+</dom-module>
