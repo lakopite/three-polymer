@@ -110,7 +110,7 @@
         element.data = [];
 
         expect(element.object.name).to.equal("mesh");
-        expect(element.boundaries).to.be.undefined
+        expect(element.boundaries).to.be.undefined;
       });
 
       it('updates the geometry when a new mesh is added', (done) => {
@@ -121,9 +121,8 @@
             {xMax: 10, xMin: -10, yMax: 0, yMin: 0, zMax: 10, zMin: -10}
           );
           expect(element.position).to.deep.equal([0, 0, 0]);
-          expect(element.numberOfMeshes).to.equal(3);
           expect(element.radius).to.equal(10);
-          done()
+          done();
         });
       });
     });
@@ -145,13 +144,21 @@
         expect(parent.newModelCount).to.equal(2);
       });
 
-      it('tells the view when it gets a new mesh', () => {
-        expect(parent.newMeshWithinModelCount).to.equal(1);
+      it('tells the view when it gets a new mesh', (done) => {
+        replace('three-mesh').with('fake-three-mesh');
+        parent = fixture('parent');
+        threeModel = parent.querySelector('three-model');
 
-        threeModel.numberOfMeshes += 1;
+        flush(() => {
+          const fakeThreeMesh = threeModel.shadowRoot.querySelector('#line-0');
+          expect(parent.modelNeedsRenderCount).to.equal(0);
 
-        expect(parent.newMeshWithinModelEvent.bubbles).to.be.true;
-        expect(parent.newMeshWithinModelCount).to.equal(2);
+          fakeThreeMesh._dispatchNewMesh();
+
+          expect(parent.modelNeedsRenderCount).to.equal(1);
+
+          done();
+        });
       });
 
       it('tells the view when it gets new boundaries', () => {
@@ -159,6 +166,23 @@
 
         expect(parent.boundariesChangedCount).to.equal(1);
         expect(parent.boundariesChangedEvent.bubbles).to.be.true;
+      });
+
+      it('tells the view if the model requires a re-render', (done) => {
+        replace('three-mesh').with('fake-three-mesh');
+        parent = fixture('parent');
+        threeModel = parent.querySelector('three-model');
+
+        flush(() => {
+          const fakeThreeMesh = threeModel.shadowRoot.querySelector('#line-0');
+          expect(parent.modelNeedsRenderCount).to.equal(0);
+
+          fakeThreeMesh._dispatchMeshChange();
+
+          expect(parent.modelNeedsRenderCount).to.equal(1);
+
+          done();
+        });
       });
     });
   });

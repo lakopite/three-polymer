@@ -12,6 +12,8 @@
       initial-count="1"
       target-framerate="30">
       <three-mesh
+        id="line-{{index}}"
+        on-new-mesh="_handleNewMesh"
         on-mesh-change="_handleMeshChange"
         vertices="[[line.vertices]]"
         metadata="[[line.metadata]]"
@@ -33,15 +35,10 @@
         return {
           data: {type: Array, observer: '_dataChanged'},
           object: {type: Object, observer: '_objectChanged'},
-          numberOfMeshes: {
-            type: Number,
-            value: 0,
-            observer: '_numberOfMeshesChanged',
-          },
           position: Array,
-          radius: Number,
+          radius: {type: Number, observer: '_radiusChanged'},
           contourBy: String,
-          stroke: {type: Number, computed: '_computeStroke(radius)'},
+          stroke: Number,
           contourColors: {
             type: Array,
             readOnly: true,
@@ -81,19 +78,25 @@
         this.object = group;
       }
 
-      _handleMeshChange(event) {
+      _handleNewMesh(event) {
+//        console.log('_handleNewMesh');
         const mesh = event.target.object;
         this._updateBoundaries(event.target.vertices);
         this.object.add(mesh);
-        this.numberOfMeshes = this.object.children.length;
+        this._dispatchModelNeedsRender();
       }
 
-      _computeStroke(radius) {
-        return radius / 10
+      _handleMeshChange() {
+        this._dispatchModelNeedsRender();
       }
 
-      _numberOfMeshesChanged() {
-        this.dispatchEvent(new CustomEvent('new-mesh-within-model', {bubbles: true}));
+      _dispatchModelNeedsRender() {
+        this.dispatchEvent(new CustomEvent('model-needs-render', {bubbles: true}));
+      }
+
+      // TODO: set the stroke once after all the lines have been drawn
+      _radiusChanged(radius) {
+        this.stroke = radius / 10;
       }
 
       _updateBoundaries(vertices) {
@@ -112,6 +115,7 @@
       }
 
       _boundariesChanged(boundaries) {
+        if (!boundaries) return;
 //        console.log('_boundariesChanged', boundaries);
         this.position = [
           (boundaries.xMin + boundaries.xMax) / 2,

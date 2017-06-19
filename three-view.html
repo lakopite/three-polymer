@@ -78,10 +78,9 @@
       connectedCallback() {
         super.connectedCallback();
         this.addEventListener('new-model', e => this._handleNewModel(e));
-        this.addEventListener('new-mesh-within-model', () => this._handleNewMeshWithinModel());
+        this.addEventListener('model-needs-render', () => this._handleModelNeedsRender());
         this.addEventListener('model-boundaries-change', e => this._handleModelBoundariesChange(e));
         this.addEventListener('controls-changed', () => this._handleControlsChanged());
-        this.addEventListener('material-change', () => this._handleMaterialChange());
         this._render();
       }
 
@@ -102,8 +101,8 @@
         return stats;
       }
 
-      _handleMaterialChange() {
-        this._render();
+      _computeMinimumMillisBetweenFrames(maximumFramesPerSecond) {
+        return 1000 / maximumFramesPerSecond;
       }
 
       _statsChanged(newStats) {
@@ -112,10 +111,6 @@
 
       _canvasChanged(newCanvas) {
         this.root.appendChild(newCanvas);
-      }
-
-      _computeMinimumMillisBetweenFrames(maximumFramesPerSecond) {
-        return 1000 / maximumFramesPerSecond;
       }
 
       _handleControlsChanged() {
@@ -135,7 +130,7 @@
         this._render();
       }
 
-      _handleNewMeshWithinModel() {
+      _handleModelNeedsRender() {
         this._render();
       }
 

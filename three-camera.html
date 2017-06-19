@@ -33,10 +33,10 @@
         this.distanceToTarget = v1.distanceTo(v2);
 
         this.frustum = [
-          modelRadius * -1.5,
-          modelRadius * 1.5,
-          modelRadius * 1.5,
-          modelRadius * -1.5,
+          modelRadius * -2,
+          modelRadius * 2,
+          modelRadius * 2,
+          modelRadius * -2,
           this.distanceToTarget - 2 * modelRadius,
           this.distanceToTarget + 2 * modelRadius
         ];

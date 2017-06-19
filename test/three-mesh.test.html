@@ -44,7 +44,6 @@
     let element, parent;
 
     describe('itself', () => {
-
       it('calculates the color of the line when the contourBy changes', () => {
         element = fixture('basic');
         expect(element.color).to.equal("#CDDC39");
@@ -53,25 +52,48 @@
 
         expect(element.color).to.equal("#FF5722");
       });
-
-      it('tells the view when its colors changes', () => {
-
-      });
-
     });
 
     describe('interactions with parent', () => {
-
-      it('tells the model when its object changes', () => {
+      it('tells the model when the mesh gets instantiated', () => {
         parent = fixture('parent');
-        let threeMesh = parent.querySelector('three-mesh');
-        expect(parent.handleMeshChangeCount).to.equal(1);
+        const threeMesh = parent.querySelector('three-mesh');
+        expect(parent.handleNewMeshCount).to.equal(1);
+
+        threeMesh.object = new THREE.Mesh();
+
+        expect(parent.handleNewMeshCount).to.equal(2);
+      });
+
+      it('tells the model when its geometry changes', () => {
+        parent = fixture('parent');
+        const threeMesh = parent.querySelector('three-mesh');
+        expect(parent.handleMeshChangeCount).to.equal(3);
 
         threeMesh.geometry = new THREE.Geometry();
 
-        expect(parent.handleMeshChangeCount).to.equal(2);
+        expect(parent.handleMeshChangeCount).to.equal(4);
       });
 
+      it('tells the model when its material changes', () => {
+        parent = fixture('parent');
+        const threeMesh = parent.querySelector('three-mesh');
+        expect(parent.handleMeshChangeCount).to.equal(3);
+
+        threeMesh.material = new THREE.MeshBasicMaterial();
+
+        expect(parent.handleMeshChangeCount).to.equal(4);
+      });
+
+      it('tells the model when its color changes', () => {
+        parent = fixture('parent');
+        const threeMesh = parent.querySelector('three-mesh');
+        expect(parent.handleMeshChangeCount).to.equal(3);
+
+        threeMesh.contourBy = "flexure";
+
+        expect(parent.handleMeshChangeCount).to.equal(4);
+      });
     });
 
   });

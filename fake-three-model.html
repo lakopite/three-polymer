@@ -13,11 +13,13 @@
           object: Object,
           position: Array,
           radius: Number,
+          handleNewMeshCount: {type: Number, value: 0},
           handleMeshChangeCount: {type: Number, value: 0},
         }
       }
 
       connectedCallback() {
+        this.addEventListener('new-mesh', () => this._handleNewMesh());
         this.addEventListener('mesh-change', () => this._handleMeshChange());
       }
 
@@ -31,9 +33,16 @@
         this.dispatchEvent(new CustomEvent('model-boundaries-change', {bubbles: true}));
       }
 
+      _handleNewMesh() {
+        this.handleNewMeshCount += 1;
+      }
+
       _handleMeshChange() {
         this.handleMeshChangeCount += 1;
-        this.dispatchEvent(new CustomEvent('new-mesh-within-model', {bubbles: true}));
+      }
+
+      _dispatchModelNeedsRender() {
+        this.dispatchEvent(new CustomEvent('model-needs-render', {bubbles: true}));
       }
     }
 

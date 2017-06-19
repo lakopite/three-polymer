@@ -10,16 +10,17 @@
 
       static get properties() {
         return {
-          object: {
-            type: Object,
-            observer: '_meshChanged',
-          },
-          vertices: {type: Array},
+          object: {type: Object, value: () => new THREE.Mesh()},
+          vertices: {type: Array, value: () => [[1, 2, 3], [4, 5, 6]]},
         }
       }
 
-      _meshChanged() {
+      _dispatchMeshChange() {
         this.dispatchEvent(new CustomEvent('mesh-change', {composed: true, bubbles: true}));
+      }
+
+      _dispatchNewMesh() {
+        this.dispatchEvent(new CustomEvent('new-mesh', {composed: true, bubbles: true}));
       }
     }
 

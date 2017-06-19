@@ -25,7 +25,7 @@
 
       _computeGeometry(vertices, cameraNormal, stroke) {
         if (!(vertices && cameraNormal && stroke)) return;
-//        console.log("_computeGeometry with:", vertices, cameraNormal, stroke);
+//        console.log("_computeGeometry with midpoint:", this._computeMidpoint(vertices), "stroke:", stroke);
         const v0 = new THREE.Vector3(...vertices[0]);
         const v1 = new THREE.Vector3(...vertices[1]);
         const centerLineVector = v1.clone().sub(v0).normalize();

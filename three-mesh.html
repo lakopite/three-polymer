@@ -24,28 +24,22 @@
           contourColors: Array,
           contourBy: String,
           metadata: Object,
+          vertices: Array,
           color: {
             type: String,
             readOnly: true,
             observer: '_colorChanged',
             computed: '_computeColor(contourValues, contourColors, contourBy, metadata)',
           },
-          geometry: Object,
-          vertices: Array,
-          material: Object,
+          geometry: {type: Object, observer: '_geometryChanged'},
+          material: {type: Object, observer: '_materialChanged'},
           object: {
             type: Object,
-            computed: '_computeMesh(geometry, material)',
-            observer: '_meshChanged'
+            value: () => new THREE.Mesh(),
+            observer: '_newMesh',
           },
           stroke: Number,
         }
-      }
-
-      _computeMesh(geometry, material) {
-//        console.log('_computeMesh', geometry, material);
-        if (!(geometry && material)) return;
-        return new THREE.Mesh(geometry, material);
       }
 
       _computeColor(contourValues, contourColors, contourBy, metadata) {
@@ -57,12 +51,31 @@
         return contourColors[index];
       }
 
-      _meshChanged() {
-        this.dispatchEvent(new CustomEvent('mesh-change', {composed: true, bubbles: true}));
+      _geometryChanged(geometry) {
+        this.object.geometry = geometry;
+        this._dispatchMeshChange();
+      }
+
+      _materialChanged(material) {
+        this.object.material = material;
+        this._dispatchMeshChange();
       }
 
       _colorChanged() {
-        this.dispatchEvent(new CustomEvent('material-change', {composed: true, bubbles: true}));
+        this._dispatchMeshChange();
+      }
+
+      _newMesh() {
+        this._dispatchNewMesh();
+      }
+
+      _dispatchMeshChange() {
+        this.dispatchEvent(new CustomEvent('mesh-change', {composed: true, bubbles: true}));
+      }
+
+      // TODO: does this need to bubble and be composed?
+      _dispatchNewMesh() {
+        this.dispatchEvent(new CustomEvent('new-mesh', {composed: true, bubbles: true}));
       }
     }
 

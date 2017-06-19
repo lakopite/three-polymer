@@ -12,8 +12,7 @@
         return {
           newModelCount: {type: Number, value: 0},
           newModelEvent: Object,
-          newMeshWithinModelCount: {type: Number, value: 0},
-          newMeshWithinModelEvent: Object,
+          modelNeedsRenderCount: {type: Number, value: 0},
           boundariesChangedCount: {type: Number, value: 0},
           boundariesChangedEvent: Object,
         }
@@ -22,7 +21,7 @@
       connectedCallback() {
         super.connectedCallback();
         this.addEventListener('new-model', event => this._handleNewModel(event));
-        this.addEventListener('new-mesh-within-model', (event) => this._handleNewMeshWithinModel(event));
+        this.addEventListener('model-needs-render', (event) => this._handleModelNeedsRender(event));
         this.addEventListener('model-boundaries-change', event => this._handleModelBoundariesChanged(event));
       }
 
@@ -31,9 +30,8 @@
         this.newModelEvent = event;
       }
 
-      _handleNewMeshWithinModel(event) {
-        this.newMeshWithinModelCount += 1;
-        this.newMeshWithinModelEvent = event;
+      _handleModelNeedsRender(event) {
+        this.modelNeedsRenderCount += 1;
       }
 
       _handleModelBoundariesChanged(event) {

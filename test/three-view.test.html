@@ -19,7 +19,7 @@
       scene-background-color="#F5F5F2"
       renderer-width="12"
       renderer-height="21">
-      <three-model slot="lattice"></three-model>
+      <three-model slot="model"></three-model>
     </three-view>
   </template>
 </test-fixture>
@@ -69,7 +69,7 @@
       expect(fakeThreeRenderer.renderCount).to.equal(2);
     });
 
-    it('renders when the model gets a new mesh', () => {
+    it('renders when the model says it needs to be rendered', () => {
       replace('three-controls').with('fake-three-controls');
       replace('three-renderer').with('fake-three-renderer');
       replace('three-model').with('fake-three-model');
@@ -80,7 +80,7 @@
 
       expect(fakeThreeRenderer.renderCount).to.equal(1);
 
-      fakeThreeModel._handleMeshChange();
+      fakeThreeModel._dispatchModelNeedsRender();
 
       expect(fakeThreeRenderer.renderCount).to.equal(2);
     });
