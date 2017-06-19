@@ -32,6 +32,10 @@
       expect(element.stroke).to.equal(1);
       expect(element.vertices).to.deep.equal([[-10, 0, -10], [-10, 0, 10]]);
     });
+
+    it('calculates the midpoint correctly', () => {
+      expect(element.midpoint).to.deep.equal([-10, 0, 0]);
+    });
   });
 </script>
 </body>

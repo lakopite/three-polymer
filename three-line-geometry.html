@@ -18,7 +18,8 @@
             type: Object,
             computed: '_computeGeometry(vertices, cameraNormal, stroke)',
             notify: true,
-          }
+          },
+          midpoint: {type: Array, computed: '_computeMidpoint(vertices)'},
         }
       }
 
@@ -45,6 +46,10 @@
         );
 
         return geometry;
+      }
+
+      _computeMidpoint(vertices) {
+        return _.zipWith(vertices[0], vertices[1], (c0, c1) => (c0 + c1) / 2);
       }
     }
 
