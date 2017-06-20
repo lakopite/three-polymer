@@ -114,6 +114,8 @@
         expect(element.boundaries).to.be.undefined;
       });
 
+      // this test will break until this gets resolved:
+      // https://github.com/Polymer/polymer/pull/4363
       it('updates the geometry when a new mesh is added', (done) => {
         element = fixture('basic');
 

@@ -7,7 +7,7 @@
     <template
       id="meshes"
       is="dom-repeat"
-      items="{{data}}"
+      items="{{lines}}"
       as="line"
       initial-count="1"
       target-framerate="30"
@@ -34,6 +34,7 @@
 
       static get properties() {
         return {
+          lines: Array,
           data: {type: Array, observer: '_dataChanged'},
           numberOfLines: {type: Number, computed: '_computeNumberOfLines(data)'},
           meshes: {type: Array, value: []},
@@ -88,7 +89,10 @@
         this.dispatchEvent(new CustomEvent('new-model', {bubbles: true}));
       }
 
-      _dataChanged() {
+      _dataChanged(newData) {
+        this.lines = [];
+//        this.lines = newData;
+        setTimeout(() => {this.lines = newData}, 0);
         const group = new THREE.Group();
         group.name = "mesh";
         this.boundaries = undefined;
