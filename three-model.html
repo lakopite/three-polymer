@@ -10,7 +10,8 @@
       items="{{data}}"
       as="line"
       initial-count="1"
-      target-framerate="30">
+      target-framerate="30"
+      on-rendered-item-count-changed="_handleRenderedItemCountChanged">
       <three-mesh
         id="line-{{index}}"
         on-new-mesh="_handleNewMesh"
@@ -34,9 +35,14 @@
       static get properties() {
         return {
           data: {type: Array, observer: '_dataChanged'},
-          object: {type: Object, observer: '_objectChanged'},
+          numberOfLines: {type: Number, computed: '_computeNumberOfLines(data)'},
+          meshes: {type: Array, value: []},
+          object: {
+            type: Object,
+            observer: '_objectChanged',
+          },
           position: Array,
-          radius: {type: Number, observer: '_radiusChanged'},
+          radius: Number,
           contourBy: String,
           stroke: Number,
           contourColors: {
@@ -66,6 +72,17 @@
         }
       }
 
+      _computeNumberOfLines(data) {
+        return data.length;
+      }
+
+      _handleRenderedItemCountChanged(event) {
+        const numberOfLinesRendered = event.detail.value;
+        if (numberOfLinesRendered === this.numberOfLines) {
+          this.stroke = this.radius / 10;
+        }
+      }
+
       _objectChanged() {
 //        console.log('_objectChanged');
         this.dispatchEvent(new CustomEvent('new-model', {bubbles: true}));
@@ -92,11 +109,6 @@
 
       _dispatchModelNeedsRender() {
         this.dispatchEvent(new CustomEvent('model-needs-render', {bubbles: true}));
-      }
-
-      // TODO: set the stroke once after all the lines have been drawn
-      _radiusChanged(radius) {
-        this.stroke = radius / 10;
       }
 
       _updateBoundaries(vertices) {

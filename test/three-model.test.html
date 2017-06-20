@@ -93,12 +93,13 @@
         ]);
       });
 
-      it('calculates the stroke of the line', () => {
+      it('calculates the stroke of the line', (done) => {
         element = fixture('basic');
 
-        element.radius = 10;
-
-        expect(element.stroke).to.equal(1);
+        flush(() => {
+          expect(element.stroke).to.equal(1);
+          done();
+        });
       });
 
       it('resets the boundaries and the group when it gets new data', () => {
