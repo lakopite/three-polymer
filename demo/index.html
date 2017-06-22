@@ -17,52 +17,17 @@
 <body>
 <div class="vertical-section-container centered">
   <h3>three-polymer demo</h3>
-  <!--<demo-snippet>-->
-    <!--<template>-->
-      <!--<three-view-->
-        <!--id="view-three"-->
-        <!--show-stats="true"-->
-        <!--scene-background-color="#F5F5F5"-->
-        <!--renderer-height="700"-->
-        <!--renderer-width="700">-->
-        <!--<three-model-->
-          <!--id="frame-three"-->
-          <!--slot="model"-->
-          <!--data='[]'-->
-          <!--contour-by="beamnum"-->
-          <!--color="#00BFA5">-->
-        <!--</three-model>-->
-      <!--</three-view>-->
-    <!--</template>-->
-  <!--</demo-snippet>-->
-  <!--<demo-snippet>-->
-    <!--<template>-->
-      <!--<three-view-->
-        <!--id="view-two"-->
-        <!--scene-background-color="#F5F5F5"-->
-        <!--renderer-height="360"-->
-        <!--renderer-width="360">-->
-        <!--<three-model-->
-          <!--id="frame-two"-->
-          <!--slot="model"-->
-          <!--contour-by="flexure"-->
-          <!--data='[]'-->
-          <!--color="#00BFA5">-->
-        <!--</three-model>-->
-      <!--</three-view>-->
-    <!--</template>-->
-  <!--</demo-snippet>-->
   <demo-snippet>
     <template>
       <three-view
-        id="view-one"
+        id="view-three"
         scene-background-color="#F5F5F5"
-        renderer-height="360"
-        renderer-width="360">
+        renderer-height="700"
+        renderer-width="700">
         <three-model
-          id="frame-one"
+          id="frame-three"
           slot="model"
-          contour-by="flexure"
+          contour-by="id"
           data='[]'
           color="#00BFA5">
         </three-model>
@@ -72,8 +37,6 @@
 </div>
 </body>
 <script>
-//  $.getJSON("frame-three.json", data => document.getElementById("frame-three").setAttribute("data", JSON.stringify(data)));
-//  $.getJSON("frame-two.json", data => document.getElementById("frame-two").setAttribute("data", JSON.stringify(data)));
-  $.getJSON("frame-one.json", data => document.getElementById("frame-one").setAttribute("data", JSON.stringify(data)));
+  $.getJSON("frame-three.json", data => document.getElementById("frame-three").setAttribute("data", JSON.stringify(data)));
 </script>
 </html>
