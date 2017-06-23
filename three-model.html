@@ -69,7 +69,7 @@
             type: Array,
             computed: '_computeContourValues(contourBy, contourColors, data)',
           },
-          boundaries: {type: Object, observer: '_boundariesChanged'},
+          boundaries: Object,
         }
       }
 
@@ -80,7 +80,22 @@
       _handleRenderedItemCountChanged(event) {
         const numberOfLinesRendered = event.detail.value;
         if (numberOfLinesRendered === this.numberOfLines) {
+          if (!this.boundaries) return;
+          this.position = [
+            (this.boundaries.xMin + this.boundaries.xMax) / 2,
+            (this.boundaries.yMin + this.boundaries.yMax) / 2,
+            (this.boundaries.zMin + this.boundaries.zMax) / 2
+          ];
+
+          this.radius = _.max([
+            this.boundaries.xMax - this.position[0],
+            this.boundaries.yMax - this.position[1],
+            this.boundaries.zMax - this.position[2]
+          ]);
+
           this.stroke = this.radius / 40;
+
+          this.dispatchEvent(new CustomEvent('model-boundaries-change', {bubbles: true}));
         }
       }
 
@@ -91,7 +106,6 @@
 
       _dataChanged(newData) {
         this.lines = [];
-//        this.lines = newData;
         setTimeout(() => {this.lines = newData}, 0);
         const group = new THREE.Group();
         group.name = "mesh";
@@ -108,6 +122,7 @@
       }
 
       _handleMeshChange() {
+//        console.log('_handleMeshChange');
         this._dispatchModelNeedsRender();
       }
 
@@ -128,24 +143,6 @@
           zMax: _.max([this.boundaries ? this.boundaries.zMax : 0, v0[2], v1[2]]),
           zMin: _.min([this.boundaries ? this.boundaries.zMin : 0, v0[2], v1[2]]),
         }
-      }
-
-      _boundariesChanged(boundaries) {
-        if (!boundaries) return;
-//        console.log('_boundariesChanged', boundaries);
-        this.position = [
-          (boundaries.xMin + boundaries.xMax) / 2,
-          (boundaries.yMin + boundaries.yMax) / 2,
-          (boundaries.zMin + boundaries.zMax) / 2
-        ];
-
-        this.radius = _.max([
-          boundaries.xMax - this.position[0],
-          boundaries.yMax - this.position[1],
-          boundaries.zMax - this.position[2]
-        ]);
-
-        this.dispatchEvent(new CustomEvent('model-boundaries-change', {bubbles: true}));
       }
 
       _computeContourValues(contourBy, contourColors, data) {

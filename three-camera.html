@@ -10,7 +10,7 @@
 
       static get properties() {
         return {
-          modelGeometry: Object,
+          modelGeometry: {type: Object, value: {radius: 1, position: [0, 0, 0]}},
           position: Array,
           distanceToTarget: Number,
           frustum: Array,
