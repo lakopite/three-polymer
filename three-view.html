@@ -1,5 +1,6 @@
 <script src="../threejs/build/three.min.js"></script>
 <script src="../stats.js/build/stats.min.js"></script>
+<link rel="import" href="../polymer/lib/utils/debounce.html">
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="three-camera.html">
 <link rel="import" href="three-controls.html">
@@ -86,9 +87,14 @@
 
       // TODO: we are calling render far too many times when the model is being constructed
       _render() {
-//        console.log('_render');
-        if (this.stats) this.stats.update();
-        this.$.renderer.render();
+        this._debouncer = Polymer.Debouncer.debounce(
+          this._debouncer,
+          Polymer.Async.animationFrame,
+          () => {
+            console.log('_render');
+            if (this.stats) this.stats.update();
+            this.$.renderer.render();
+          });
       }
 
       _computeStats(showStats) {
@@ -114,11 +120,7 @@
       }
 
       _handleControlsChanged() {
-        const millisNow = performance.now();
-        if (millisNow > this.millisWhenRendered + this.minimumMillisBetweenFrames) {
-          this._render();
-          this.millisWhenRendered = millisNow;
-        }
+        this._render();
       }
 
       _handleNewModel(event) {

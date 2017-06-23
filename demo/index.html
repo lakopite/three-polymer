@@ -20,12 +20,13 @@
   <demo-snippet>
     <template>
       <three-view
-        id="view-four"
+        id="view"
+        show-stats="true"
         scene-background-color="#F5F5F5"
         renderer-height="700"
         renderer-width="700">
         <three-model
-          id="frame-four"
+          id="frame"
           slot="model"
           contour-by="beamnum"
           data='[]'
@@ -37,6 +38,6 @@
 </div>
 </body>
 <script>
-  $.getJSON("frame-four.json", data => document.getElementById("frame-four").setAttribute("data", JSON.stringify(data)));
+  $.getJSON("frame-five.json", data => document.getElementById("frame").setAttribute("data", JSON.stringify(data)));
 </script>
 </html>
