@@ -29,7 +29,7 @@
     it('instantiates the element', () => {
       expect(element.localName).to.equal('three-line-geometry');
       expect(element.cameraNormal).to.deep.equal([0, 1, 0]);
-      expect(element.stroke).to.equal(1);
+      expect(element.stroke).to.be.undefined;
       expect(element.vertices).to.deep.equal([[0, 0, 0], [0, 0, 10]]);
     });
 
@@ -39,6 +39,7 @@
 
     describe('the geometry', () => {
       it('gets calculated correctly for a vertical column', () => {
+        element.stroke = 1;
         const vertices = element.object.vertices.map((vector3) => vector3.toArray());
 
         expect(vertices).to.include.deep.members([
@@ -47,6 +48,7 @@
       });
 
       it('gets calculated correctly for a beam not perpendicular to the camera', () => {
+        element.stroke = 1;
         element.vertices = [[0, 0, 20], [10, 10, 20]];
         const vertices = element.object.vertices.map((vector3) => vector3.toArray());
 
