@@ -9,8 +9,8 @@
       is="dom-repeat"
       items="{{lines}}"
       as="line"
-      initial-count="1"
-      target-framerate="30"
+      initial-count="100"
+      target-framerate="1"
       on-rendered-item-count-changed="_handleRenderedItemCountChanged">
       <three-mesh
         id="line-{{index}}"
@@ -95,12 +95,16 @@
 
           this.stroke = this.radius / 40;
 
-          this.dispatchEvent(new CustomEvent('model-boundaries-change', {bubbles: true}));
+          this.dispatchEvent(new CustomEvent('model-ready', {bubbles: true}));
         }
       }
 
       _objectChanged() {
-//        console.log('_objectChanged');
+        this._dispatchNewModel();
+      }
+
+      _dispatchNewModel() {
+//        console.log('_dispatchNewModel');
         this.dispatchEvent(new CustomEvent('new-model', {bubbles: true}));
       }
 

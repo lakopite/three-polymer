@@ -40,6 +40,7 @@
       expect(element.sceneBackgroundColor).to.equal('#F5F5F2');
       expect(element.rendererWidth).to.equal(12);
       expect(element.rendererHeight).to.equal(21);
+      expect(element.modelIsReady).to.be.false;
     });
 
     it('appends the renderer DOM element to the view', () => {
@@ -52,6 +53,20 @@
       expect(element.root.querySelectorAll('canvas')).to.have.lengthOf(1);
     });
 
+    it('calls the renderer once initially', (done) => {
+      replace('three-controls').with('fake-three-controls');
+      replace('three-renderer').with('fake-three-renderer');
+      replace('three-model').with('fake-three-model');
+      replace('three-scene').with('fake-three-scene');
+      element = fixture('basic');
+      const fakeThreeRenderer = element.shadowRoot.querySelector('fake-three-renderer');
+      flush(() => {
+        expect(fakeThreeRenderer.renderCount).to.equal(1);
+
+        done();
+      });
+    });
+
     it('updates the modelGeometry and renders when the model boundaries change', (done) => {
       replace('three-controls').with('fake-three-controls');
       replace('three-renderer').with('fake-three-renderer');
@@ -61,10 +76,14 @@
       const fakeThreeModel = document.getElementsByTagName('fake-three-model')[0];
       const fakeThreeRenderer = element.shadowRoot.querySelector('fake-three-renderer');
       flush(() => {
-        fakeThreeModel._boundariesChanged([1, 2, 3], 4);
+        fakeThreeModel.position = [1, 2, 3];
+        fakeThreeModel.radius = 4;
+
+        fakeThreeModel._dispatchModelReady();
 
         expect(element.modelGeometry).to.deep.equal({position: [1, 2, 3], radius: 4});
-        expect(fakeThreeRenderer.renderCount).to.equal(1);
+        expect(element.modelIsReady).to.be.true;
+        expect(fakeThreeRenderer.renderCount).to.equal(2);
 
         done();
       });
@@ -79,6 +98,7 @@
       const fakeThreeModel = document.getElementsByTagName('fake-three-model')[0];
       const fakeThreeRenderer = element.shadowRoot.querySelector('fake-three-renderer');
       flush(() => {
+        element.modelIsReady = true;
         fakeThreeModel._dispatchModelNeedsRender();
 
         expect(fakeThreeRenderer.renderCount).to.equal(1);
@@ -86,7 +106,23 @@
       });
     });
 
-    it('replaces the mesh in the scene when it gets a new one, and then renders', (done) => {
+    it('does not attempt to render if the model is not ready', (done) => {
+      replace('three-controls').with('fake-three-controls');
+      replace('three-renderer').with('fake-three-renderer');
+      replace('three-model').with('fake-three-model');
+      replace('three-scene').with('fake-three-scene');
+      element = fixture('basic');
+      const fakeThreeModel = document.getElementsByTagName('fake-three-model')[0];
+      const fakeThreeRenderer = element.shadowRoot.querySelector('fake-three-renderer');
+      flush(() => {
+        fakeThreeModel._dispatchModelNeedsRender();
+
+        expect(fakeThreeRenderer.renderCount).to.equal(0);
+        done();
+      });
+    });
+
+    it('replaces the model in the scene when it gets a new one, and then renders', (done) => {
       replace('three-renderer').with('fake-three-renderer');
       replace('three-controls').with('fake-three-controls');
       replace('three-model').with('fake-three-model');
@@ -96,8 +132,10 @@
       const fakeThreeModel = document.getElementsByTagName('fake-three-model')[0];
       const fakeThreeRenderer = element.shadowRoot.querySelector('fake-three-renderer');
       flush(() => {
+        element.modelIsReady = true;
         fakeThreeModel.object = new THREE.Group();
-        fakeThreeModel._objectChanged();
+
+        fakeThreeModel._dispatchNewModel();
 
         expect(fakeThreeScene.removeCallCount).to.equal(1);
         expect(fakeThreeScene.addCallCount).to.equal(1);
@@ -106,7 +144,7 @@
       });
     });
 
-    it('only adds a mesh to the scene if there is one', () => {
+    it('does not add the model to the scene if there is nothing to add', () => {
       replace('three-renderer').with('fake-three-renderer');
       replace('three-controls').with('fake-three-controls');
       replace('three-model').with('fake-three-model');
@@ -116,7 +154,8 @@
       const fakeThreeModel = document.getElementsByTagName('fake-three-model')[0];
 
       fakeThreeModel.object = undefined;
-      fakeThreeModel._objectChanged();
+
+      fakeThreeModel._dispatchNewModel();
 
       expect(fakeThreeScene.addCallCount).to.equal(0);
     });
@@ -130,6 +169,8 @@
       const fakeThreeControls = element.shadowRoot.querySelector('fake-three-controls');
       const fakeThreeRenderer = element.shadowRoot.querySelector('fake-three-renderer');
       flush(() => {
+        element.modelIsReady = true;
+
         fakeThreeControls.fireControlsChanged();
         fakeThreeControls.fireControlsChanged();
         fakeThreeControls.fireControlsChanged();

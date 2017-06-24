@@ -13,8 +13,8 @@
           newModelCount: {type: Number, value: 0},
           newModelEvent: Object,
           modelNeedsRenderCount: {type: Number, value: 0},
-          boundariesChangedCount: {type: Number, value: 0},
-          boundariesChangedEvent: Object,
+          modelReadyCount: {type: Number, value: 0},
+          modelReadyEvent: Object,
         }
       }
 
@@ -22,7 +22,7 @@
         super.connectedCallback();
         this.addEventListener('new-model', event => this._handleNewModel(event));
         this.addEventListener('model-needs-render', (event) => this._handleModelNeedsRender(event));
-        this.addEventListener('model-boundaries-change', event => this._handleModelBoundariesChanged(event));
+        this.addEventListener('model-ready', event => this._handleModelReady(event));
       }
 
       _handleNewModel(event) {
@@ -34,9 +34,9 @@
         this.modelNeedsRenderCount += 1;
       }
 
-      _handleModelBoundariesChanged(event) {
-        this.boundariesChangedCount += 1;
-        this.boundariesChangedEvent = event;
+      _handleModelReady(event) {
+        this.modelReadyCount += 1;
+        this.modelReadyEvent = event;
       }
     }
 

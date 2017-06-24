@@ -65,7 +65,9 @@
             computed: '_computeStats(showStats)',
             observer: '_statsChanged',
           },
-          model: {type: Object},
+          model: Object,
+          modelIsReady: {type: Boolean, value: false},
+          initialRenderIsComplete: {type: Boolean, value: false},
         }
       }
 
@@ -73,12 +75,13 @@
         super.connectedCallback();
         this.addEventListener('new-model', e => this._handleNewModel(e));
         this.addEventListener('model-needs-render', () => this._handleModelNeedsRender());
-        this.addEventListener('model-boundaries-change', e => this._handleModelBoundariesChange(e));
+        this.addEventListener('model-ready', e => this._handleModelReady(e));
         this.addEventListener('controls-changed', () => this._handleControlsChanged());
         this._render();
       }
 
       _render() {
+        if (!this.modelIsReady && this.initialRenderIsComplete) return;
         this._debouncer = Polymer.Debouncer.debounce(
           this._debouncer,
           Polymer.Async.animationFrame,
@@ -86,6 +89,7 @@
             console.log('_render');
             if (this.stats) this.stats.update();
             this.$.renderer.render();
+            this.initialRenderIsComplete = true;
           });
       }
 
@@ -124,12 +128,13 @@
         this._render();
       }
 
-      _handleModelBoundariesChange(event) {
-//        console.log('_handleModelBoundariesChange');
+      _handleModelReady(event) {
+        console.log('_handleModelReady');
         this.modelGeometry = {
           position: event.target.position,
           radius: event.target.radius,
         };
+        this.modelIsReady = true;
         this._render();
       }
     }

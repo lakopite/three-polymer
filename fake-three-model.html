@@ -23,22 +23,20 @@
         this.addEventListener('mesh-change', () => this._handleMeshChange());
       }
 
-      _objectChanged() {
-        this.dispatchEvent(new CustomEvent('new-model', {bubbles: true}));
-      }
-
-      _boundariesChanged(position, radius) {
-        this.position = position;
-        this.radius = radius;
-        this.dispatchEvent(new CustomEvent('model-boundaries-change', {bubbles: true}));
-      }
-
       _handleNewMesh() {
         this.handleNewMeshCount += 1;
       }
 
       _handleMeshChange() {
         this.handleMeshChangeCount += 1;
+      }
+
+      _dispatchNewModel() {
+        this.dispatchEvent(new CustomEvent('new-model', {bubbles: true}));
+      }
+
+      _dispatchModelReady() {
+        this.dispatchEvent(new CustomEvent('model-ready', {bubbles: true}));
       }
 
       _dispatchModelNeedsRender() {
