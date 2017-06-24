@@ -52,7 +52,7 @@
       expect(element.root.querySelectorAll('canvas')).to.have.lengthOf(1);
     });
 
-    it('updates the modelGeometry and renders when the model boundaries change', () => {
+    it('updates the modelGeometry and renders when the model boundaries change', (done) => {
       replace('three-controls').with('fake-three-controls');
       replace('three-renderer').with('fake-three-renderer');
       replace('three-model').with('fake-three-model');
@@ -60,16 +60,17 @@
       element = fixture('basic');
       const fakeThreeModel = document.getElementsByTagName('fake-three-model')[0];
       const fakeThreeRenderer = element.shadowRoot.querySelector('fake-three-renderer');
+      flush(() => {
+        fakeThreeModel._boundariesChanged([1, 2, 3], 4);
 
-      expect(fakeThreeRenderer.renderCount).to.equal(1);
+        expect(element.modelGeometry).to.deep.equal({position: [1, 2, 3], radius: 4});
+        expect(fakeThreeRenderer.renderCount).to.equal(1);
 
-      fakeThreeModel._boundariesChanged([1, 2, 3], 4);
-
-      expect(element.modelGeometry).to.deep.equal({position: [1, 2, 3], radius: 4});
-      expect(fakeThreeRenderer.renderCount).to.equal(2);
+        done();
+      });
     });
 
-    it('renders when the model says it needs to be rendered', () => {
+    it('renders when the model says it needs to be rendered', (done) => {
       replace('three-controls').with('fake-three-controls');
       replace('three-renderer').with('fake-three-renderer');
       replace('three-model').with('fake-three-model');
@@ -77,15 +78,15 @@
       element = fixture('basic');
       const fakeThreeModel = document.getElementsByTagName('fake-three-model')[0];
       const fakeThreeRenderer = element.shadowRoot.querySelector('fake-three-renderer');
+      flush(() => {
+        fakeThreeModel._dispatchModelNeedsRender();
 
-      expect(fakeThreeRenderer.renderCount).to.equal(1);
-
-      fakeThreeModel._dispatchModelNeedsRender();
-
-      expect(fakeThreeRenderer.renderCount).to.equal(2);
+        expect(fakeThreeRenderer.renderCount).to.equal(1);
+        done();
+      });
     });
 
-    it('replaces the mesh in the scene when it gets a new one, and then renders', () => {
+    it('replaces the mesh in the scene when it gets a new one, and then renders', (done) => {
       replace('three-renderer').with('fake-three-renderer');
       replace('three-controls').with('fake-three-controls');
       replace('three-model').with('fake-three-model');
@@ -94,15 +95,15 @@
       const fakeThreeScene = element.shadowRoot.querySelector('fake-three-scene');
       const fakeThreeModel = document.getElementsByTagName('fake-three-model')[0];
       const fakeThreeRenderer = element.shadowRoot.querySelector('fake-three-renderer');
+      flush(() => {
+        fakeThreeModel.object = new THREE.Group();
+        fakeThreeModel._objectChanged();
 
-      expect(fakeThreeRenderer.renderCount).to.equal(1);
-
-      fakeThreeModel.object = new THREE.Group();
-      fakeThreeModel._objectChanged();
-
-      expect(fakeThreeScene.removeCallCount).to.equal(1);
-      expect(fakeThreeScene.addCallCount).to.equal(1);
-      expect(fakeThreeRenderer.renderCount).to.equal(2);
+        expect(fakeThreeScene.removeCallCount).to.equal(1);
+        expect(fakeThreeScene.addCallCount).to.equal(1);
+        expect(fakeThreeRenderer.renderCount).to.equal(1);
+        done();
+      });
     });
 
     it('only adds a mesh to the scene if there is one', () => {
@@ -120,7 +121,7 @@
       expect(fakeThreeScene.addCallCount).to.equal(0);
     });
 
-    it('only calls the renderer once when the controls change multiple times in close succession', () => {
+    it('only calls the renderer once when the controls change multiple times in close succession', (done) => {
       replace('three-controls').with('fake-three-controls');
       replace('three-renderer').with('fake-three-renderer');
       replace('three-model').with('fake-three-model');
@@ -128,14 +129,14 @@
       element = fixture('basic');
       const fakeThreeControls = element.shadowRoot.querySelector('fake-three-controls');
       const fakeThreeRenderer = element.shadowRoot.querySelector('fake-three-renderer');
+      flush(() => {
+        fakeThreeControls.fireControlsChanged();
+        fakeThreeControls.fireControlsChanged();
+        fakeThreeControls.fireControlsChanged();
 
-      expect(fakeThreeRenderer.renderCount).to.equal(1);
-
-      fakeThreeControls.fireControlsChanged();
-      fakeThreeControls.fireControlsChanged();
-      fakeThreeControls.fireControlsChanged();
-
-      expect(fakeThreeRenderer.renderCount).to.equal(2);
+        expect(fakeThreeRenderer.renderCount).to.equal(1);
+        done();
+      });
     });
   });
 </script>

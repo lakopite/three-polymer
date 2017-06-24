@@ -165,13 +165,6 @@
         });
       });
 
-      it('tells the view when it gets new boundaries', () => {
-        threeModel.boundaries = {};
-
-        expect(parent.boundariesChangedCount).to.equal(1);
-        expect(parent.boundariesChangedEvent.bubbles).to.be.true;
-      });
-
       it('tells the view if the model requires a re-render', (done) => {
         replace('three-mesh').with('fake-three-mesh');
         parent = fixture('parent');
