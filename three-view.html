@@ -65,13 +65,6 @@
             computed: '_computeStats(showStats)',
             observer: '_statsChanged',
           },
-          millisWhenRendered: {type: Number, value: 0},
-          maximumFramesPerSecond: {type: Number, value: 60, readOnly: true},
-          minimumMillisBetweenFrames: {
-            type: Number,
-            computed: '_computeMinimumMillisBetweenFrames(maximumFramesPerSecond)',
-            readOnly: true,
-          },
           model: {type: Object},
         }
       }
@@ -85,7 +78,6 @@
         this._render();
       }
 
-      // TODO: we are calling render far too many times when the model is being constructed
       _render() {
         this._debouncer = Polymer.Debouncer.debounce(
           this._debouncer,
@@ -105,10 +97,6 @@
         stats.dom.style.left = '0px';
         stats.dom.style.top = '0px';
         return stats;
-      }
-
-      _computeMinimumMillisBetweenFrames(maximumFramesPerSecond) {
-        return 1000 / maximumFramesPerSecond;
       }
 
       _statsChanged(newStats) {
