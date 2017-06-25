@@ -37,10 +37,11 @@
           lines: Array,
           data: {type: Array, observer: '_dataChanged'},
           numberOfLines: {type: Number, computed: '_computeNumberOfLines(data)'},
+          allLinesAreStamped: {type: Boolean, value: false, observer: '_allLinesAreStampedChanged'},
           meshes: {type: Array, value: []},
           object: {
             type: Object,
-            observer: '_objectChanged',
+            observer: '_dispatchNewModel',
           },
           position: Array,
           radius: Number,
@@ -77,9 +78,31 @@
         return data.length;
       }
 
+      _computeContourValues(contourBy, contourColors, data) {
+//        console.log('_computeContourValues');
+        const length = contourColors.length;
+        const values = _.map(data, (line) => {return line.metadata[contourBy]});
+
+        if (values.length === 1) return new Array(length).fill(values[0]);
+
+        const max = _.max(values);
+        const min = _.min(values);
+        const step = (max - min) / length;
+        let contourValues = _.rangeRight(max, min, -step)
+          .map((it) => {return _.round(it, 4)});
+
+        if (contourValues.length === 14) contourValues = _.drop(contourValues);
+
+        return contourValues;
+      }
+
       _handleRenderedItemCountChanged(event) {
-        const numberOfLinesRendered = event.detail.value;
-        if (numberOfLinesRendered === this.numberOfLines) {
+        const numberOfLinesStamped = event.detail.value;
+        this.allLinesAreStamped = numberOfLinesStamped === this.numberOfLines;
+      }
+
+      _allLinesAreStampedChanged(allLinesAreStamped) {
+        if (allLinesAreStamped) {
           if (!this.boundaries) return;
           this.position = [
             (this.boundaries.xMin + this.boundaries.xMax) / 2,
@@ -95,17 +118,8 @@
 
           this.stroke = this.radius / 40;
 
-          this.dispatchEvent(new CustomEvent('model-ready', {bubbles: true}));
+          this._dispatchModelReady();
         }
-      }
-
-      _objectChanged() {
-        this._dispatchNewModel();
-      }
-
-      _dispatchNewModel() {
-//        console.log('_dispatchNewModel');
-        this.dispatchEvent(new CustomEvent('new-model', {bubbles: true}));
       }
 
       _dataChanged(newData) {
@@ -115,23 +129,6 @@
         group.name = "mesh";
         this.boundaries = undefined;
         this.object = group;
-      }
-
-      _handleNewMesh(event) {
-//        console.log('_handleNewMesh');
-        const mesh = event.target.object;
-        this._updateBoundaries(event.target.vertices);
-        this.object.add(mesh);
-        this._dispatchModelNeedsRender();
-      }
-
-      _handleMeshChange() {
-//        console.log('_handleMeshChange');
-        this._dispatchModelNeedsRender();
-      }
-
-      _dispatchModelNeedsRender() {
-        this.dispatchEvent(new CustomEvent('model-needs-render', {bubbles: true}));
       }
 
       _updateBoundaries(vertices) {
@@ -149,22 +146,30 @@
         }
       }
 
-      _computeContourValues(contourBy, contourColors, data) {
-//        console.log('_computeContourValues');
-        const length = contourColors.length;
-        const values = _.map(data, (line) => {return line.metadata[contourBy]});
+      _handleNewMesh(event) {
+//        console.log('_handleNewMesh');
+        const mesh = event.target.object;
+        this._updateBoundaries(event.target.vertices);
+        this.object.add(mesh);
+        this._dispatchModelNeedsRender();
+      }
 
-        if (values.length === 1) return new Array(length).fill(values[0]);
+      _handleMeshChange() {
+//        console.log('_handleMeshChange');
+        this._dispatchModelNeedsRender();
+      }
 
-        const max = _.max(values);
-        const min = _.min(values);
-        const step = (max - min) / length;
-        let contourValues = _.rangeRight(max, min, -step)
-          .map((it) => {return _.round(it, 4)});
+      _dispatchNewModel() {
+        this.dispatchEvent(new CustomEvent('new-model', {bubbles: true}));
+      }
 
-        if (contourValues.length === 14) contourValues = _.drop(contourValues);
+      _dispatchModelReady() {
+//        console.log('_dispatchModelReady');
+        this.dispatchEvent(new CustomEvent('model-ready', {bubbles: true}));
+      }
 
-        return contourValues;
+      _dispatchModelNeedsRender() {
+        this.dispatchEvent(new CustomEvent('model-needs-render', {bubbles: true}));
       }
     }
 
