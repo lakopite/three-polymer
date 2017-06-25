@@ -37,7 +37,6 @@
           lines: Array,
           data: {type: Array, observer: '_dataChanged'},
           numberOfLines: {type: Number, computed: '_computeNumberOfLines(data)'},
-          allLinesAreStamped: {type: Boolean, value: false, observer: '_allLinesAreStampedChanged'},
           meshes: {type: Array, value: []},
           object: {
             type: Object,
@@ -97,11 +96,7 @@
       }
 
       _handleRenderedItemCountChanged(event) {
-        const numberOfLinesStamped = event.detail.value;
-        this.allLinesAreStamped = numberOfLinesStamped === this.numberOfLines;
-      }
-
-      _allLinesAreStampedChanged(allLinesAreStamped) {
+        const allLinesAreStamped = event.detail.value === this.numberOfLines;
         if (allLinesAreStamped) {
           if (!this.boundaries) return;
           this.position = [
