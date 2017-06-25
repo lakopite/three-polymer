@@ -1,5 +1,7 @@
 # \<three-polymer\>
-Reusable polymer element for three.js geometry rendering
+[![slack](http://slackin-xfuuoewxii.now.sh/badge.svg)](https://slackin-xfuuoewxii.now.sh)
+
+Polymer web components for rendering 3D geometry in the browser
 
 ## Setup
 Install dependencies:
