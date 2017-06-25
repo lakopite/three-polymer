@@ -1,7 +1,8 @@
 # \<three-polymer\>
 [![slack](http://slackin-xfuuoewxii.now.sh/badge.svg)](https://slackin-xfuuoewxii.now.sh)
+[![bower](https://img.shields.io/bower/v/bootstrap.svg)](https://bower.io/)
 
-Polymer web components for rendering 3D geometry in the browser with WebGL
+Polymer web components for rendering 3D geometry in the browser
 
 ## Setup
 Install dependencies:
