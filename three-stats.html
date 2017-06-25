@@ -1,0 +1,46 @@
+<script src="../stats.js/build/stats.min.js"></script>
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="three-stats">
+  <template></template>
+  <script>
+    class ThreeStats extends Polymer.Element {
+
+      static get is() {
+        return 'three-stats';
+      }
+
+      static get properties() {
+        return {
+          showStats: {type: Boolean, value: false},
+          object: {
+            type: Object,
+            computed: '_computeStats(showStats)',
+            observer: '_statsChanged',
+          },
+        }
+      }
+
+      update() {
+        if (!this.showStats) return;
+        this.object.update();
+      }
+
+      _computeStats(showStats) {
+        if (!showStats) return;
+        const stats = new Stats();
+        stats.setMode(0);
+        stats.dom.style.position = 'relative';
+        stats.dom.style.left = '0px';
+        stats.dom.style.top = '0px';
+        return stats;
+      }
+
+      _statsChanged(newStats) {
+        this.root.appendChild(newStats.dom);
+      }
+    }
+
+    customElements.define(ThreeStats.is, ThreeStats);
+  </script>
+</dom-module>

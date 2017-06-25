@@ -1,8 +1,8 @@
 <script src="../threejs/build/three.min.js"></script>
-<script src="../stats.js/build/stats.min.js"></script>
 <link rel="import" href="../polymer/lib/utils/debounce.html">
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="three-camera.html">
+<link rel="import" href="three-stats.html">
 <link rel="import" href="three-controls.html">
 <link rel="import" href="three-renderer.html">
 <link rel="import" href="three-scene.html">
@@ -14,7 +14,10 @@
 
 <dom-module id="three-view">
   <template>
-    <div id="stats"></div>
+    <three-stats
+      id="stats"
+      show-stats="[[showStats]]">
+    </three-stats>
     <three-controls
       id="controls"
       camera="{{camera}}"
@@ -49,22 +52,17 @@
 
       static get properties() {
         return {
-          rendererWidth: Number,
-          rendererHeight: Number,
-          sceneBackgroundColor: String,
-          scene: Object,
           camera: Object,
+          scene: Object,
+          sceneBackgroundColor: String,
+          model: Object,
           modelRadius: Number,
           modelPosition: Array,
           modelGeometry: Object,
+          rendererWidth: Number,
+          rendererHeight: Number,
           canvas: {type: Object, observer: '_canvasChanged'},
           showStats: {type: Boolean, value: false},
-          stats: {
-            type: Object,
-            computed: '_computeStats(showStats)',
-            observer: '_statsChanged',
-          },
-          model: Object,
           modelIsReady: {type: Boolean, value: false},
           initialRenderIsComplete: {type: Boolean, value: false},
         }
@@ -84,24 +82,10 @@
           Polymer.Async.animationFrame,
           () => {
             console.log('_render');
-            if (this.stats) this.stats.update();
+            this.$.stats.update();
             this.$.renderer.render();
             this.initialRenderIsComplete = true;
           });
-      }
-
-      _computeStats(showStats) {
-        if (!showStats) return;
-        const stats = new Stats();
-        stats.setMode(0);
-        stats.dom.style.position = 'relative';
-        stats.dom.style.left = '0px';
-        stats.dom.style.top = '0px';
-        return stats;
-      }
-
-      _statsChanged(newStats) {
-        this.$.stats.appendChild(newStats.dom);
       }
 
       _canvasChanged(newCanvas) {
