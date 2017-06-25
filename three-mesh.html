@@ -28,7 +28,7 @@
           color: {
             type: String,
             readOnly: true,
-            observer: '_colorChanged',
+            observer: '_dispatchMeshChange',
             computed: '_computeColor(contourValues, contourColors, contourBy, metadata)',
           },
           geometry: {type: Object, observer: '_geometryChanged'},
@@ -36,7 +36,7 @@
           object: {
             type: Object,
             value: () => new THREE.Mesh(),
-            observer: '_newMesh',
+            observer: '_dispatchNewMesh',
           },
           stroke: Number,
         }
@@ -61,21 +61,12 @@
         this._dispatchMeshChange();
       }
 
-      _colorChanged() {
-        this._dispatchMeshChange();
-      }
-
-      _newMesh() {
-        this._dispatchNewMesh();
-      }
-
       _dispatchMeshChange() {
-        this.dispatchEvent(new CustomEvent('mesh-change', {composed: true, bubbles: true}));
+        this.dispatchEvent(new CustomEvent('mesh-change', {bubbles: true}));
       }
 
-      // TODO: does this need to bubble and be composed?
       _dispatchNewMesh() {
-        this.dispatchEvent(new CustomEvent('new-mesh', {composed: true, bubbles: true}));
+        this.dispatchEvent(new CustomEvent('new-mesh', {bubbles: true}));
       }
     }
 
