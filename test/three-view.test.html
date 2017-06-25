@@ -171,9 +171,9 @@
       flush(() => {
         element.modelIsReady = true;
 
-        fakeThreeControls.fireControlsChanged();
-        fakeThreeControls.fireControlsChanged();
-        fakeThreeControls.fireControlsChanged();
+        fakeThreeControls._dispatchModelNeedsRender();
+        fakeThreeControls._dispatchModelNeedsRender();
+        fakeThreeControls._dispatchModelNeedsRender();
 
         expect(fakeThreeRenderer.renderCount).to.equal(1);
         done();

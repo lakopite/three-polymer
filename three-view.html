@@ -74,10 +74,8 @@
       connectedCallback() {
         super.connectedCallback();
         this.addEventListener('new-model', e => this._handleNewModel(e));
-        this.addEventListener('model-needs-render', () => this._handleModelNeedsRender());
         this.addEventListener('model-ready', e => this._handleModelReady(e));
-        this.addEventListener('controls-changed', () => this._handleControlsChanged());
-        this._render();
+        this.addEventListener('model-needs-render', () => this._handleModelNeedsRender());
       }
 
       _render() {
@@ -111,20 +109,12 @@
         this.root.appendChild(newCanvas);
       }
 
-      _handleControlsChanged() {
-        this._render();
-      }
-
       _handleNewModel(event) {
         this.model = event.target.object;
         const scene = this.$.scene;
         scene.removeAllObjects();
         if (this.model === undefined) return;
         scene.addObject(this.model);
-        this._render();
-      }
-
-      _handleModelNeedsRender() {
         this._render();
       }
 
@@ -135,6 +125,10 @@
           radius: event.target.radius,
         };
         this.modelIsReady = true;
+        this._render();
+      }
+
+      _handleModelNeedsRender() {
         this._render();
       }
     }
