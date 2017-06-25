@@ -52,7 +52,7 @@
         element.vertices = [[0, 0, 20], [10, 10, 20]];
         const vertices = element.object.vertices.map((vector3) => vector3.toArray());
 
-        expect(element.offsetVector).to.deep.equal([0, 0, -1]);
+        expect(element.unitOffsetVector).to.deep.equal([0, 0, -1]);
         expect(vertices).to.include.deep.members([
           [0, 0, 19.5], [0, 0, 20.5], [10, 10, 19.5], [10, 10, 20.5]
         ]);
@@ -63,7 +63,7 @@
         element.vertices = [[0, 0, 0], [10, 10, 10]];
         const vertices = element.object.vertices.map((vector3) => vector3.toArray());
 
-        expect(element.offsetVector).to.deep.equal([0.7071, 0, -0.7071]);
+        expect(element.unitOffsetVector).to.deep.equal([0.7071, 0, -0.7071]);
 
         expect(vertices).to.include.deep.members([
           [0.5303, 0, -0.5303], [-0.5303, 0, 0.5303], [9.47, 10, 10.53], [10.53, 10, 9.47]

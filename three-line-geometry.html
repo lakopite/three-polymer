@@ -19,7 +19,7 @@
             computed: '_computeGeometry(vertices, cameraNormal, stroke)',
             notify: true,
           },
-          offsetVector: Array,
+          unitOffsetVector: Array,
           midpoint: {type: Array, computed: '_computeMidpoint(vertices)'},
         }
       }
@@ -27,29 +27,32 @@
       _computeGeometry(vertices, cameraNormal, stroke) {
         if (!(vertices && cameraNormal && stroke)) return;
 //        console.log("_computeGeometry with midpoint:", this._computeMidpoint(vertices), "stroke:", stroke);
-        const toSignificantFigures = (coordinate) => parseFloat(_.round(coordinate, 5).toPrecision(4));
 
         const centerLineVector = this._scaleVector(_.zipWith(vertices[1], vertices[0], (a, b) => a - b), 1);
         const projectedCenterLineVector = _.zipWith(centerLineVector, cameraNormal, (a, b) => a * (1 - b));
 
-        this.offsetVector = new THREE.Vector3(...projectedCenterLineVector)
+        this.unitOffsetVector = new THREE.Vector3(...projectedCenterLineVector)
           .applyAxisAngle(new THREE.Vector3(...cameraNormal), Math.PI / 2)
           .normalize()
           .toArray()
-          .map(toSignificantFigures);
+          .map(this._toSignificantFigures);
 
-        const scaledOffsetVector = this._scaleVector(this.offsetVector, stroke / 2);
+        const scaledOffsetVector = this._scaleVector(this.unitOffsetVector, stroke / 2);
 
-        const v0l = _.zipWith(vertices[0], scaledOffsetVector, (a, b) => a + b).map(toSignificantFigures);
-        const v0r = _.zipWith(vertices[0], scaledOffsetVector, (a, b) => a - b).map(toSignificantFigures);
-        const v1l = _.zipWith(vertices[1], scaledOffsetVector, (a, b) => a + b).map(toSignificantFigures);
-        const v1r = _.zipWith(vertices[1], scaledOffsetVector, (a, b) => a - b).map(toSignificantFigures);
+        const v0l = _.zipWith(vertices[0], scaledOffsetVector, (a, b) => a + b).map(this._toSignificantFigures);
+        const v0r = _.zipWith(vertices[0], scaledOffsetVector, (a, b) => a - b).map(this._toSignificantFigures);
+        const v1l = _.zipWith(vertices[1], scaledOffsetVector, (a, b) => a + b).map(this._toSignificantFigures);
+        const v1r = _.zipWith(vertices[1], scaledOffsetVector, (a, b) => a - b).map(this._toSignificantFigures);
 
         const geometry = new THREE.Geometry();
         geometry.vertices.push(...[v0l, v0r, v1r, v1l].map(a => new THREE.Vector3(...a)));
         geometry.faces.push(...[[0, 1, 2], [0, 2, 3]].map(a => new THREE.Face3(...a)));
 
         return geometry;
+      }
+
+      _toSignificantFigures(coordinate) {
+        return parseFloat(_.round(coordinate, 5).toPrecision(4))
       }
 
       _scaleVector(vector, magnitude) {
