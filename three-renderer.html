@@ -1,4 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/utils/debounce.html">
+<link rel="import" href="../polymer/lib/utils/flush.html">
 
 <dom-module id="three-renderer">
   <script>
@@ -10,12 +12,13 @@
 
       static get properties() {
         return {
-          object: {type: Object, computed: '_computeObject()'},
+          object: {type: Object, value: () => new THREE.WebGLRenderer({antialias: true})},
           camera: Object,
           scene: Object,
           canvas: {type: Object, computed: '_computeCanvas(object)', notify: true},
           width: Number,
           height: Number,
+          renderCount: {type: Number, value: 0},
         }
       }
 
@@ -27,15 +30,19 @@
 
       render() {
         if (!(this.scene && this.camera)) return;
-        this.object.render(this.scene, this.camera);
+        this._debouncer = Polymer.Debouncer.debounce(
+          this._debouncer,
+          Polymer.Async.animationFrame,
+          () => {
+            console.log('render');
+            this.object.render(this.scene, this.camera);
+            this.renderCount += 1;
+          });
+        Polymer.enqueueDebouncer(this._debouncer)
       }
 
-      _computeObject() {
-        return new THREE.WebGLRenderer({antialias: true})
-      }
-
-      _computeCanvas() {
-        return this.object.domElement;
+      _computeCanvas(object) {
+        return object.domElement;
       }
 
       _sizeChanged(width, height) {

@@ -1,5 +1,4 @@
 <script src="../threejs/build/three.min.js"></script>
-<link rel="import" href="../polymer/lib/utils/debounce.html">
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="three-camera.html">
 <link rel="import" href="three-stats.html">
@@ -77,15 +76,9 @@
 
       _render() {
         if (!this.modelIsReady && this.initialRenderIsComplete) return;
-        this._debouncer = Polymer.Debouncer.debounce(
-          this._debouncer,
-          Polymer.Async.animationFrame,
-          () => {
-            console.log('_render');
-            this.$.stats.update();
-            this.$.renderer.render();
-            this.initialRenderIsComplete = true;
-          });
+        this.$.stats.update();
+        this.$.renderer.render();
+        this.initialRenderIsComplete = true;
       }
 
       _canvasChanged(newCanvas) {
@@ -102,7 +95,7 @@
       }
 
       _handleModelReady(event) {
-        console.log('_handleModelReady');
+//        console.log('_handleModelReady');
         this.modelGeometry = {
           position: event.target.position,
           radius: event.target.radius,

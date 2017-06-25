@@ -40,6 +40,31 @@
       expect(element.object.getSize().width).to.equal(43);
     });
 
+    it('debounces calls to render', (done) => {
+      element.scene = new THREE.Scene();
+      element.camera = new THREE.Camera();
+
+      element.render();
+      element.render();
+      element.render();
+
+      flush(() => {
+        expect(element.renderCount).to.equal(1);
+
+        done();
+      });
+    });
+
+    it('does not render without a scene and a camera', (done) => {
+      element.render();
+
+      flush(() => {
+        expect(element.renderCount).to.equal(0);
+
+        done();
+      });
+    });
+
   });
 </script>
 </body>
