@@ -1,6 +1,6 @@
 # \<three-polymer\>
 [![slack](http://slackin-xfuuoewxii.now.sh/badge.svg)](https://slackin-xfuuoewxii.now.sh)
-[![bower](https://img.shields.io/bower/v/bootstrap.svg)]()
+[![bower](https://img.shields.io/bower/v/bootstrap.svg)](https://github.com/lakopite/three-polymer)
 
 Polymer web components for rendering 3D geometry in the browser with WebGL
 
