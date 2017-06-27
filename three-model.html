@@ -11,10 +11,12 @@
       as="line"
       initial-count="100"
       target-framerate="1"
+      filter="_isWithinCoordinateBoundaries"
       on-rendered-item-count-changed="_handleRenderedItemCountChanged">
       <three-mesh
         id="line-{{index}}"
         on-new-mesh="_handleNewMesh"
+        on-remove-mesh="_handleRemoveMesh"
         on-mesh-change="_handleMeshChange"
         vertices="[[line.vertices]]"
         metadata="[[line.metadata]]"
@@ -70,7 +72,34 @@
             computed: '_computeContourValues(contourBy, contourColors, data)',
           },
           boundaries: Object,
+          geometryFilter: {type: Object, observer: '_geometryFilterChanged'},
         }
+      }
+
+      _geometryFilterChanged() {
+        this.$.meshes.render();
+      }
+
+      _isWithinCoordinateBoundaries(line) {
+        if (!this.geometryFilter) return true;
+
+        const v0 = line.vertices[0];
+        const v1 = line.vertices[1];
+
+        const boundingBox = {
+          xMin: _.min([v0[0], v1[0]]),
+          yMin: _.min([v0[1], v1[1]]),
+          zMin: _.min([v0[2], v1[2]]),
+          xMax: _.max([v0[0], v1[0]]),
+          yMax: _.max([v0[1], v1[1]]),
+          zMax: _.max([v0[2], v1[2]])
+        };
+
+        return Object.keys(this.geometryFilter)
+          .map(key => key.includes('Max')
+            ? boundingBox[key] <= this.geometryFilter[key]
+            : boundingBox[key] >= this.geometryFilter[key])
+          .reduce((a, b) => a && b, true);
       }
 
       _computeNumberOfLines(data) {
@@ -99,6 +128,7 @@
         const allLinesAreStamped = event.detail.value === this.numberOfLines;
         if (allLinesAreStamped) {
           if (!this.boundaries) return;
+          this.geometryFilter = this.boundaries;
           this.position = [
             (this.boundaries.xMin + this.boundaries.xMax) / 2,
             (this.boundaries.yMin + this.boundaries.yMax) / 2,
@@ -146,6 +176,12 @@
         const mesh = event.target.object;
         this._updateBoundaries(event.target.vertices);
         this.object.add(mesh);
+        this._dispatchModelNeedsRender();
+      }
+
+      _handleRemoveMesh(event) {
+        const mesh = event.target.object;
+        this.object.remove(mesh);
         this._dispatchModelNeedsRender();
       }
 

@@ -27,6 +27,23 @@
   </template>
 </test-fixture>
 
+<test-fixture id="medium">
+  <template>
+    <three-model
+      id="medium"
+      slot="model"
+      contour-by="axial"
+      data='[
+      {"vertices":[[0, 0, 0],[0, 0, 10]], "metadata": {"axial": 10, "flexure": 40}},
+      {"vertices":[[5, 5, 0],[5, 5, 10]], "metadata": {"axial": 80, "flexure": 95}},
+      {"vertices":[[10, 10, 0],[10, 10, 10]], "metadata": {"axial": 100, "flexure": 55}},
+      {"vertices":[[0, 0, 10],[5, 5, 10]], "metadata": {"axial": 40, "flexure": 20}},
+      {"vertices":[[5, 5, 10],[10, 10, 10]], "metadata": {"axial": 60, "flexure": 70}}
+      ]'>
+    </three-model>
+  </template>
+</test-fixture>
+
 <test-fixture id="parent">
   <template>
     <fake-three-view>
@@ -106,7 +123,8 @@
       });
 
       // the below two tests were failing intermittently
-      // i believe it is related to: https://github.com/Polymer/polymer/pull/4363
+      // implementation could be improved via the below to mitigate this...
+      // https://github.com/Polymer/polymer/pull/4363
 
       it('calculates the stroke of the line', (done) => {
         element = fixture('basic');
@@ -117,18 +135,48 @@
         });
       });
 
-      it('updates the geometry when a new mesh is added', (done) => {
+      it('calculates geometric properties after all the meshes are painted', (done) => {
         element = fixture('basic');
 
         flush(() => {
-          expect(element.boundaries).to.deep.equal(
-            {xMax: 10, xMin: -10, yMax: 0, yMin: 0, zMax: 10, zMin: -10}
-          );
+          const boundaries = {xMax: 10, xMin: -10, yMax: 0, yMin: 0, zMax: 10, zMin: -10};
+          expect(element.boundaries).to.deep.equal(boundaries);
+          expect(element.geometryFilter).to.deep.equal(element.boundaries);
           expect(element.position).to.deep.equal([0, 0, 0]);
           expect(element.radius).to.equal(10);
           done();
         });
       });
+
+      it('filters elements by coordinate geometry with nullable boundaries', (done) => {
+        element = fixture('medium');
+
+        flush(() => {
+          expect(element.$.meshes.renderedItemCount).to.equal(5);
+
+          element.geometryFilter = {xMin: 4, yMin: 4, zMin: 0, xMax: 6, yMax: 6};
+
+          expect(element.$.meshes.renderedItemCount).to.equal(1);
+          done();
+        });
+      });
+
+//      TODO: make this pass
+      xit('removes a mesh', (done) => {
+        replace('three-mesh').with('fake-three-mesh');
+        element = fixture('medium');
+
+        flush(() => {
+          const fakeThreeMesh = element.shadowRoot.querySelector('#line-0');
+          expect(element.object.children).to.have.lengthOf(3);
+
+          fakeThreeMesh._dispatchRemoveMesh();
+
+          expect(element.object.children).to.have.lengthOf(2);
+          done();
+        });
+      });
+
     });
 
     describe('interactions with <three-view>', () => {
@@ -175,6 +223,23 @@
           expect(parent.modelNeedsRenderCount).to.equal(0);
 
           fakeThreeMesh._dispatchMeshChange();
+
+          expect(parent.modelNeedsRenderCount).to.equal(1);
+
+          done();
+        });
+      });
+
+      it('tells the view when it removes a mesh', (done) => {
+        replace('three-mesh').with('fake-three-mesh');
+        parent = fixture('parent');
+        threeModel = parent.querySelector('three-model');
+
+        flush(() => {
+          const fakeThreeMesh = threeModel.shadowRoot.querySelector('#line-0');
+          expect(parent.modelNeedsRenderCount).to.equal(0);
+
+          fakeThreeMesh._dispatchRemoveMesh();
 
           expect(parent.modelNeedsRenderCount).to.equal(1);
 

@@ -16,11 +16,15 @@
       }
 
       _dispatchMeshChange() {
-        this.dispatchEvent(new CustomEvent('mesh-change', {composed: true, bubbles: true}));
+        this.dispatchEvent(new CustomEvent('mesh-change', {bubbles: true}));
       }
 
       _dispatchNewMesh() {
-        this.dispatchEvent(new CustomEvent('new-mesh', {composed: true, bubbles: true}));
+        this.dispatchEvent(new CustomEvent('new-mesh', {bubbles: true}));
+      }
+
+      _dispatchRemoveMesh() {
+        this.dispatchEvent(new CustomEvent('remove-mesh', {bubbles: true}));
       }
     }
 

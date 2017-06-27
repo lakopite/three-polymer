@@ -94,6 +94,16 @@
 
         expect(parent.handleMeshChangeCount).to.equal(4);
       });
+
+      it('tells the model when it gets removed from the dom', () => {
+        parent = fixture('parent');
+        const threeMesh = parent.querySelector('three-mesh');
+        expect(parent.handleRemoveMeshCount).to.equal(0);
+
+        threeMesh.disconnectedCallback();
+
+        expect(parent.handleRemoveMeshCount).to.equal(1);
+      });
     });
 
   });

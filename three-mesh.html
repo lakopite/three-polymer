@@ -42,6 +42,11 @@
         }
       }
 
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this._dispatchRemoveMesh();
+      }
+
       _computeColor(contourValues, contourColors, contourBy, metadata) {
 //        console.log('_computeColor with:', contourValues, contourColors, contourBy, metadata);
         if (!(contourValues && contourColors && contourBy && metadata)) return;
@@ -67,6 +72,10 @@
 
       _dispatchNewMesh() {
         this.dispatchEvent(new CustomEvent('new-mesh', {bubbles: true}));
+      }
+
+      _dispatchRemoveMesh() {
+        this.dispatchEvent(new CustomEvent('remove-mesh', {bubbles: true}));
       }
     }
 
