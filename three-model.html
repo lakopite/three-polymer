@@ -46,8 +46,9 @@
           },
           position: Array,
           radius: Number,
-          contourBy: String,
           stroke: Number,
+          metadataFields: {type: Array, value: [], reflectToAttribute: true},
+          contourBy: String,
           contourColors: {
             type: Array,
             readOnly: true,
@@ -173,9 +174,13 @@
 
       _handleNewMesh(event) {
 //        console.log('_handleNewMesh');
-        const mesh = event.target.object;
         this._updateBoundaries(event.target.vertices);
-        this.object.add(mesh);
+        this.object.add(event.target.object);
+
+        const set = new Set(this.metadataFields);
+        Object.keys(event.target.metadata).forEach(key => set.add(key));
+        this.metadataFields = Array.from(set);
+
         this._dispatchModelNeedsRender();
       }
 

@@ -148,6 +148,15 @@
         });
       });
 
+      it('calculates metadataFields', (done) => {
+        element = fixture('basic');
+
+        flush(() => {
+          expect(element.metadataFields).to.deep.equal(['axial', 'flexure']);
+          done();
+        });
+      });
+
       it('filters elements by coordinate geometry with nullable boundaries', (done) => {
         element = fixture('medium');
 
