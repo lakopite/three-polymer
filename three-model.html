@@ -68,9 +68,14 @@
               "#F44336"
             ]
           },
+          contourBounds: {
+            type: Object,
+            reflectToAttribute: true,
+            computed: '_computeContourBounds(data, contourBy)',
+          },
           contourValues: {
             type: Array,
-            computed: '_computeContourValues(contourBy, contourColors, data)',
+            computed: '_computeContourValues(contourColors, contourBounds)',
           },
           boundaries: {type: Object, reflectToAttribute: true},
           geometryFilter: {type: Object, observer: '_geometryFilterChanged'},
@@ -107,22 +112,27 @@
         return data.length;
       }
 
-      _computeContourValues(contourBy, contourColors, data) {
-//        console.log('_computeContourValues');
+      _computeContourBounds(data, contourBy) {
+        if (data.length === 0) return;
+        const values = data.map(line => line.metadata[contourBy]);
+
+        const max = values.reduce((p, v) => p > v ? p : v);
+        const min = values.reduce((p, v) => p < v ? p : v);
+
+        return {min: min, max: max};
+      }
+
+      _computeContourValues(contourColors, contourBounds) {
+        if (!(contourColors && contourBounds)) return;
         const length = contourColors.length;
-        const values = _.map(data, (line) => {return line.metadata[contourBy]});
+        const step = (contourBounds.max - contourBounds.min) / length;
 
-        if (values.length === 1) return new Array(length).fill(values[0]);
+        const contourValues = [];
+        for (let i = contourBounds.max; contourValues.length !== length; i -= step) {
+          contourValues.push(_.round(i, 4));
+        }
 
-        const max = _.max(values);
-        const min = _.min(values);
-        const step = (max - min) / length;
-        let contourValues = _.rangeRight(max, min, -step)
-          .map((it) => {return _.round(it, 4)});
-
-        if (contourValues.length === 14) contourValues = _.drop(contourValues);
-
-        return contourValues;
+        return contourValues.reverse();
       }
 
       _handleRenderedItemCountChanged(event) {
