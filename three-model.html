@@ -113,7 +113,7 @@
       }
 
       _computeContourBounds(data, contourBy) {
-        if (data.length === 0) return;
+        if (!Array.isArray(data) || data.length === 0) return;
         const values = data.map(line => line.metadata[contourBy]);
 
         const max = values.reduce((p, v) => p > v ? p : v);
