@@ -159,11 +159,13 @@
       }
 
       _dataChanged(newData) {
+//        console.log('_dataChanged');
+        this.boundaries = undefined;
+        this.geometryFilter = undefined;
         this.lines = [];
         setTimeout(() => {this.lines = newData}, 0);
         const group = new THREE.Group();
         group.name = "mesh";
-        this.boundaries = undefined;
         this.object = group;
       }
 

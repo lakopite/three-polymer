@@ -124,9 +124,24 @@
         expect(element.boundaries).to.be.undefined;
       });
 
-      // the below two tests were failing intermittently
+      // will need to restamp all elements on new data to get this to pass
       // implementation could be improved via the below to mitigate this...
       // https://github.com/Polymer/polymer/pull/4363
+      xit('resets the boundaries and geometry filter when the it gets new data', (done) => {
+        element = fixture('basic');
+
+        element.data = [
+          {"vertices": [[-10, 0, -10], [-10, 0, 10]], "metadata": {"axial": 40, "flexure": 20}},
+          {"vertices": [[-10, 0, 10], [10, 0, 10]], "metadata": {"axial": 10, "flexure": 55}},
+          {"vertices": [[10, 0, 10], [10, 0, 30]], "metadata": {"axial": 100, "flexure": 40}}
+        ];
+
+        flush(() => {
+          expect(element.boundaries.zMax).to.equal(30);
+          expect(element.geometryFilter).to.equal(element.boundaries);
+          done();
+        });
+      });
 
       it('calculates the stroke of the line', (done) => {
         element = fixture('basic');
