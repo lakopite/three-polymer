@@ -78,7 +78,7 @@
             type: Array,
             computed: '_computeContourValues(contourColors, contourBounds)',
           },
-          boundaries: {type: Object, reflectToAttribute: true, notify; true},
+          boundaries: {type: Object, reflectToAttribute: true, notify: true},
           geometryFilter: {type: Object, observer: '_geometryFilterChanged'},
         }
       }
