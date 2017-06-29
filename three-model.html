@@ -47,7 +47,7 @@
           position: Array,
           radius: Number,
           stroke: Number,
-          metadataFields: {type: Array, value: [], reflectToAttribute: true},
+          metadataFields: {type: Array, value: [], reflectToAttribute: true, notify: true},
           contourBy: String,
           contourColors: {
             type: Array,
@@ -71,13 +71,14 @@
           contourBounds: {
             type: Object,
             reflectToAttribute: true,
+            notify: true,
             computed: '_computeContourBounds(data, contourBy)',
           },
           contourValues: {
             type: Array,
             computed: '_computeContourValues(contourColors, contourBounds)',
           },
-          boundaries: {type: Object, reflectToAttribute: true},
+          boundaries: {type: Object, reflectToAttribute: true, notify; true},
           geometryFilter: {type: Object, observer: '_geometryFilterChanged'},
         }
       }
