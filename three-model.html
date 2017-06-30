@@ -79,7 +79,7 @@
             computed: '_computeContourValues(contourColors, contourBounds)',
           },
           boundaries: {type: Object, reflectToAttribute: true, notify: true},
-          geometryFilter: {type: Object, observer: '_geometryFilterChanged'},
+          geometryFilter: {type: Object, observer: '_geometryFilterChanged', notify: true},
         }
       }
 
@@ -140,7 +140,7 @@
         const allLinesAreStamped = event.detail.value === this.numberOfLines;
         if (allLinesAreStamped) {
           if (!this.boundaries) return;
-          this.geometryFilter = this.boundaries;
+          this.geometryFilter = _.cloneDeep(this.boundaries);
           this.position = [
             (this.boundaries.xMin + this.boundaries.xMax) / 2,
             (this.boundaries.yMin + this.boundaries.yMax) / 2,
