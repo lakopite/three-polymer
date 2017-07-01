@@ -48,8 +48,6 @@
           numberOfLines: {type: Number, computed: '_computeNumberOfLines(data)'},
           meshes: {type: Array, value: []},
           object: {type: Object, observer: '_dispatchNewModel'},
-          position: Array,
-          radius: Number,
           stroke: Number,
           metadataFields: {type: Array, value: [], reflectToAttribute: true, notify: true},
           contourBy: String,
@@ -57,6 +55,8 @@
           contourLimits: Array,
           contourBounds: {type: Object, reflectToAttribute: true, notify: true},
           boundaries: {type: Object, computed: '_computeBoundaries(data)', reflectToAttribute: true, notify: true},
+          radius: {type: Number, computed: '_computeRadius(boundaries)'},
+          position: {type: Array, computed: '_computePosition(boundaries)'},
           geometryFilter: {type: Object, observer: '_geometryFilterChanged', notify: true},
         }
       }
@@ -96,17 +96,6 @@
         if (allLinesAreStamped) {
           if (!this.boundaries) return;
           this.geometryFilter = _.cloneDeep(this.boundaries);
-          this.position = [
-            (this.boundaries.xMin + this.boundaries.xMax) / 2,
-            (this.boundaries.yMin + this.boundaries.yMax) / 2,
-            (this.boundaries.zMin + this.boundaries.zMax) / 2
-          ];
-
-          this.radius = _.max([
-            this.boundaries.xMax - this.position[0],
-            this.boundaries.yMax - this.position[1],
-            this.boundaries.zMax - this.position[2]
-          ]);
 
           this.stroke = this.radius / 40;
 
@@ -135,6 +124,22 @@
             zMax: boundaries.zMax > vertex[2] ? boundaries.zMax : vertex[2],
             zMin: boundaries.zMin < vertex[2] ? boundaries.zMin : vertex[2]
           }), {xMax: 0, xMin: 0, yMay: 0, yMin: 0, zMaz: 0, zMin: 0});
+      }
+
+      _computePosition(boundaries) {
+        return boundaries ? [
+          (boundaries.xMin + boundaries.xMax) / 2,
+          (boundaries.yMin + boundaries.yMax) / 2,
+          (boundaries.zMin + boundaries.zMax) / 2
+        ] : undefined;
+      }
+
+      _computeRadius(boundaries) {
+        return boundaries ? [
+            boundaries.xMax - boundaries.xMin,
+            boundaries.yMax - boundaries.yMin,
+            boundaries.zMax - boundaries.zMin
+          ].reduce((p, v) => p > v ? p : v) / 2 : undefined;
       }
 
       _handleNewMesh(event) {
