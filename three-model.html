@@ -48,7 +48,12 @@
           numberOfLines: {type: Number, computed: '_computeNumberOfLines(data)'},
           meshes: {type: Array, value: []},
           object: {type: Object, observer: '_dispatchNewModel'},
-          metadataFields: {type: Array, value: [], reflectToAttribute: true, notify: true},
+          metadataFields: {
+            type: Array,
+            computed: '_computeMetadataFields(data)',
+            reflectToAttribute: true,
+            notify: true
+          },
           contourBy: String,
           contourColors: Array,
           contourLimits: Array,
@@ -144,20 +149,20 @@
         return radius / 40;
       }
 
+      _computeMetadataFields(data) {
+        const keys = data
+          .map(line => Object.keys(line.metadata))
+          .reduce((previousKeys, currentKeys) => previousKeys.concat(currentKeys), []);
+        return [...new Set(keys)];
+      }
+
       _handleNewMesh(event) {
-//        console.log('_handleNewMesh');
         this.object.add(event.target.object);
-
-        const set = new Set(this.metadataFields);
-        Object.keys(event.target.metadata).forEach(key => set.add(key));
-        this.metadataFields = Array.from(set);
-
         this._dispatchModelNeedsRender();
       }
 
       _handleRemoveMesh(event) {
-        const mesh = event.target.object;
-        this.object.remove(mesh);
+        this.object.remove(event.target.object);
         this._dispatchModelNeedsRender();
       }
 
