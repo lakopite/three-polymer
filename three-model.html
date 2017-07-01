@@ -47,10 +47,7 @@
           data: {type: Array, observer: '_dataChanged'},
           numberOfLines: {type: Number, computed: '_computeNumberOfLines(data)'},
           meshes: {type: Array, value: []},
-          object: {
-            type: Object,
-            observer: '_dispatchNewModel',
-          },
+          object: {type: Object, observer: '_dispatchNewModel'},
           position: Array,
           radius: Number,
           stroke: Number,
@@ -59,7 +56,7 @@
           contourColors: Array,
           contourLimits: Array,
           contourBounds: {type: Object, reflectToAttribute: true, notify: true},
-          boundaries: {type: Object, reflectToAttribute: true, notify: true},
+          boundaries: {type: Object, computed: '_computeBoundaries(data)', reflectToAttribute: true, notify: true},
           geometryFilter: {type: Object, observer: '_geometryFilterChanged', notify: true},
         }
       }
@@ -119,7 +116,6 @@
 
       _dataChanged(newData) {
 //        console.log('_dataChanged');
-        this.boundaries = undefined;
         this.geometryFilter = undefined;
         this.lines = [];
         setTimeout(() => {this.lines = newData}, 0);
@@ -128,24 +124,21 @@
         this.object = group;
       }
 
-      _updateBoundaries(vertices) {
-//        console.log('_updateBoundaries', vertices);
-        const v0 = vertices[0];
-        const v1 = vertices[1];
-
-        this.boundaries = {
-          xMax: _.max([this.boundaries ? this.boundaries.xMax : 0, v0[0], v1[0]]),
-          xMin: _.min([this.boundaries ? this.boundaries.xMin : 0, v0[0], v1[0]]),
-          yMax: _.max([this.boundaries ? this.boundaries.yMax : 0, v0[1], v1[1]]),
-          yMin: _.min([this.boundaries ? this.boundaries.yMin : 0, v0[1], v1[1]]),
-          zMax: _.max([this.boundaries ? this.boundaries.zMax : 0, v0[2], v1[2]]),
-          zMin: _.min([this.boundaries ? this.boundaries.zMin : 0, v0[2], v1[2]]),
-        }
+      _computeBoundaries(data) {
+        return data.length === 0 ? undefined : data
+          .reduce((previousLine, currentLine) => previousLine.concat(currentLine.vertices), [])
+          .reduce((boundaries, vertex) => new Object({
+            xMax: boundaries.xMax > vertex[0] ? boundaries.xMax : vertex[0],
+            xMin: boundaries.xMin < vertex[0] ? boundaries.xMin : vertex[0],
+            yMax: boundaries.yMax > vertex[1] ? boundaries.yMax : vertex[1],
+            yMin: boundaries.yMin < vertex[1] ? boundaries.yMin : vertex[1],
+            zMax: boundaries.zMax > vertex[2] ? boundaries.zMax : vertex[2],
+            zMin: boundaries.zMin < vertex[2] ? boundaries.zMin : vertex[2]
+          }), {xMax: 0, xMin: 0, yMay: 0, yMin: 0, zMaz: 0, zMin: 0});
       }
 
       _handleNewMesh(event) {
 //        console.log('_handleNewMesh');
-        this._updateBoundaries(event.target.vertices);
         this.object.add(event.target.object);
 
         const set = new Set(this.metadataFields);
