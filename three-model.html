@@ -14,7 +14,7 @@
     <template
       id="meshes"
       is="dom-repeat"
-      items="{{lines}}"
+      items="{{_lines}}"
       as="line"
       initial-count="100"
       target-framerate="1"
@@ -43,26 +43,33 @@
 
       static get properties() {
         return {
-          lines: Array,
           data: {type: Array, observer: '_dataChanged'},
-          numberOfLines: {type: Number, computed: '_computeNumberOfLines(data)'},
-          meshes: {type: Array, value: []},
-          object: {type: Object, observer: '_dispatchNewModel'},
+          contourBy: String,
+          geometryFilter: {
+            type: Object,
+            value: {
+              xMax: undefined,
+              xMin: undefined,
+              yMax: undefined,
+              yMin: undefined,
+              zMax: undefined,
+              zMin: undefined
+            },
+            observer: '_geometryFilterChanged',
+            notify: true
+          },
           metadataFields: {
             type: Array,
             computed: '_computeMetadataFields(data)',
             reflectToAttribute: true,
             notify: true
           },
-          contourBy: String,
-          contourColors: Array,
-          contourLimits: Array,
-          contourBounds: {type: Object, reflectToAttribute: true, notify: true},
+          object: {type: Object, computed: '_computeObject(data)', observer: '_dispatchNewModel'},
           boundaries: {type: Object, computed: '_computeBoundaries(data)', reflectToAttribute: true, notify: true},
           position: {type: Array, computed: '_computePosition(boundaries)'},
           radius: {type: Number, computed: '_computeRadius(boundaries)'},
           stroke: {type: Number, computed: '_computeStroke(radius)'},
-          geometryFilter: {type: Object, observer: '_geometryFilterChanged', notify: true},
+          _lines: Array,
         }
       }
 
@@ -92,12 +99,8 @@
           .reduce((a, b) => a && b, true);
       }
 
-      _computeNumberOfLines(data) {
-        return data.length;
-      }
-
       _handleRenderedItemCountChanged(event) {
-        const allLinesAreStamped = event.detail.value === this.numberOfLines;
+        const allLinesAreStamped = event.detail.value === this.data.length;
         if (allLinesAreStamped) {
           if (!this.boundaries) return;
           this.geometryFilter = _.cloneDeep(this.boundaries);
@@ -109,11 +112,14 @@
       _dataChanged(newData) {
 //        console.log('_dataChanged');
         this.geometryFilter = undefined;
-        this.lines = [];
-        setTimeout(() => {this.lines = newData}, 0);
+        this._lines = [];
+        setTimeout(() => {this._lines = newData}, 0);
+      }
+
+      _computeObject(data) {
         const group = new THREE.Group();
         group.name = "mesh";
-        this.object = group;
+        return group;
       }
 
       _computeBoundaries(data) {
@@ -126,7 +132,7 @@
             yMin: boundaries.yMin < vertex[1] ? boundaries.yMin : vertex[1],
             zMax: boundaries.zMax > vertex[2] ? boundaries.zMax : vertex[2],
             zMin: boundaries.zMin < vertex[2] ? boundaries.zMin : vertex[2]
-          }), {xMax: 0, xMin: 0, yMay: 0, yMin: 0, zMaz: 0, zMin: 0});
+          }), {xMax: 0, xMin: 0, yMax: 0, yMin: 0, zMax: 0, zMin: 0});
       }
 
       _computePosition(boundaries) {
@@ -167,7 +173,6 @@
       }
 
       _handleMeshChange() {
-//        console.log('_handleMeshChange');
         this._dispatchModelNeedsRender();
       }
 
@@ -176,7 +181,6 @@
       }
 
       _dispatchModelReady() {
-//        console.log('_dispatchModelReady');
         this.dispatchEvent(new CustomEvent('model-ready', {bubbles: true}));
       }
 
