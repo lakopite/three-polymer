@@ -3,40 +3,40 @@
 
 Polymer web components for rendering 3D geometry in the browser
 
-##Element <three-model>
-###Properties
-#####data: Array
+## Element <three-model>
+### Properties
+##### data: Array
 An array of objects that compose the model. The objects must include `vertices` as well as `metadata` (e.g.
 `{"vertices":[[0, 0, 0],[0, 0, 10]], "metadata": {"axial": 10, "flexure": 40}}`)
 
-#####contour-by: String
+##### contour-by: String
 The `metadata` field from which contours will be calculated. This field may be any of the fields within `metadataFields`
 
-#####geometryFilter: Object = `{xMax: undefined, xMin: undefined, yMax: undefined, yMin: undefined, zMax: undefined, zMin: undefined}`
+##### geometryFilter: Object = `{xMax: undefined, xMin: undefined, yMax: undefined, yMin: undefined, zMax: undefined, zMin: undefined}`
 A bounding box object to filter which model elements are visible to the user.
 
-#####metadataFields: Array _computed_
+##### metadataFields: Array _computed_
 The set of fields of which you can specify to contour the model
 
-#####object: Object _computed_
+##### object: Object _computed_
 The `THREE.Group()` object associated with the model
 
-#####boundaries: Object _computed_
+##### boundaries: Object _computed_
 The model's bounding box
 
-#####position: Array _computed_
+##### position: Array _computed_
 The center of the model's bounding box
 
-#####radius: Number _computed_
+##### radius: Number _computed_
 The radius of the model's bounding box
 
-#####stroke: Number _computed_
+##### stroke: Number _computed_
 The width of the lines in the model
 
-#####_lines: Array _protected_
+##### _lines: Array _protected_
         
 
-##Development
+## Development
 ### Setup
 Install dependencies:
 ```
