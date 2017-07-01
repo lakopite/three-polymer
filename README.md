@@ -22,7 +22,7 @@ The set of fields of which you can specify to contour the model
 The `THREE.Group()` object associated with the model
 
 ##### boundaries: Object _computed_
-The model's bounding box
+The bounding box computed from `data`. This will not update based on any filters applied to the model.
 
 ##### position: Array _computed_
 The center of the model's bounding box

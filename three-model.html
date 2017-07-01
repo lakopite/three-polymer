@@ -65,7 +65,13 @@
             notify: true
           },
           object: {type: Object, computed: '_computeObject(data)', observer: '_dispatchNewModel'},
-          boundaries: {type: Object, computed: '_computeBoundaries(data)', reflectToAttribute: true, notify: true},
+          boundaries: {
+            type: Object,
+            computed: '_computeBoundaries(data)',
+            observer: '_boundariesChanged',
+            reflectToAttribute: true,
+            notify: true
+          },
           position: {type: Array, computed: '_computePosition(boundaries)'},
           radius: {type: Number, computed: '_computeRadius(boundaries)'},
           stroke: {type: Number, computed: '_computeStroke(radius)'},
@@ -100,18 +106,25 @@
       }
 
       _handleRenderedItemCountChanged(event) {
-        const allLinesAreStamped = event.detail.value === this.data.length;
-        if (allLinesAreStamped) {
-          if (!this.boundaries) return;
-          this.geometryFilter = _.cloneDeep(this.boundaries);
+        const numberOfLines = this.data.length;
+        const allLinesAreStamped = event.detail.value === numberOfLines;
+        if (allLinesAreStamped && numberOfLines !== 0) this._dispatchModelReady();
+      }
 
-          this._dispatchModelReady();
-        }
+      _boundariesChanged(boundaries) {
+        this.geometryFilter = boundaries
       }
 
       _dataChanged(newData) {
 //        console.log('_dataChanged');
-        this.geometryFilter = undefined;
+        this.geometryFilter = {
+          xMax: undefined,
+          xMin: undefined,
+          yMax: undefined,
+          yMin: undefined,
+          zMax: undefined,
+          zMin: undefined
+        };
         this._lines = [];
         setTimeout(() => {this._lines = newData}, 0);
       }

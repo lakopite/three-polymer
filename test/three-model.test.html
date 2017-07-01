@@ -227,6 +227,16 @@
           done();
         });
       });
+
+      it('tells the view when the model is ready', (done) => {
+        parent = fixture('parent');
+        threeModel = parent.querySelector('three-model');
+
+        flush(() => {
+          expect(parent.modelReadyCount).to.equal(1);
+          done();
+        });
+      });
     });
   });
 </script>
