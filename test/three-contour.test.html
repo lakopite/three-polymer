@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-contour test</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <link rel="import" href="../../polymer/polymer.html">
+  <link rel="import" href="../three-contour.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-contour
+      id="contour"
+      by="axial"
+      data='[
+      {"vertices":[[-10, 0, -10],[-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}},
+      {"vertices":[[-10, 0, 10],[10, 0, 10]], "metadata": {"axial": 40, "flexure": 20}},
+      {"vertices":[[10, 0, 10],[10, 0, -10]], "metadata": {"axial": 100, "flexure": 55}}
+      ]'>
+    </three-contour>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-contour>', () => {
+
+    let element;
+
+    describe('itself', () => {
+
+      it('instantiates the element', () => {
+        element = fixture('basic');
+        expect(element.localName).to.equal('three-contour');
+        expect(element.by).to.equal('axial');
+        expect(element.colors).to.deep.equal(
+          ["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688", "#4CAF50",
+            "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"]
+        );
+      });
+
+      it('calculates limits based on by', () => {
+        element = fixture('basic');
+        expect(element.limits).to.deep.equal([
+          16.9231, 23.8462, 30.7692, 37.6923, 44.6154, 51.5385,
+          58.4615, 65.3846, 72.3077, 79.2308, 86.1538, 93.0769, 100
+        ]);
+        expect(element.bounds).to.deep.equal({min: 10, max: 100});
+
+        element.by = "flexure";
+
+        expect(element.limits).to.deep.equal([
+          22.6923, 25.3846, 28.0769, 30.7692, 33.4615, 36.1538,
+          38.8462, 41.5385, 44.2308, 46.9231, 49.6154, 52.3077, 55
+        ]);
+        expect(element.bounds).to.deep.equal({min: 20, max: 55});
+      });
+
+      it('calculates limits for a single line', () => {
+        element = fixture('basic');
+
+        element.data = [{"vertices": [[-10, 0, -10], [-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}}];
+
+        expect(element.limits).to.deep.equal([
+          10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10
+        ]);
+      });
+
+      it('updates the limits when it gets new data', () => {
+        element = fixture('basic');
+
+        element.data = [
+          {"vertices": [[-10, 0, -10], [-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}},
+          {"vertices": [[-10, 0, 10], [10, 0, 10]], "metadata": {"axial": 40, "flexure": 20}}
+        ];
+
+        expect(element.limits).to.deep.equal([
+          12.3077, 14.6154, 16.9231, 19.2308, 21.5385, 23.8462,
+          26.1538, 28.4615, 30.7692, 33.0769, 35.3846, 37.6923, 40
+        ]);
+      });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<script src="../lodash/lodash.js"></script>
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="three-contour">
+  <template>
+  </template>
+  <script>
+    class ThreeContour extends Polymer.Element {
+
+      static get is() {
+        return 'three-contour';
+      }
+
+      static get properties() {
+        return {
+          data: Array,
+          by: String,
+          colors: {
+            type: Array,
+            readOnly: true,
+            notify: true,
+            value: [
+              "#9C27B0",
+              "#673AB7",
+              "#3F51B5",
+              "#2196F3",
+              "#00BCD4",
+              "#009688",
+              "#4CAF50",
+              "#8BC34A",
+              "#FFEB3B",
+              "#FFC107",
+              "#FF9800",
+              "#FF5722",
+              "#F44336"
+            ],
+          },
+          bounds: {
+            type: Object,
+            computed: '_computeBounds(data, by)',
+          },
+          limits: {
+            type: Array,
+            notify: true,
+            computed: '_computeLimits(colors, bounds)',
+          },
+        }
+      }
+
+      _computeBounds(data, by) {
+        if (!Array.isArray(data) || data.length === 0) return;
+        const values = data.map(line => line.metadata[by]);
+
+        const max = values.reduce((p, v) => p > v ? p : v);
+        const min = values.reduce((p, v) => p < v ? p : v);
+
+        return {min: min, max: max};
+      }
+
+      _computeLimits(colors, bounds) {
+        if (!(colors && bounds)) return;
+        const length = colors.length;
+        const step = (bounds.max - bounds.min) / length;
+
+        const limits = [];
+        for (let i = bounds.max; limits.length !== length; i -= step) {
+          limits.push(_.round(i, 4));
+        }
+
+        return limits.reverse();
+      }
+    }
+
+    customElements.define(ThreeContour.is, ThreeContour);
+  </script>
+</dom-module>

@@ -1,9 +1,16 @@
 <script src="../lodash/lodash.js"></script>
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="three-mesh.html">
+<link rel="import" href="three-contour.html">
 
 <dom-module id="three-model">
   <template>
+    <three-contour
+      data="[[data]]"
+      by="{{contourBy}}"
+      limits="{{contourLimits}}"
+      colors="{{contourColors}}">
+    </three-contour>
     <template
       id="meshes"
       is="dom-repeat"
@@ -22,7 +29,7 @@
         metadata="[[line.metadata]]"
         stroke="[[stroke]]"
         contour-by="[[contourBy]]"
-        contour-values="[[contourValues]]"
+        contour-limits="[[contourLimits]]"
         contour-colors="[[contourColors]]">
       </three-mesh>
     </template>
@@ -49,35 +56,9 @@
           stroke: Number,
           metadataFields: {type: Array, value: [], reflectToAttribute: true, notify: true},
           contourBy: String,
-          contourColors: {
-            type: Array,
-            readOnly: true,
-            value: [
-              "#9C27B0",
-              "#673AB7",
-              "#3F51B5",
-              "#2196F3",
-              "#00BCD4",
-              "#009688",
-              "#4CAF50",
-              "#8BC34A",
-              "#FFEB3B",
-              "#FFC107",
-              "#FF9800",
-              "#FF5722",
-              "#F44336"
-            ]
-          },
-          contourBounds: {
-            type: Object,
-            reflectToAttribute: true,
-            notify: true,
-            computed: '_computeContourBounds(data, contourBy)',
-          },
-          contourValues: {
-            type: Array,
-            computed: '_computeContourValues(contourColors, contourBounds)',
-          },
+          contourColors: Array,
+          contourLimits: Array,
+          contourBounds: {type: Object, reflectToAttribute: true, notify: true},
           boundaries: {type: Object, reflectToAttribute: true, notify: true},
           geometryFilter: {type: Object, observer: '_geometryFilterChanged', notify: true},
         }
@@ -111,29 +92,6 @@
 
       _computeNumberOfLines(data) {
         return data.length;
-      }
-
-      _computeContourBounds(data, contourBy) {
-        if (!Array.isArray(data) || data.length === 0) return;
-        const values = data.map(line => line.metadata[contourBy]);
-
-        const max = values.reduce((p, v) => p > v ? p : v);
-        const min = values.reduce((p, v) => p < v ? p : v);
-
-        return {min: min, max: max};
-      }
-
-      _computeContourValues(contourColors, contourBounds) {
-        if (!(contourColors && contourBounds)) return;
-        const length = contourColors.length;
-        const step = (contourBounds.max - contourBounds.min) / length;
-
-        const contourValues = [];
-        for (let i = contourBounds.max; contourValues.length !== length; i -= step) {
-          contourValues.push(_.round(i, 4));
-        }
-
-        return contourValues.reverse();
       }
 
       _handleRenderedItemCountChanged(event) {
