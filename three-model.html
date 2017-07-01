@@ -48,15 +48,15 @@
           numberOfLines: {type: Number, computed: '_computeNumberOfLines(data)'},
           meshes: {type: Array, value: []},
           object: {type: Object, observer: '_dispatchNewModel'},
-          stroke: Number,
           metadataFields: {type: Array, value: [], reflectToAttribute: true, notify: true},
           contourBy: String,
           contourColors: Array,
           contourLimits: Array,
           contourBounds: {type: Object, reflectToAttribute: true, notify: true},
           boundaries: {type: Object, computed: '_computeBoundaries(data)', reflectToAttribute: true, notify: true},
-          radius: {type: Number, computed: '_computeRadius(boundaries)'},
           position: {type: Array, computed: '_computePosition(boundaries)'},
+          radius: {type: Number, computed: '_computeRadius(boundaries)'},
+          stroke: {type: Number, computed: '_computeStroke(radius)'},
           geometryFilter: {type: Object, observer: '_geometryFilterChanged', notify: true},
         }
       }
@@ -96,8 +96,6 @@
         if (allLinesAreStamped) {
           if (!this.boundaries) return;
           this.geometryFilter = _.cloneDeep(this.boundaries);
-
-          this.stroke = this.radius / 40;
 
           this._dispatchModelReady();
         }
@@ -140,6 +138,10 @@
             boundaries.yMax - boundaries.yMin,
             boundaries.zMax - boundaries.zMin
           ].reduce((p, v) => p > v ? p : v) / 2 : undefined;
+      }
+
+      _computeStroke(radius) {
+        return radius / 40;
       }
 
       _handleNewMesh(event) {
