@@ -58,6 +58,12 @@
             observer: '_geometryFilterChanged',
             notify: true
           },
+          isLoading: {
+            type: Boolean,
+            computed: '_computeIsLoading(_allLinesAreStamped)',
+            reflectToAttribute: true,
+            notify: true
+          },
           metadataFields: {
             type: Array,
             computed: '_computeMetadataFields(data)',
@@ -76,6 +82,7 @@
           radius: {type: Number, computed: '_computeRadius(boundaries)'},
           stroke: {type: Number, computed: '_computeStroke(radius)'},
           _lines: Array,
+          _allLinesAreStamped: {type: Boolean, value: false},
         }
       }
 
@@ -105,10 +112,14 @@
           .reduce((a, b) => a && b, true);
       }
 
+      _computeIsLoading(_allLinesAreStamped) {
+        return !_allLinesAreStamped;
+      }
+
       _handleRenderedItemCountChanged(event) {
         const numberOfLines = this.data.length;
-        const allLinesAreStamped = event.detail.value === numberOfLines;
-        if (allLinesAreStamped && numberOfLines !== 0) this._dispatchModelReady();
+        this._allLinesAreStamped = event.detail.value === numberOfLines;
+        if (this._allLinesAreStamped && numberOfLines !== 0) this._dispatchModelReady();
       }
 
       _boundariesChanged(boundaries) {

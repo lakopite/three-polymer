@@ -237,6 +237,17 @@
           done();
         });
       });
+
+      it('communicates whether or not it is loading', (done) => {
+        element = fixture('basic');
+
+        expect(element.isLoading).to.be.true;
+
+        flush(() => {
+          expect(element.isLoading).to.be.false;
+          done();
+        });
+      });
     });
   });
 </script>
