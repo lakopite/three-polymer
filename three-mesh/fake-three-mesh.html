@@ -1,8 +1,8 @@
-<link rel="import" href="../../polymer/polymer-element.html">
+<link rel="import" href="abstract-three-mesh.html">
 
 <dom-module id="fake-three-mesh">
   <script>
-    class FakeThreeMesh extends Polymer.Element {
+    class FakeThreeMesh extends AbstractThreeMesh {
 
       static get is() {
         return 'fake-three-mesh';
@@ -13,18 +13,6 @@
           object: {type: Object, value: () => new THREE.Mesh()},
           vertices: {type: Array, value: () => [[1, 2, 3], [4, 5, 6]]},
         }
-      }
-
-      _dispatchMeshChange() {
-        this.dispatchEvent(new CustomEvent('mesh-change', {bubbles: true}));
-      }
-
-      _dispatchNewMesh() {
-        this.dispatchEvent(new CustomEvent('new-mesh', {bubbles: true}));
-      }
-
-      _dispatchRemoveMesh() {
-        this.dispatchEvent(new CustomEvent('remove-mesh', {bubbles: true}));
       }
     }
 

@@ -1,0 +1,26 @@
+<link rel="import" href="../../polymer/polymer-element.html">
+
+<dom-module id="abstract-three-model">
+  <script>
+    class AbstractThreeModel extends Polymer.Element {
+
+      static get is() {
+        return 'abstract-three-model';
+      }
+
+      _dispatchNewModel() {
+        this.dispatchEvent(new CustomEvent('new-model', {bubbles: true}));
+      }
+
+      _dispatchModelReady() {
+        this.dispatchEvent(new CustomEvent('model-ready', {bubbles: true}));
+      }
+
+      _dispatchModelNeedsRender() {
+        this.dispatchEvent(new CustomEvent('model-needs-render', {bubbles: true}));
+      }
+    }
+
+    customElements.define(AbstractThreeModel.is, AbstractThreeModel);
+  </script>
+</dom-module>

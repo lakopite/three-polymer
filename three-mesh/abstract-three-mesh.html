@@ -1,0 +1,26 @@
+<link rel="import" href="../../polymer/polymer-element.html">
+
+<dom-module id="abstract-three-mesh">
+  <script>
+    class AbstractThreeMesh extends Polymer.Element {
+
+      static get is() {
+        return 'abstract-three-mesh';
+      }
+
+      _dispatchMeshChange() {
+        this.dispatchEvent(new CustomEvent('mesh-change', {bubbles: true}));
+      }
+
+      _dispatchNewMesh() {
+        this.dispatchEvent(new CustomEvent('new-mesh', {bubbles: true}));
+      }
+
+      _dispatchRemoveMesh() {
+        this.dispatchEvent(new CustomEvent('remove-mesh', {bubbles: true}));
+      }
+    }
+
+    customElements.define(AbstractThreeMesh.is, AbstractThreeMesh);
+  </script>
+</dom-module>

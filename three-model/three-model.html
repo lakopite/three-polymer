@@ -1,5 +1,5 @@
 <script src="../../lodash/lodash.js"></script>
-<link rel="import" href="../../polymer/polymer-element.html">
+<link rel="import" href="abstract-three-model.html">
 <link rel="import" href="../three-mesh/three-mesh.html">
 <link rel="import" href="../three-contour/three-contour.html">
 
@@ -35,7 +35,7 @@
     </template>
   </template>
   <script>
-    class ThreeModel extends Polymer.Element {
+    class ThreeModel extends AbstractThreeModel {
 
       static get is() {
         return 'three-model';
@@ -199,18 +199,6 @@
 
       _handleMeshChange() {
         this._dispatchModelNeedsRender();
-      }
-
-      _dispatchNewModel() {
-        this.dispatchEvent(new CustomEvent('new-model', {bubbles: true}));
-      }
-
-      _dispatchModelReady() {
-        this.dispatchEvent(new CustomEvent('model-ready', {bubbles: true}));
-      }
-
-      _dispatchModelNeedsRender() {
-        this.dispatchEvent(new CustomEvent('model-needs-render', {bubbles: true}));
       }
     }
 

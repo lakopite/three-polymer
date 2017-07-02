@@ -1,4 +1,4 @@
-<link rel="import" href="../../polymer/polymer-element.html">
+<link rel="import" href="abstract-three-mesh.html">
 <link rel="import" href="../three-material/three-material.html">
 <link rel="import" href="../three-line-geometry/three-line-geometry.html">
 
@@ -12,7 +12,7 @@
     <three-material id="material" object="{{material}}" color="[[color]]"></three-material>
   </template>
   <script>
-    class ThreeMesh extends Polymer.Element {
+    class ThreeMesh extends AbstractThreeMesh {
 
       static get is() {
         return 'three-mesh';
@@ -63,18 +63,6 @@
       _materialChanged(material) {
         this.object.material = material;
         this._dispatchMeshChange();
-      }
-
-      _dispatchMeshChange() {
-        this.dispatchEvent(new CustomEvent('mesh-change', {bubbles: true}));
-      }
-
-      _dispatchNewMesh() {
-        this.dispatchEvent(new CustomEvent('new-mesh', {bubbles: true}));
-      }
-
-      _dispatchRemoveMesh() {
-        this.dispatchEvent(new CustomEvent('remove-mesh', {bubbles: true}));
       }
     }
 

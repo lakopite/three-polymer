@@ -1,5 +1,5 @@
 <script src="../../threejs/build/three.min.js"></script>
-<link rel="import" href="../../polymer/polymer-element.html">
+<link rel="import" href="abstract-three-view.html">
 <link rel="import" href="../../iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../three-camera/three-camera.html">
 <link rel="import" href="../three-stats/three-stats.html">
@@ -54,7 +54,7 @@
     </slot>
   </template>
   <script>
-    class ThreeView extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+    class ThreeView extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], AbstractThreeView) {
 
       static get is() {
         return 'three-view';

@@ -1,0 +1,22 @@
+<link rel="import" href="../../polymer/polymer-element.html">
+
+<dom-module id="abstract-three-view">
+  <script>
+    class AbstractThreeView extends Polymer.Element {
+
+      static get is() {
+        return 'abstract-three-view';
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+      }
+    }
+
+    customElements.define(AbstractThreeView.is, AbstractThreeView);
+  </script>
+</dom-module>
