@@ -20,9 +20,17 @@
       }
 
       connectedCallback() {
-        this.addEventListener('new-mesh', () => this._handleNewMesh());
-        this.addEventListener('mesh-change', () => this._handleMeshChange());
-        this.addEventListener('remove-mesh', () => this._handleRemoveMesh());
+        super.connectedCallback();
+        this.addEventListener('new-mesh', this._handleNewMesh);
+        this.addEventListener('mesh-change', this._handleMeshChange);
+        this.addEventListener('remove-mesh', this._handleRemoveMesh);
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('new-mesh', this._handleNewMesh);
+        this.removeEventListener('mesh-change', this._handleMeshChange);
+        this.removeEventListener('remove-mesh', this._handleRemoveMesh);
       }
 
       _handleNewMesh() {

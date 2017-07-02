@@ -78,9 +78,9 @@
 
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('new-model', e => this._handleNewModel(e));
-        this.addEventListener('model-ready', e => this._handleModelReady(e));
-        this.addEventListener('model-needs-render', () => this._handleModelNeedsRender());
+        this.addEventListener('new-model', this._handleNewModel);
+        this.addEventListener('model-ready', this._handleModelReady);
+        this.addEventListener('model-needs-render', this._handleModelNeedsRender);
         this.addEventListener('iron-resize', this._handleResize);
       }
 
