@@ -1,4 +1,4 @@
-<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../../polymer/polymer-element.html">
 
 <dom-module id="fake-three-view">
   <script>
@@ -24,7 +24,7 @@
         this.addEventListener('model-needs-render', (event) => this._handleModelNeedsRender(event));
         this.addEventListener('model-ready', event => this._handleModelReady(event));
       }
-
+      
       _handleNewModel(event) {
         this.newModelCount += 1;
         this.newModelEvent = event;
