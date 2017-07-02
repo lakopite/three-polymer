@@ -46,6 +46,7 @@
       }
 
       _sizeChanged(width, height) {
+        if (!(width && height)) return;
         this.object.setSize(width, height);
       }
     }

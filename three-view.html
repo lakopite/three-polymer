@@ -1,5 +1,6 @@
 <script src="../threejs/build/three.min.js"></script>
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="three-camera.html">
 <link rel="import" href="three-stats.html">
 <link rel="import" href="three-controls.html">
@@ -13,6 +14,13 @@
 
 <dom-module id="three-view">
   <template>
+    <style>
+      :host {
+        display: block;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
     <three-stats
       id="stats"
       show-stats="[[showStats]]">
@@ -22,15 +30,18 @@
       camera="{{camera}}"
       canvas="[[canvas]]"
       camera-position="[[cameraPosition]]"
-      model-geometry="[[modelGeometry]]">
+      model-position="[[modelGeometry.position]]"
+      model-radius="[[modelGeometry.radius]]"
+      view-width="[[width]]"
+      view-height="[[height]]">
     </three-controls>
     <three-renderer
       id="renderer"
       canvas="{{canvas}}"
       camera="[[camera]]"
       scene="[[scene]]"
-      width="[[rendererWidth]]"
-      height="[[rendererHeight]]">
+      width="[[width]]"
+      height="[[height]]">
     </three-renderer>
     <three-scene
       id="scene"
@@ -43,7 +54,7 @@
     </slot>
   </template>
   <script>
-    class ThreeView extends Polymer.Element {
+    class ThreeView extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
 
       static get is() {
         return 'three-view';
@@ -55,11 +66,9 @@
           scene: Object,
           sceneBackgroundColor: String,
           model: Object,
-          modelRadius: Number,
-          modelPosition: Array,
           modelGeometry: Object,
-          rendererWidth: Number,
-          rendererHeight: Number,
+          width: Number,
+          height: Number,
           canvas: {type: Object, observer: '_canvasChanged'},
           showStats: {type: Boolean, value: false},
           modelIsReady: {type: Boolean, value: false},
@@ -72,6 +81,21 @@
         this.addEventListener('new-model', e => this._handleNewModel(e));
         this.addEventListener('model-ready', e => this._handleModelReady(e));
         this.addEventListener('model-needs-render', () => this._handleModelNeedsRender());
+        this.addEventListener('iron-resize', this._handleResize);
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('new-model', this._handleNewModel);
+        this.removeEventListener('model-ready', this._handleModelReady);
+        this.removeEventListener('model-needs-render', this._handleModelNeedsRender);
+        this.removeEventListener('iron-resize', this._handleResize);
+      }
+
+      _handleResize(e) {
+        this.height = e.target.clientHeight;
+        this.width = e.target.clientWidth;
+        this._render();
       }
 
       _render() {

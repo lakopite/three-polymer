@@ -19,19 +19,19 @@
   <h3>three-polymer demo</h3>
   <demo-snippet>
     <template>
-      <three-view
-        id="view"
-        show-stats="true"
-        scene-background-color="#F5F5F5"
-        renderer-height="700"
-        renderer-width="700">
-        <three-model
-          id="frame"
-          slot="model"
-          contour-by="beamnum"
-          data='[]'>
-        </three-model>
-      </three-view>
+      <div style="height: 500px; width: 100%">
+        <three-view
+          id="view"
+          show-stats="true"
+          scene-background-color="#F5F5F5">
+          <three-model
+            id="frame"
+            slot="model"
+            contour-by="beamnum"
+            data='[]'>
+          </three-model>
+        </three-view>
+      </div>
     </template>
   </demo-snippet>
 </div>

@@ -6,7 +6,10 @@
     <three-camera
       id="camera"
       object="{{camera}}"
-      model-geometry="[[modelGeometry]]">
+      model-radius="[[modelRadius]]"
+      model-position="[[modelPosition]]"
+      view-width="[[viewWidth]]"
+      view-height="[[viewHeight]]">
     </three-camera>
   </template>
   <script>
@@ -18,25 +21,23 @@
 
       static get properties() {
         return {
-          object: {type: Object, computed: '_computeControls(camera, canvas)'},
           camera: {type: Object, notify: true},
           canvas: Object,
-          modelGeometry: {type: Object, observer: '_modelGeometryChanged'},
+          object: {type: Object, computed: '_computeObject(camera, canvas)'},
+          modelPosition: {type: Array, observer: '_modelPositionChanged'},
         }
       }
 
-      _computeControls(camera, canvas) {
+      _computeObject(camera, canvas) {
         if (!(camera && canvas)) return;
-        this.object = undefined;
         const controls = new THREE.OrbitControls(camera, canvas);
         controls.addEventListener('change', () => this._dispatchModelNeedsRender());
         return controls;
       };
 
-      _modelGeometryChanged(newModelGeometry) {
-//        console.log('_modelGeometryChanged');
+      _modelPositionChanged(modelPosition) {
         if (!this.object) return;
-        this.object.target.set(...newModelGeometry.position);
+        this.object.target.set(...modelPosition);
         this.object.update();
       }
 

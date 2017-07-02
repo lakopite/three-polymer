@@ -15,12 +15,18 @@
 <test-fixture id="basic">
   <template>
     <three-view
-      id="id"
-      scene-background-color="#F5F5F2"
-      renderer-width="12"
-      renderer-height="21">
+      id="basic"
+      scene-background-color="#F5F5F2">
       <three-model slot="model"></three-model>
     </three-view>
+  </template>
+</test-fixture>
+
+<test-fixture id="parent">
+  <template>
+    <div>
+      <three-view id="parent"></three-view>
+    </div>
   </template>
 </test-fixture>
 
@@ -38,8 +44,6 @@
 
       expect(element.localName).to.equal('three-view');
       expect(element.sceneBackgroundColor).to.equal('#F5F5F2');
-      expect(element.rendererWidth).to.equal(12);
-      expect(element.rendererHeight).to.equal(21);
       expect(element.modelIsReady).to.be.false;
       expect(element.initialRenderIsComplete).to.be.false;
     });
@@ -131,6 +135,28 @@
 
       expect(fakeThreeScene.addCallCount).to.equal(0);
     });
+
+    describe('interactions with <parent>', () => {
+
+      let parent, threeView;
+
+      it('sets the width and height of the view', () => {
+        replace('three-controls').with('fake-three-controls');
+        replace('three-renderer').with('fake-three-renderer');
+        replace('three-model').with('fake-three-model');
+        replace('three-scene').with('fake-three-scene');
+        parent = fixture('parent');
+        threeView = parent.querySelector('three-view');
+
+        parent.style.width = "400px";
+        parent.style.height = "600px";
+        threeView.dispatchEvent(new Event('iron-resize'));
+
+        expect(threeView.width).to.equal(400);
+        expect(threeView.height).to.equal(600);
+      });
+    });
+
   });
 </script>
 </body>
