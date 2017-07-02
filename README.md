@@ -3,7 +3,7 @@
 
 Polymer web components for rendering 3D geometry in the browser
 
-## Element <three-model>
+## Element \<three-model\>
 ### Properties
 ##### data: Array
 An array of objects that compose the model. The objects must include `vertices` as well as `metadata` (e.g.
@@ -12,13 +12,13 @@ An array of objects that compose the model. The objects must include `vertices` 
 ##### contour-by: String
 The `metadata` field from which contours will be calculated. This field may be any of the fields within `metadataFields`
 
-##### geometryFilter: Object = `{xMax: undefined, xMin: undefined, yMax: undefined, yMin: undefined, zMax: undefined, zMin: undefined}`
+##### geometry-filter: Object = `{xMax: undefined, xMin: undefined, yMax: undefined, yMin: undefined, zMax: undefined, zMin: undefined}`
 A bounding box object to filter which model elements are visible to the user.
 
-##### isLoading: Boolean _computed_
+##### is-loading: Boolean _computed_
 Indicates whether or not the model is in the process of stamping out its children produced by `data`
 
-##### metadataFields: Array _computed_
+##### metadata-fields: Array _computed_
 The set of fields of which you can specify to contour the model
 
 ##### object: Object _computed_
