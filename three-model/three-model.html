@@ -117,6 +117,7 @@
       }
 
       _handleRenderedItemCountChanged(event) {
+        if (!this.data) return;
         const numberOfLines = this.data.length;
         this._allLinesAreStamped = event.detail.value === numberOfLines;
         if (this._allLinesAreStamped && numberOfLines !== 0) this._dispatchModelReady();
