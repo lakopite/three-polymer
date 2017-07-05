@@ -124,7 +124,7 @@
       }
 
       _boundariesChanged(boundaries) {
-        this.geometryFilter = boundaries
+        this.geometryFilter = _.cloneDeep(boundaries)
       }
 
       _dataChanged(newData) {
