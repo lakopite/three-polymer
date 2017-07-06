@@ -4,7 +4,7 @@
   "dependencies": {
     "polymer": "2.0.1",
     "threejs": "r84",
-    "lodash": "4.0.0",
+    "lodash": "^4.17.4",
     "stats.js": "latest"
   },
   "devDependencies": {
@@ -15,6 +15,6 @@
     "jquery": "3.2.1"
   },
   "resolutions": {
-    "lodash": "4.0.0"
+    "lodash": "^4.17.4"
   }
 }
