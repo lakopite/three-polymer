@@ -12,8 +12,9 @@ An array of objects that compose the model. The objects must include `vertices` 
 ##### contour-by: String
 The `metadata` field from which contours will be calculated. This field may be any of the fields within `metadataFields`
 
-##### geometry-filter: Object = `{xMax: undefined, xMin: undefined, yMax: undefined, yMin: undefined, zMax: undefined, zMin: undefined}`
-A bounding box object to filter which model elements are visible to the user.
+##### geometry-filter: Object = `{}`
+A bounding box object to filter which model elements are visible to the user.  
+It may contain any number of fields `xMax`,`xMin`,`yMax`,`yMin`,`zMax`,`zMin` with values of type `Number` 
 
 ##### is-loading: Boolean _computed_
 Indicates whether or not the model is in the process of stamping out its children produced by `data`

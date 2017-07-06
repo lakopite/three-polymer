@@ -83,7 +83,7 @@
       // will need to restamp all elements on new data to get this to pass
       // implementation could be improved via the below to mitigate this...
       // https://github.com/Polymer/polymer/pull/4363
-      xit('resets the boundaries and geometry filter when the it gets new data', (done) => {
+      xit('resets the boundaries when it gets new data', (done) => {
         element = fixture('basic');
 
         element.data = [
@@ -94,7 +94,6 @@
 
         flush(() => {
           expect(element.boundaries.zMax).to.equal(30);
-          expect(element.geometryFilter).to.equal(element.boundaries);
           done();
         });
       });
@@ -130,16 +129,31 @@
         });
       });
 
-      it('filters elements by coordinate geometry with nullable boundaries', (done) => {
-        element = fixture('medium');
+      describe('geometry-filter', () => {
+        it('filters elements by coordinate geometry', (done) => {
+          element = fixture('medium');
 
-        flush(() => {
-          expect(element.$.meshes.renderedItemCount).to.equal(5);
+          flush(() => {
+            expect(element.$.meshes.renderedItemCount).to.equal(5);
 
-          element.geometryFilter = {xMin: 4, yMin: 4, zMin: 0, xMax: 6, yMax: 6};
+            element.geometryFilter = {xMin: 4, yMin: 4, zMin: 0, xMax: 6, yMax: 6};
 
-          expect(element.$.meshes.renderedItemCount).to.equal(1);
-          done();
+            expect(element.$.meshes.renderedItemCount).to.equal(1);
+            done();
+          });
+        });
+
+        it('filters elements by coordinate geometry with a single field', (done) => {
+          element = fixture('medium');
+
+          flush(() => {
+            expect(element.$.meshes.renderedItemCount).to.equal(5);
+
+            element.geometryFilter = {zMin: 10};
+
+            expect(element.$.meshes.renderedItemCount).to.equal(2);
+            done();
+          });
         });
       });
 
