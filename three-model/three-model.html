@@ -47,14 +47,7 @@
           contourBy: String,
           geometryFilter: {
             type: Object,
-            value: {
-              xMax: undefined,
-              xMin: undefined,
-              yMax: undefined,
-              yMin: undefined,
-              zMax: undefined,
-              zMin: undefined
-            },
+            value: {},
             observer: '_geometryFilterChanged',
             notify: true
           },
@@ -74,7 +67,6 @@
           boundaries: {
             type: Object,
             computed: '_computeBoundaries(data)',
-            observer: '_boundariesChanged',
             reflectToAttribute: true,
             notify: true
           },
@@ -91,8 +83,6 @@
       }
 
       _isWithinCoordinateBoundaries(line) {
-        if (!this.geometryFilter) return true;
-
         const v0 = line.vertices[0];
         const v1 = line.vertices[1];
 
@@ -123,20 +113,7 @@
         if (this._allLinesAreStamped && numberOfLines !== 0) this._dispatchModelReady();
       }
 
-      _boundariesChanged(boundaries) {
-        this.geometryFilter = _.cloneDeep(boundaries)
-      }
-
       _dataChanged(newData) {
-//        console.log('_dataChanged');
-        this.geometryFilter = {
-          xMax: undefined,
-          xMin: undefined,
-          yMax: undefined,
-          yMin: undefined,
-          zMax: undefined,
-          zMin: undefined
-        };
         this._lines = [];
         setTimeout(() => {this._lines = newData}, 0);
       }
