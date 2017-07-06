@@ -74,11 +74,27 @@
           radius: {type: Number, computed: '_computeRadius(boundaries)'},
           stroke: {type: Number, computed: '_computeStroke(radius)'},
           _lines: Array,
-          _allLinesAreStamped: {type: Boolean, value: false},
+          _numberOfLinesToBeStamped: {
+            type: Number,
+          },
+          _numberOfLinesStamped: Number,
+          _allLinesAreStamped: {
+            type: Boolean,
+            computed: '_computeAllLinesAreStamped(_numberOfLinesToBeStamped, _numberOfLinesStamped)'
+          },
         }
       }
 
+//      TODO: compute the number of lines after the filter
+//      TODO: compute the number of lines in the model = this.object.children
+//      TODO: run async process to assert if the two values are equal
+
+      _computeAllLinesAreStamped(_numberOfLinesToBeStamped, _numberOfLinesStamped) {
+        return _numberOfLinesToBeStamped === _numberOfLinesStamped;
+      }
+
       _geometryFilterChanged() {
+        this._numberOfLinesToBeStamped = this.data.length;
         this.$.meshes.render();
       }
 
@@ -94,12 +110,14 @@
           yMax: _.max([v0[1], v1[1]]),
           zMax: _.max([v0[2], v1[2]])
         };
-
-        return Object.keys(this.geometryFilter)
+        const isWithinBoundaries = Object.keys(this.geometryFilter)
           .map(key => key.includes('Max')
             ? boundingBox[key] <= this.geometryFilter[key]
             : boundingBox[key] >= this.geometryFilter[key])
           .reduce((a, b) => a && b, true);
+
+        this._numberOfLinesToBeStamped -= isWithinBoundaries ? 0 : 1;
+        return isWithinBoundaries;
       }
 
       _computeIsLoading(_allLinesAreStamped) {
@@ -107,14 +125,18 @@
       }
 
       _handleRenderedItemCountChanged(event) {
-        if (!this.data) return;
-        const numberOfLines = this.data.length;
-        this._allLinesAreStamped = event.detail.value === numberOfLines;
-        if (this._allLinesAreStamped && numberOfLines !== 0) this._dispatchModelReady();
+        if (this._numberOfLinesToBeStamped === 0) return;
+        this._numberOfLinesStamped = event.detail.value;
+
+//        console.log("isLoading:", this.isLoading);
+//        console.log("numberOfLinesStamped:", numberOfLinesStamped);
+//        console.log("this._numberOfLinesToBeStamped:", this._numberOfLinesToBeStamped);
+        if (this._allLinesAreStamped) this._dispatchModelReady();
       }
 
       _dataChanged(newData) {
         this._lines = [];
+        this._numberOfLinesToBeStamped = newData.length;
         setTimeout(() => {this._lines = newData}, 0);
       }
 

@@ -22,6 +22,10 @@
         }
       }
 
+//      TODO: asserting on the debouncer to compute if we are loading is no good
+//      TODO: we shouldn't force ourselves to make calls to render to indicate if we are loading
+//      TODO: this should all be handled in the model explicitly
+
       static get observers() {
         return [
           '_sizeChanged(width, height)',

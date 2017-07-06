@@ -253,14 +253,51 @@
         });
       });
 
-      it('communicates whether or not it is loading', (done) => {
-        element = fixture('basic');
+      describe('is-loading', () => {
+        it('communicates whether or not it is loading a new model', (done) => {
+          element = fixture('basic');
 
-        expect(element.isLoading).to.be.true;
+          expect(element.isLoading).to.be.true;
 
-        flush(() => {
-          expect(element.isLoading).to.be.false;
-          done();
+          flush(() => {
+            expect(element.isLoading).to.be.false;
+            done();
+          });
+        });
+
+        it('communicates that it is loading when geometry is being filtered', (done) => {
+          element = fixture('medium');
+
+          flush(() => {
+            expect(element.isLoading).to.be.false;
+            done();
+          });
+
+          element.geometryFilter = {zMin: 10};
+          expect(element.isLoading).to.be.true;
+        });
+
+        it('communicates it is done loading when geometry is done being filtered', (done) => {
+          element = fixture('medium');
+
+          element.geometryFilter = {zMin: 10};
+          expect(element.isLoading).to.be.true;
+
+          flush(() => {
+            expect(element.isLoading).to.be.false;
+            done();
+          });
+        });
+
+        it('works when we filter multiple times', (doneOnce) => {
+          element = fixture('medium');
+          element.geometryFilter = {xMin: 5};
+          element.geometryFilter = {zMin: 10};
+
+          flush(() => {
+            expect(element.isLoading).to.be.false;
+            doneOnce();
+          });
         });
       });
     });
