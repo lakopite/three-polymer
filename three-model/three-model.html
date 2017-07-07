@@ -74,9 +74,7 @@
           radius: {type: Number, computed: '_computeRadius(boundaries)'},
           stroke: {type: Number, computed: '_computeStroke(radius)'},
           _lines: Array,
-          _numberOfLinesToBeStamped: {
-            type: Number,
-          },
+          _numberOfLinesToBeStamped: Number,
           _numberOfLinesStamped: Number,
           _allLinesAreStamped: {
             type: Boolean,
@@ -84,10 +82,6 @@
           },
         }
       }
-
-//      TODO: compute the number of lines after the filter
-//      TODO: compute the number of lines in the model = this.object.children
-//      TODO: run async process to assert if the two values are equal
 
       _computeAllLinesAreStamped(_numberOfLinesToBeStamped, _numberOfLinesStamped) {
         return _numberOfLinesToBeStamped === _numberOfLinesStamped;
@@ -128,9 +122,6 @@
         if (this._numberOfLinesToBeStamped === 0) return;
         this._numberOfLinesStamped = event.detail.value;
 
-//        console.log("isLoading:", this.isLoading);
-//        console.log("numberOfLinesStamped:", numberOfLinesStamped);
-//        console.log("this._numberOfLinesToBeStamped:", this._numberOfLinesToBeStamped);
         if (this._allLinesAreStamped) this._dispatchModelReady();
       }
 
