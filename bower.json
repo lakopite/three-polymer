@@ -2,7 +2,7 @@
   "name": "three-polymer",
   "description": "reusable polymer element for three.js geometry rendering",
   "dependencies": {
-    "polymer": "thomastodon/polymer#2.0.1-fix-01",
+    "polymer": "2.0.1",
     "threejs": "r84",
     "lodash": "^4.17.4",
     "stats.js": "latest"
