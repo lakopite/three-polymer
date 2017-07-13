@@ -78,24 +78,10 @@
 
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('new-model', this._handleNewModel);
-        this.addEventListener('model-ready', this._handleModelReady);
-        this.addEventListener('model-needs-render', this._handleModelNeedsRender);
-        this.addEventListener('iron-resize', this._handleResize);
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        this.removeEventListener('new-model', this._handleNewModel);
-        this.removeEventListener('model-ready', this._handleModelReady);
-        this.removeEventListener('model-needs-render', this._handleModelNeedsRender);
-        this.removeEventListener('iron-resize', this._handleResize);
-      }
-
-      _handleResize(e) {
-        this.height = e.target.clientHeight;
-        this.width = e.target.clientWidth;
-        this._render();
       }
 
       _render() {
@@ -107,6 +93,12 @@
 
       _canvasChanged(newCanvas) {
         this.root.appendChild(newCanvas);
+      }
+
+      _handleResize(e) {
+        this.height = e.target.clientHeight;
+        this.width = e.target.clientWidth;
+        this._render();
       }
 
       _handleNewModel(event) {

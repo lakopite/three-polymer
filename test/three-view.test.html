@@ -45,7 +45,7 @@
       expect(element.localName).to.equal('three-view');
       expect(element.sceneBackgroundColor).to.equal('#F5F5F2');
       expect(element.modelIsReady).to.be.false;
-      expect(element.initialRenderIsComplete).to.be.false;
+      expect(element.initialRenderIsComplete).to.be.true;
     });
 
     it('appends the renderer DOM element to the view', () => {
@@ -89,6 +89,7 @@
       element = fixture('basic');
       const fakeThreeModel = document.getElementsByTagName('fake-three-model')[0];
       const fakeThreeRenderer = element.shadowRoot.querySelector('fake-three-renderer');
+      expect(fakeThreeRenderer.renderCount).to.equal(1);
       fakeThreeModel.position = [1, 2, 3];
       fakeThreeModel.radius = 4;
 
@@ -96,7 +97,7 @@
 
       expect(element.modelGeometry).to.deep.equal({position: [1, 2, 3], radius: 4});
       expect(element.modelIsReady).to.be.true;
-      expect(fakeThreeRenderer.renderCount).to.equal(1);
+      expect(fakeThreeRenderer.renderCount).to.equal(2);
     });
 
     it('replaces the model in the scene when it gets a new one, and then renders', () => {
