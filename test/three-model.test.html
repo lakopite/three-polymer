@@ -132,12 +132,9 @@
       describe('geometry-filter', () => {
         it('filters elements by coordinate geometry', (done) => {
           element = fixture('medium');
+          element.geometryFilter = {xMin: 4, yMin: 4, zMin: 0, xMax: 6, yMax: 6};
 
           flush(() => {
-            expect(element.$.meshes.renderedItemCount).to.equal(5);
-
-            element.geometryFilter = {xMin: 4, yMin: 4, zMin: 0, xMax: 6, yMax: 6};
-
             expect(element.$.meshes.renderedItemCount).to.equal(1);
             done();
           });
@@ -145,12 +142,9 @@
 
         it('filters elements by coordinate geometry with a single field', (done) => {
           element = fixture('medium');
+          element.geometryFilter = {zMin: 10};
 
           flush(() => {
-            expect(element.$.meshes.renderedItemCount).to.equal(5);
-
-            element.geometryFilter = {zMin: 10};
-
             expect(element.$.meshes.renderedItemCount).to.equal(2);
             done();
           });
