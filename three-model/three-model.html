@@ -26,6 +26,7 @@
         on-remove-mesh="_handleRemoveMesh"
         on-mesh-change="_handleMeshChange"
         vertices="[[line.vertices]]"
+        bounding-box="{{line.boundingBox}}"
         metadata="[[line.metadata]]"
         stroke="[[stroke]]"
         contour-by="[[contourBy]]"
@@ -97,22 +98,10 @@
       _isWithinGeometryFilter(geometryFilter) {
 
         return (line) => {
-          const v0 = line.vertices[0];
-          const v1 = line.vertices[1];
-
-          const boundingBox = {
-            xMin: _.min([v0[0], v1[0]]),
-            yMin: _.min([v0[1], v1[1]]),
-            zMin: _.min([v0[2], v1[2]]),
-            xMax: _.max([v0[0], v1[0]]),
-            yMax: _.max([v0[1], v1[1]]),
-            zMax: _.max([v0[2], v1[2]])
-          };
-
           const isWithinGeometry = Object.keys(geometryFilter)
             .map(key => key.includes('Max')
-              ? boundingBox[key] <= geometryFilter[key]
-              : boundingBox[key] >= geometryFilter[key])
+              ? line.boundingBox[key] <= geometryFilter[key]
+              : line.boundingBox[key] >= geometryFilter[key])
             .reduce((a, b) => a && b, true);
 
           this._numberOfLinesToBeStamped -= isWithinGeometry ? 0 : 1;

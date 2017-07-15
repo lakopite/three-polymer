@@ -7,6 +7,7 @@
     <three-line-geometry
       stroke="[[stroke]]"
       vertices="[[vertices]]"
+      bounding-box="{{boundingBox}}"
       object="{{geometry}}">
     </three-line-geometry>
     <three-material id="material" object="{{material}}" color="[[color]]"></three-material>
@@ -39,6 +40,7 @@
             observer: '_dispatchNewMesh',
           },
           stroke: Number,
+          boundingBox: {type: Object, notify: true}
         }
       }
 

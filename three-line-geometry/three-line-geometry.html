@@ -14,13 +14,14 @@
           cameraNormal: {type: Array, value: [0, 1, 0]},
           stroke: Number,
           vertices: Array,
+          unitOffsetVector: Array,
           object: {
             type: Object,
             computed: '_computeGeometry(vertices, cameraNormal, stroke)',
             notify: true,
           },
-          unitOffsetVector: Array,
           midpoint: {type: Array, computed: '_computeMidpoint(vertices)'},
+          boundingBox: {type: Object, computed: '_computeBoundingBox(vertices)', notify: true},
         }
       }
 
@@ -49,6 +50,20 @@
         geometry.faces.push(...[[0, 1, 2], [0, 2, 3]].map(a => new THREE.Face3(...a)));
 
         return geometry;
+      }
+
+      _computeBoundingBox(vertices) {
+        const v0 = vertices[0];
+        const v1 = vertices[1];
+
+        return {
+          xMin: _.min([v0[0], v1[0]]),
+          yMin: _.min([v0[1], v1[1]]),
+          zMin: _.min([v0[2], v1[2]]),
+          xMax: _.max([v0[0], v1[0]]),
+          yMax: _.max([v0[1], v1[1]]),
+          zMax: _.max([v0[2], v1[2]])
+        };
       }
 
       _toSignificantFigures(coordinate) {

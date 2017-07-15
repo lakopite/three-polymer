@@ -12,6 +12,10 @@
         return {
           object: {type: Object, value: () => new THREE.Mesh()},
           vertices: {type: Array, value: () => [[1, 2, 3], [4, 5, 6]]},
+          boundingBox: {
+            type: Object,
+            value: () => new Object({xMax: 4, xMin: 1, yMax: 5, yMin: 2, zMax: 6, zMin: 3}),
+          },
         }
       }
     }
