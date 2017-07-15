@@ -22,6 +22,34 @@
     </three-contour>
   </template>
 </test-fixture>
+<test-fixture id="metadata-fields-of-type-string">
+  <template>
+    <three-contour
+      id="metadata-fields-of-type-string"
+      by="group_name"
+      data='[
+      {"vertices":[[0, 0, 0],[0, 0, 10]], "metadata": {"section_property_name": "W14X257", "group_name": "g01"}},
+      {"vertices":[[0, 0, 10],[10, 0, 10]], "metadata": {"section_property_name": "W27X84", "group_name": "g02"}},
+      {"vertices":[[0, 0, 0],[0, 0, 10]], "metadata": {"section_property_name": "W14X500", "group_name": "g03"}},
+      {"vertices":[[0, 0, 10],[10, 0, 10]], "metadata": {"section_property_name": "W27X84", "group_name": "g04"}},
+      {"vertices":[[0, 0, 0],[0, 0, 10]], "metadata": {"section_property_name": "W14X500", "group_name": "g05"}},
+      {"vertices":[[0, 0, 10],[10, 0, 10]], "metadata": {"section_property_name": "W27X84", "group_name": "g06"}},
+      {"vertices":[[0, 0, 0],[0, 0, 10]], "metadata": {"section_property_name": "W14X500", "group_name": "g07"}},
+      {"vertices":[[0, 0, 10],[10, 0, 10]], "metadata": {"section_property_name": "W27X84", "group_name": "g08"}},
+      {"vertices":[[0, 0, 0],[0, 0, 10]], "metadata": {"section_property_name": "W14X500", "group_name": "g09"}},
+      {"vertices":[[0, 0, 10],[10, 0, 10]], "metadata": {"section_property_name": "W27X84", "group_name": "g10"}},
+      {"vertices":[[0, 0, 0],[0, 0, 10]], "metadata": {"section_property_name": "W14X500", "group_name": "g11"}},
+      {"vertices":[[0, 0, 10],[10, 0, 10]], "metadata": {"section_property_name": "W27X84", "group_name": "g12"}},
+      {"vertices":[[10, 0, 0],[10, 0, 10]], "metadata": {"section_property_name": "W14X500", "group_name": "g13"}},
+      {"vertices":[[10, 0, 10],[20, 0, 10]], "metadata": {"section_property_name": "W27X102", "group_name": "g14"}},
+      {"vertices":[[20, 0, 0],[20, 0, 10]], "metadata": {"section_property_name": "W14X257", "group_name": "g15"}}
+      ]'>
+    </three-contour>
+  </template>
+</test-fixture>
+
+<!--TODO: test if we have more string types than there are colors-->
+<!--TODO: test if we have fewer string types than there are colors-->
 
 <script>
   describe('<three-contour>', () => {
@@ -80,6 +108,44 @@
           26.1538, 28.4615, 30.7692, 33.0769, 35.3846, 37.6923, 40
         ]);
       });
+    });
+
+    describe('contouring by field of type String', () => {
+
+      let element;
+      beforeEach(() => {
+        element = fixture('metadata-fields-of-type-string');
+      });
+
+      it('computes the orderedValueSet and bounds', () => {
+        expect(element.orderedValueSet).to.deep.equal([
+          "g01", "g02", "g03", "g04", "g05", "g06", "g07", "g08", "g09", "g10", "g11", "g12", "g13", "g14", "g15"
+        ]);
+        expect(element.bounds).to.deep.equal({min: "g01", max: "g15"});
+
+        element.by = "section_property_name";
+
+        expect(element.orderedValueSet).to.deep.equal(["W14X257", "W14X500", "W27X102", "W27X84"]);
+        expect(element.bounds).to.deep.equal({min: "W14X257", max: "W27X84"});
+      });
+
+      it('calculates limits and colors when there are more unique values than default colors', () => {
+        expect(element.limits).to.deep.equal([
+          "g02", "g03", "g04", "g05", "g06", "g07", "g09", "g10", "g11", "g12", "g13", "g14", "g15"
+        ]);
+        expect(element.colors).to.deep.equal([
+          "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688", "#4CAF50",
+          "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"
+        ]);
+      });
+
+      it('calculates limits and colors when there are fewer unique values than default colors', () => {
+        element.by = "section_property_name";
+
+        expect(element.colors).to.deep.equal(["#9C27B0", "#00BCD4", "#FFEB3B", "#F44336"]);
+        expect(element.limits).to.deep.equal(["W14X257", "W14X500", "W27X102", "W27X84"]);
+      });
+
     });
   });
 </script>

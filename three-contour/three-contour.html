@@ -15,61 +15,85 @@
         return {
           data: Array,
           by: String,
+          valueType: {type: String, computed: '_computeValueType(data, by)'},
+          orderedValueSet: {type: Array, computed: '_computeOrderedValueSet(data, by)'},
           colors: {
             type: Array,
-            readOnly: true,
             notify: true,
-            value: [
-              "#9C27B0",
-              "#673AB7",
-              "#3F51B5",
-              "#2196F3",
-              "#00BCD4",
-              "#009688",
-              "#4CAF50",
-              "#8BC34A",
-              "#FFEB3B",
-              "#FFC107",
-              "#FF9800",
-              "#FF5722",
-              "#F44336"
-            ],
+            computed: '_computeColors(orderedValueSet, valueType)',
           },
           bounds: {
             type: Object,
-            computed: '_computeBounds(data, by)',
+            computed: '_computeBounds(orderedValueSet)',
           },
           limits: {
             type: Array,
             notify: true,
-            computed: '_computeLimits(colors, bounds)',
+            computed: '_computeLimits(colors, bounds, valueType, orderedValueSet)',
           },
         }
       }
 
-      _computeBounds(data, by) {
+      _computeValueType(data, by) {
         if (!Array.isArray(data) || data.length === 0) return;
-        const values = data.map(line => line.metadata[by]);
 
-        const max = values.reduce((p, v) => p > v ? p : v);
-        const min = values.reduce((p, v) => p < v ? p : v);
-
-        return {min: min, max: max};
+        return typeof(data[0].metadata[by]);
       }
 
-      _computeLimits(colors, bounds) {
-        if (!(colors && bounds)) return;
-        const length = colors.length;
-        const step = (bounds.max - bounds.min) / length;
+      _computeOrderedValueSet(data, by) {
+        if (!Array.isArray(data) || data.length === 0) return;
+        return data
+          .map(line => line.metadata[by])
+          .reduce((valueSet, value) => {
+            const findIndexResult = valueSet.findIndex(existingValue => value < existingValue);
+            const indexToSpliceInto = findIndexResult === -1 ? valueSet.length : findIndexResult;
 
+            const valueIsNotAlreadyInSet = !(valueSet[indexToSpliceInto - 1] === value);
+            if (valueIsNotAlreadyInSet) valueSet.splice(indexToSpliceInto, 0, value);
+
+            return valueSet;
+          }, []);
+      }
+
+      _computeBounds(orderedValueSet) {
+        if (!orderedValueSet) return;
+        return {min: orderedValueSet[0], max: orderedValueSet[orderedValueSet.length - 1]};
+      }
+
+      _computeColors(orderedValueSet, valueType) {
+        if (!orderedValueSet && !valueType) return;
+        const defaultColors = ["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688",
+          "#4CAF50", "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"];
+
+        return valueType === "number" || orderedValueSet.length >= defaultColors.length
+          ? defaultColors
+          : new Array(defaultColors.shift()).concat(defaultColors.reduceEvenlyToLength(orderedValueSet.length - 1));
+      }
+
+      _computeLimits(colors, bounds, valueType, orderedValueSet) {
+        if (!(colors && bounds && valueType && orderedValueSet)) return;
+        const numberOfColors = colors.length;
+
+        return valueType === "number"
+          ? this._computeNumericalLimits(bounds, numberOfColors)
+          : orderedValueSet.reduceEvenlyToLength(numberOfColors);
+      }
+
+      _computeNumericalLimits(bounds, numberOfColors) {
         const limits = [];
-        for (let i = bounds.max; limits.length !== length; i -= step) {
-          limits.push(_.round(i, 4));
-        }
+        const step = (bounds.max - bounds.min) / numberOfColors;
+        for (let i = bounds.max; limits.length !== numberOfColors; i -= step) limits.push(_.round(i, 4));
 
         return limits.reverse();
       }
     }
+
+    Array.prototype.reduceEvenlyToLength = function (targetLength) {
+      return this.reduce((reducedElements, element, index) => {
+        if (this.length / (index + 1) <= targetLength / (reducedElements.length + 1)) reducedElements.push(element);
+        return reducedElements;
+      }, []);
+    };
 
     customElements.define(ThreeContour.is, ThreeContour);
   </script>
