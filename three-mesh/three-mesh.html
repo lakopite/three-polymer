@@ -49,9 +49,7 @@
 
       _computeColor(contourLimits, contourColors, contourBy, metadata) {
         if (!(contourLimits && contourColors && contourBy && metadata)) return;
-        const index = contourLimits.findIndex((contourValue) => {
-          return metadata[contourBy] <= contourValue
-        });
+        const index = contourLimits.findIndex(contourValue => metadata[contourBy] <= contourValue);
         return contourColors[index];
       }
 
