@@ -171,10 +171,12 @@
       }
 
       _computeMetadataFields(data) {
-        const keys = data
+        return data
           .map(line => Object.keys(line.metadata))
-          .reduce((previousKeys, currentKeys) => previousKeys.concat(currentKeys), []);
-        return [...new Set(keys)];
+          .reduce((metadataFields, keys) => {
+            keys.forEach(key => (!metadataFields.includes(key)) ? metadataFields.push(key) : undefined);
+            return metadataFields;
+          }, []);
       }
 
       _handleNewMesh(event) {
