@@ -53,7 +53,7 @@
           },
           isLoading: {
             type: Boolean,
-            computed: '_computeIsLoading(_allLinesAreStamped)',
+            computed: '_computeIsLoading(_allLinesAreStamped, boundaries)',
             reflectToAttribute: true,
             notify: true
           },
@@ -114,8 +114,8 @@
         return isWithinBoundaries;
       }
 
-      _computeIsLoading(_allLinesAreStamped) {
-        return !_allLinesAreStamped;
+      _computeIsLoading(_allLinesAreStamped, boundaries) {
+        return !_allLinesAreStamped || (boundaries === undefined);
       }
 
       _handleRenderedItemCountChanged(event) {
