@@ -26,14 +26,15 @@
     it('instantiates the element with initial properties', () => {
       expect(element.localName).to.equal('three-material');
       expect(element.object.opacity).to.equal(1.0);
-      expect(element.object.transparent).to.be.true;
+      expect(element.object.visible).to.be.true;
+      expect(element.object.transparent).to.be.false;
       expect(element.object.color.getHexString()).to.equal("696969");
     });
 
     it('updates the opacity', () => {
-      element.opacity = 0;
+      element.isVisible = false;
 
-      expect(element.object.opacity).to.equal(0);
+      expect(element.object.visible).to.be.false;
     });
 
     it('changes colors', () => {

@@ -11,7 +11,7 @@
       static get properties() {
         return {
           color: {type: String, observer: '_colorChanged'},
-          opacity: {type: Number, observer: '_opacityChanged'},
+          isVisible: {type: Boolean, observer: '_isVisibleChanged'},
           object: {
             type: Object,
             notify: true,
@@ -19,8 +19,9 @@
               {
                 side: THREE.DoubleSide,
                 vertexColors: THREE.NoColors,
-                transparent: true,
+                transparent: false,
                 opacity: 1.0,
+                visible: true,
               }
             ),
           },
@@ -31,8 +32,8 @@
         this.object.color = new THREE.Color().setStyle(color);
       }
 
-      _opacityChanged(opacity) {
-        this.object.opacity = opacity;
+      _isVisibleChanged(isVisible) {
+        this.object.visible = isVisible;
       }
     }
 

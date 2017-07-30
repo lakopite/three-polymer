@@ -31,14 +31,15 @@
 
       static get properties() {
         return {
-          data: Array,
+          data: {type: Array, observer: '_dataChanged'},
           by: String,
           valueTypeIsString: {type: Boolean, computed: '_computeValueTypeIsString(data, by)'},
-          stringValueSet: {type: Array},
+          stringValueSet: Set,
           orderedValueSet: {
             type: Array,
-            computed: '_computeOrderedValueSet(data, by)',
-            observer: '_orderedValueSetChanged'
+            computed: '_computeOrderedValueSet(data, by, stringValueSet)',
+            observer: '_orderedValueSetChanged',
+            notify: true,
           },
           colors: {type: Array, notify: true},
           defaultColors: {
@@ -58,19 +59,16 @@
         return typeof(data[0].metadata[by]) === "string";
       }
 
-      _computeOrderedValueSet(data, by) {
+      _dataChanged() {
+        this.stringValueSet = undefined;
+      }
+
+      _computeOrderedValueSet(data, by, stringValueSet) {
         if (!Array.isArray(data) || data.length === 0) return;
-        return data
-          .map(line => line.metadata[by])
-          .reduce((valueSet, value) => {
-            const findIndexResult = valueSet.findIndex(existingValue => value < existingValue);
-            const indexToSpliceInto = findIndexResult === -1 ? valueSet.length : findIndexResult;
 
-            const valueIsNotAlreadyInSet = !(valueSet[indexToSpliceInto - 1] === value);
-            if (valueIsNotAlreadyInSet) valueSet.splice(indexToSpliceInto, 0, value);
-
-            return valueSet;
-          }, []);
+        return stringValueSet
+          ? stringValueSet.sort()
+          : data.map(line => line.metadata[by]).toSortedSet();
       }
 
       _orderedValueSetChanged(orderedValueSet) {
@@ -80,6 +78,29 @@
           : undefined;
       }
     }
+
+    Set.prototype.sort = function () {
+      return this.reduce((valueSet, value) => {
+        const findIndexResult = valueSet.findIndex(existingValue => value < existingValue);
+        const indexToSpliceInto = findIndexResult === -1 ? valueSet.length : findIndexResult;
+
+        valueSet.splice(indexToSpliceInto, 0, value);
+
+        return valueSet;
+      }, []);
+    };
+
+    Array.prototype.toSortedSet = function () {
+      return this.reduce((valueSet, value) => {
+        const findIndexResult = valueSet.findIndex(existingValue => value < existingValue);
+        const indexToSpliceInto = findIndexResult === -1 ? valueSet.length : findIndexResult;
+
+        const valueIsNotAlreadyInSet = !(valueSet[indexToSpliceInto - 1] === value);
+        if (valueIsNotAlreadyInSet) valueSet.splice(indexToSpliceInto, 0, value);
+
+        return valueSet;
+      }, []);
+    };
 
     customElements.define(ThreeContour.is, ThreeContour);
   </script>

@@ -135,6 +135,20 @@
         expect(element.orderedValueSet).to.deep.equal(["W14X257", "W14X500", "W27X102", "W27X84"]);
       });
 
+      it('calculates the orderedValueSet when there is a new stringValueSet from the parent', () => {
+
+        element.stringValueSet = ["g10", "g07", "g04", "g13", "g01", "g15", "g09"];
+
+        expect(element.orderedValueSet).to.deep.equal(["g01", "g04", "g07", "g09", "g10", "g13", "g15"]);
+
+        element.data = [
+          {"vertices": [[0, 0, 0], [0, 0, 10]], "metadata": {"section_property_name": "W14X257", "group_name": "g01"}},
+          {"vertices": [[0, 0, 10], [10, 0, 10]], "metadata": {"section_property_name": "W27X84", "group_name": "g02"}},
+          {"vertices": [[0, 0, 0], [0, 0, 10]], "metadata": {"section_property_name": "W14X500", "group_name": "g03"}}
+        ];
+
+        expect(element.orderedValueSet).to.deep.equal(["g01", "g02", "g03"]);
+      });
     });
   });
 </script>

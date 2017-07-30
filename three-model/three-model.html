@@ -10,6 +10,8 @@
       by="{{contourBy}}"
       color-limits="{{contourColorLimits}}"
       numeric-bounds="{{contourNumericBounds}}"
+      ordered-value-set="{{metadataValueFilter}}"
+      string-value-set="[[contourStringValueSet]]"
       colors="{{contourColors}}">
     </three-contour>
     <template
@@ -25,7 +27,8 @@
         on-new-mesh="_handleNewMesh"
         on-remove-mesh="_handleRemoveMesh"
         on-mesh-change="_handleMeshChange"
-        geometric-boundaries="[[geometryFilter]]"
+        geometry-filter="[[geometryFilter]]"
+        metadata-value-filter="[[metadataValueFilter]]"
         vertices="[[line.vertices]]"
         metadata="[[line.metadata]]"
         stroke="[[stroke]]"

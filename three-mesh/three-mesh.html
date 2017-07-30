@@ -11,7 +11,7 @@
     </three-line-geometry>
     <three-material
       id="material"
-      opacity="[[_computeOpacity(isVisible)]]"
+      is-visible="[[isVisible]]"
       object="{{material}}"
       color="[[color]]">
     </three-material>
@@ -30,24 +30,28 @@
           contourBy: String,
           metadata: Object,
           vertices: Array,
-          geometricBoundaries: Object,
-          boundingBox: {type: Object, computed: '_computeBoundingBox(vertices)'},
-          isVisible: {
-            type: Boolean,
-            computed: '_computeIsVisible(isWithinGeometricBoundaries, stringValueSetIncludesContouredValue)',
-            observer: '_isVisibleChanged'
-          },
-          isWithinGeometricBoundaries: {
-            type: Boolean,
-            computed: '_computeIsWithinGeometricBoundaries(geometricBoundaries, boundingBox)',
-          },
-          stringValueSetIncludesContouredValue: {type: Boolean, value: true},
+          geometryFilter: Object,
+          metadataValueFilter: Set,
           contouredValue: {computed: '_computeContouredValue(contourBy, metadata)'},
           color: {
             type: String,
             readOnly: true,
             observer: '_dispatchMeshChange',
             computed: '_computeColor(contourColorLimits, contourColors, contouredValue)',
+          },
+          boundingBox: {type: Object, computed: '_computeBoundingBox(vertices)'},
+          isWithinGeometricBoundaries: {
+            type: Boolean,
+            computed: '_computeIsWithinGeometricBoundaries(geometryFilter, boundingBox)',
+          },
+          metadataValueFilterIncludesContouredValue: {
+            type: Boolean,
+            computed: '_computeMetadataValueFilterIncludesContouredValue(metadataValueFilter, contouredValue)',
+          },
+          isVisible: {
+            type: Boolean,
+            computed: '_computeIsVisible(isWithinGeometricBoundaries, metadataValueFilterIncludesContouredValue)',
+            observer: '_isVisibleChanged',
           },
           geometry: {type: Object, observer: '_geometryChanged'},
           material: {type: Object, observer: '_materialChanged'},
@@ -74,23 +78,25 @@
         };
       }
 
-      _computeIsWithinGeometricBoundaries(geometricBoundaries, boundingBox) {
-        if (!(geometricBoundaries && boundingBox)) return true;
+      _computeIsWithinGeometricBoundaries(geometryFilter, boundingBox) {
+        if (!(geometryFilter && boundingBox)) return true;
 
-        return Object.keys(geometricBoundaries)
+        return Object.keys(geometryFilter)
           .map(key => key.includes('Max')
-            ? boundingBox[key] <= geometricBoundaries[key]
-            : boundingBox[key] >= geometricBoundaries[key])
+            ? boundingBox[key] <= geometryFilter[key]
+            : boundingBox[key] >= geometryFilter[key])
           .reduce((a, b) => a && b, true);
       }
 
-      _computeIsVisible(isWithinGeometricBoundaries, stringValueSetIncludesContouredValue) {
-        return isWithinGeometricBoundaries
-          && stringValueSetIncludesContouredValue;
+      _computeMetadataValueFilterIncludesContouredValue(metadataValueFilter, contouredValue) {
+        if (!(metadataValueFilter && contouredValue)) return true;
+
+        return metadataValueFilter.includes(contouredValue);
       }
 
-      _computeOpacity(isVisible) {
-        return isVisible ? 1 : 0;
+      _computeIsVisible(isWithinGeometricBoundaries, metadataValueFilterIncludesContouredValue) {
+        return isWithinGeometricBoundaries
+          && metadataValueFilterIncludesContouredValue;
       }
 
       _computeContouredValue(contourBy, metadata) {
