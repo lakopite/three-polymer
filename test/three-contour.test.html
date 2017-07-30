@@ -64,12 +64,12 @@
       ]);
     });
 
-    it('makes the bounds undefined when there is no data', () => {
+    it('makes the numericBounds undefined when there is no data', () => {
       element = fixture('metadata-fields-of-type-string');
 
       element.data = [];
 
-      expect(element.bounds).to.be.undefined;
+      expect(element.numericBounds).to.be.undefined;
     });
 
     describe('contouring by field of type Number', () => {
@@ -79,30 +79,30 @@
         element = fixture('metadata-fields-of-type-number');
       });
 
-      it('has a <three-numerical-contour> child', (done) => {
+      it('has a <three-numeric-contour> child', (done) => {
         flush(() => {
 
-          expect(element.shadowRoot.querySelector('three-numerical-contour')).to.exist;
+          expect(element.shadowRoot.querySelector('three-numeric-contour')).to.exist;
           expect(element.shadowRoot.querySelector('three-string-contour')).to.not.exist;
 
           done();
         });
       });
 
-      it('calculates the bounds', () => {
+      it('calculates the numericBounds', () => {
 
-        expect(element.bounds).to.deep.equal({min: 10, max: 100});
+        expect(element.numericBounds).to.deep.equal({min: 10, max: 100});
 
         element.by = "flexure";
 
-        expect(element.bounds).to.deep.equal({min: 20, max: 55});
+        expect(element.numericBounds).to.deep.equal({min: 20, max: 55});
       });
 
-      it('can have its bounds overwritten', () => {
+      it('can have its numericBounds overwritten', () => {
 
-        element.bounds = {min: 0, max: 1};
+        element.numericBounds = {min: 0, max: 1};
 
-        expect(element.bounds).to.deep.equal({min: 0, max: 1});
+        expect(element.numericBounds).to.deep.equal({min: 0, max: 1});
       });
     });
 
@@ -117,7 +117,7 @@
         flush(() => {
 
           expect(element.shadowRoot.querySelector('three-string-contour')).to.exist;
-          expect(element.shadowRoot.querySelector('three-numerical-contour')).to.not.exist;
+          expect(element.shadowRoot.querySelector('three-numeric-contour')).to.not.exist;
 
           done();
         });

@@ -2,26 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>three-numerical-contour test</title>
+  <title>three-numeric-contour test</title>
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
   <link rel="import" href="../../polymer/polymer.html">
-  <link rel="import" href="../three-contour/three-numerical-contour.html">
+  <link rel="import" href="../three-contour/three-numeric-contour.html">
 </head>
 <body>
 
 <test-fixture id="basic">
   <template>
-    <three-numerical-contour
+    <three-numeric-contour
       default-colors='["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688",
         "#4CAF50", "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"]'
       bounds='{"min": 20, "max": 55}'>
-    </three-numerical-contour>
+    </three-numeric-contour>
   </template>
 </test-fixture>
 
 <script>
-  describe('<three-numerical-contour>', () => {
+  describe('<three-numeric-contour>', () => {
 
     let element;
     beforeEach(() => {
@@ -30,7 +30,7 @@
 
     it('instantiates the element with default properties', () => {
 
-      expect(element.localName).to.equal('three-numerical-contour');
+      expect(element.localName).to.equal('three-numeric-contour');
       expect(element.defaultColors).to.deep.equal(
         ["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688", "#4CAF50",
           "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"]

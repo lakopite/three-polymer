@@ -1,7 +1,7 @@
 <script src="../../lodash/lodash.js"></script>
 <link rel="import" href="../../polymer/polymer-element.html">
 <link rel="import" href="three-string-contour.html">
-<link rel="import" href="three-numerical-contour.html">
+<link rel="import" href="three-numeric-contour.html">
 
 <dom-module id="three-contour">
   <template>
@@ -14,12 +14,12 @@
       </three-string-contour>
     </template>
     <template is="dom-if" if="{{!valueTypeIsString}}">
-      <three-numerical-contour
-        bounds="[[bounds]]"
+      <three-numeric-contour
+        bounds="[[numericBounds]]"
         default-colors="[[defaultColors]]"
         colors="{{colors}}"
         color-limits="{{colorLimits}}">
-      </three-numerical-contour>
+      </three-numeric-contour>
     </template>
   </template>
   <script>
@@ -34,6 +34,7 @@
           data: Array,
           by: String,
           valueTypeIsString: {type: Boolean, computed: '_computeValueTypeIsString(data, by)'},
+          stringValueSet: {type: Array},
           orderedValueSet: {
             type: Array,
             computed: '_computeOrderedValueSet(data, by)',
@@ -46,7 +47,7 @@
             value: ["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688",
               "#4CAF50", "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"]
           },
-          bounds: {type: Object, notify: true},
+          numericBounds: {type: Object, notify: true},
           colorLimits: {type: Array, notify: true},
         }
       }
@@ -74,7 +75,7 @@
 
       _orderedValueSetChanged(orderedValueSet) {
 
-        this.bounds = orderedValueSet
+        this.numericBounds = orderedValueSet
           ? {min: orderedValueSet[0], max: orderedValueSet[orderedValueSet.length - 1]}
           : undefined;
       }
