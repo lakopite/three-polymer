@@ -11,6 +11,7 @@
       static get properties() {
         return {
           color: {type: String, observer: '_colorChanged'},
+          opacity: {type: Number, observer: '_opacityChanged'},
           object: {
             type: Object,
             notify: true,
@@ -29,7 +30,12 @@
       _colorChanged(color) {
         this.object.color = new THREE.Color().setStyle(color);
       }
+
+      _opacityChanged(opacity) {
+        this.object.opacity = opacity;
+      }
     }
+
     customElements.define(ThreeMaterial.is, ThreeMaterial);
   </script>
 </dom-module>

@@ -19,13 +19,13 @@
       as="line"
       initial-count="100"
       target-framerate="1"
-      filter="_isWithinCoordinateBoundaries"
       on-rendered-item-count-changed="_handleRenderedItemCountChanged">
       <three-mesh
         id="line-{{index}}"
         on-new-mesh="_handleNewMesh"
         on-remove-mesh="_handleRemoveMesh"
         on-mesh-change="_handleMeshChange"
+        geometric-boundaries="[[geometryFilter]]"
         vertices="[[line.vertices]]"
         metadata="[[line.metadata]]"
         stroke="[[stroke]]"
@@ -49,7 +49,6 @@
           geometryFilter: {
             type: Object,
             value: {},
-            observer: '_geometryFilterChanged',
             notify: true
           },
           isLoading: {
@@ -86,33 +85,6 @@
 
       _computeAllLinesAreStamped(_numberOfLinesToBeStamped, _numberOfLinesStamped) {
         return _numberOfLinesToBeStamped === _numberOfLinesStamped;
-      }
-
-      _geometryFilterChanged() {
-        this._numberOfLinesToBeStamped = this.data.length;
-        this.$.meshes.render();
-      }
-
-      _isWithinCoordinateBoundaries(line) {
-        const v0 = line.vertices[0];
-        const v1 = line.vertices[1];
-
-        const boundingBox = {
-          xMin: _.min([v0[0], v1[0]]),
-          yMin: _.min([v0[1], v1[1]]),
-          zMin: _.min([v0[2], v1[2]]),
-          xMax: _.max([v0[0], v1[0]]),
-          yMax: _.max([v0[1], v1[1]]),
-          zMax: _.max([v0[2], v1[2]])
-        };
-        const isWithinBoundaries = Object.keys(this.geometryFilter)
-          .map(key => key.includes('Max')
-            ? boundingBox[key] <= this.geometryFilter[key]
-            : boundingBox[key] >= this.geometryFilter[key])
-          .reduce((a, b) => a && b, true);
-
-        this._numberOfLinesToBeStamped -= isWithinBoundaries ? 0 : 1;
-        return isWithinBoundaries;
       }
 
       _computeIsLoading(_allLinesAreStamped, boundaries) {
@@ -161,10 +133,10 @@
 
       _computeRadius(boundaries) {
         return boundaries ? [
-            boundaries.xMax - boundaries.xMin,
-            boundaries.yMax - boundaries.yMin,
-            boundaries.zMax - boundaries.zMin
-          ].reduce((p, v) => p > v ? p : v) / 2 : undefined;
+          boundaries.xMax - boundaries.xMin,
+          boundaries.yMax - boundaries.yMin,
+          boundaries.zMax - boundaries.zMin
+        ].reduce((p, v) => p > v ? p : v) / 2 : undefined;
       }
 
       _computeStroke(radius) {

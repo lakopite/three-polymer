@@ -9,7 +9,12 @@
       vertices="[[vertices]]"
       object="{{geometry}}">
     </three-line-geometry>
-    <three-material id="material" object="{{material}}" color="[[color]]"></three-material>
+    <three-material
+      id="material"
+      opacity="[[_computeOpacity(isVisible)]]"
+      object="{{material}}"
+      color="[[color]]">
+    </three-material>
   </template>
   <script>
     class ThreeMesh extends AbstractThreeMesh {
@@ -25,11 +30,24 @@
           contourBy: String,
           metadata: Object,
           vertices: Array,
+          geometricBoundaries: Object,
+          boundingBox: {type: Object, computed: '_computeBoundingBox(vertices)'},
+          isVisible: {
+            type: Boolean,
+            computed: '_computeIsVisible(isWithinGeometricBoundaries, stringValueSetIncludesContouredValue)',
+            observer: '_isVisibleChanged'
+          },
+          isWithinGeometricBoundaries: {
+            type: Boolean,
+            computed: '_computeIsWithinGeometricBoundaries(geometricBoundaries, boundingBox)',
+          },
+          stringValueSetIncludesContouredValue: {type: Boolean, value: true},
+          contouredValue: {computed: '_computeContouredValue(contourBy, metadata)'},
           color: {
             type: String,
             readOnly: true,
             observer: '_dispatchMeshChange',
-            computed: '_computeColor(contourColorLimits, contourColors, contourBy, metadata)',
+            computed: '_computeColor(contourColorLimits, contourColors, contouredValue)',
           },
           geometry: {type: Object, observer: '_geometryChanged'},
           material: {type: Object, observer: '_materialChanged'},
@@ -42,16 +60,48 @@
         }
       }
 
-      disconnectedCallback() {
-        super.disconnectedCallback();
-        this._dispatchRemoveMesh();
+      _computeBoundingBox(vertices) {
+        const v0 = vertices[0];
+        const v1 = vertices[1];
+
+        return {
+          xMin: _.min([v0[0], v1[0]]),
+          yMin: _.min([v0[1], v1[1]]),
+          zMin: _.min([v0[2], v1[2]]),
+          xMax: _.max([v0[0], v1[0]]),
+          yMax: _.max([v0[1], v1[1]]),
+          zMax: _.max([v0[2], v1[2]])
+        };
       }
 
-      _computeColor(contourColorLimits, contourColors, contourBy, metadata) {
-        if (!(contourColorLimits && contourColors && contourBy && metadata)) return;
+      _computeIsWithinGeometricBoundaries(geometricBoundaries, boundingBox) {
+        if (!(geometricBoundaries && boundingBox)) return true;
+
+        return Object.keys(geometricBoundaries)
+          .map(key => key.includes('Max')
+            ? boundingBox[key] <= geometricBoundaries[key]
+            : boundingBox[key] >= geometricBoundaries[key])
+          .reduce((a, b) => a && b, true);
+      }
+
+      _computeIsVisible(isWithinGeometricBoundaries, stringValueSetIncludesContouredValue) {
+        return isWithinGeometricBoundaries
+          && stringValueSetIncludesContouredValue;
+      }
+
+      _computeOpacity(isVisible) {
+        return isVisible ? 1 : 0;
+      }
+
+      _computeContouredValue(contourBy, metadata) {
+        return metadata[contourBy];
+      }
+
+      _computeColor(contourColorLimits, contourColors, contouredValue) {
+        if (!(contourColorLimits && contourColors && contouredValue)) return;
 
         const maximumColor = contourColors[contourColors.length - 1];
-        const index = contourColorLimits.findIndex(contourValue => metadata[contourBy] <= contourValue);
+        const index = contourColorLimits.findIndex(contourColorLimit => contouredValue <= contourColorLimit);
 
         return index === -1 ? maximumColor : contourColors[index];
       }
@@ -63,6 +113,10 @@
 
       _materialChanged(material) {
         this.object.material = material;
+        this._dispatchMeshChange();
+      }
+
+      _isVisibleChanged() {
         this._dispatchMeshChange();
       }
     }

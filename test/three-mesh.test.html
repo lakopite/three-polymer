@@ -13,7 +13,7 @@
 <test-fixture id="basic">
   <template>
     <three-mesh
-      vertices="[[-10, 0, -10],[-10, 0, 10]]"
+      vertices="[[0, 0, 0],[4, 8, 12]]"
       metadata='{"axial": 27, "flexure": 37}'
       stroke="2"
       contour-by="axial"
@@ -44,29 +44,54 @@
     let element, parent;
 
     describe('itself', () => {
-      it('calculates the color of the line when the contourBy changes', () => {
-        element = fixture('basic');
-        expect(element.color).to.equal("#CDDC39");
 
+      beforeEach(() => {
+        element = fixture('basic');
+      });
+
+      it('instantiates the element with initial properties', () => {
+        expect(element.localName).to.equal('three-mesh');
+        expect(element.stroke).to.equal(2);
+        expect(element.contourBy).to.equal("axial");
+        expect(element.vertices).to.deep.equal([[0, 0, 0], [4, 8, 12]]);
+        expect(element.metadata).to.deep.equal({"axial": 27, "flexure": 37});
+        expect(element.contourColorLimits).to.deep.equal([10, 20, 30, 40]);
+        expect(element.contourColors).to.deep.equal(["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]);
+
+        expect(element.color).to.equal("#CDDC39");
+        expect(element.isVisible).to.be.true;
+      });
+
+      it('calculates the color of the line when the contourBy changes', () => {
         element.contourBy = "flexure";
 
         expect(element.color).to.equal("#FF5722");
       });
 
       it('calculates the color of the line when the metadata value is greater than any contourColorLimit', () => {
-        element = fixture('basic');
-
         element.contourColorLimits = [10, 14, 18, 22];
 
         expect(element.color).to.equal("#FF5722");
       });
 
       it('calculates the color of the line when the metadata value is lesser than any contourColorLimit', () => {
-        element = fixture('basic');
-
         element.contourColorLimits = [30, 32, 34, 36];
 
         expect(element.color).to.equal("#9C27B0");
+      });
+
+      it('computes visibility when it is outside of the geometricBoundaries', () => {
+        element.geometricBoundaries = {xMin: 0, yMin: 0, zMin: 0, xMax: 6, yMax: 6};
+
+        expect(element.isVisible).to.be.false;
+        expect(element.shadowRoot.querySelector('three-material').opacity).to.equal(0);
+      });
+
+      it('computes visibility when it is outside of the geometricBoundaries', () => {
+        element.geometricBoundaries = {xMin: 0, yMin: 0, zMin: 0, xMax: 4, yMax: 8};
+
+        expect(element.isVisible).to.be.true;
+        expect(element.shadowRoot.querySelector('three-material').opacity).to.equal(1);
       });
     });
 
@@ -84,44 +109,33 @@
       it('tells the model when its geometry changes', () => {
         parent = fixture('parent');
         const threeMesh = parent.querySelector('three-mesh');
-        expect(parent.handleMeshChangeCount).to.equal(3);
+        expect(parent.handleMeshChangeCount).to.equal(4);
 
         threeMesh.geometry = new THREE.Geometry();
 
-        expect(parent.handleMeshChangeCount).to.equal(4);
+        expect(parent.handleMeshChangeCount).to.equal(5);
       });
 
       it('tells the model when its material changes', () => {
         parent = fixture('parent');
         const threeMesh = parent.querySelector('three-mesh');
-        expect(parent.handleMeshChangeCount).to.equal(3);
+        expect(parent.handleMeshChangeCount).to.equal(4);
 
         threeMesh.material = new THREE.MeshBasicMaterial();
 
-        expect(parent.handleMeshChangeCount).to.equal(4);
+        expect(parent.handleMeshChangeCount).to.equal(5);
       });
 
       it('tells the model when its color changes', () => {
         parent = fixture('parent');
         const threeMesh = parent.querySelector('three-mesh');
-        expect(parent.handleMeshChangeCount).to.equal(3);
+        expect(parent.handleMeshChangeCount).to.equal(4);
 
         threeMesh.contourBy = "flexure";
 
-        expect(parent.handleMeshChangeCount).to.equal(4);
-      });
-
-      it('tells the model when it gets removed from the dom', () => {
-        parent = fixture('parent');
-        const threeMesh = parent.querySelector('three-mesh');
-        expect(parent.handleRemoveMeshCount).to.equal(0);
-
-        threeMesh.disconnectedCallback();
-
-        expect(parent.handleRemoveMeshCount).to.equal(1);
+        expect(parent.handleMeshChangeCount).to.equal(5);
       });
     });
-
   });
 </script>
 </body>
