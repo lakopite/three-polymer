@@ -9,10 +9,10 @@
   <link rel="import" href="../three-contour/three-contour.html">
 </head>
 <body>
+
 <test-fixture id="metadata-fields-of-type-number">
   <template>
     <three-contour
-      id="metadata-fields-of-type-number"
       by="axial"
       data='[
       {"vertices":[[-10, 0, -10],[-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}},
@@ -22,10 +22,10 @@
     </three-contour>
   </template>
 </test-fixture>
+
 <test-fixture id="metadata-fields-of-type-string">
   <template>
     <three-contour
-      id="metadata-fields-of-type-string"
       by="group_name"
       data='[
       {"vertices":[[0, 0, 0],[0, 0, 10]], "metadata": {"section_property_name": "W14X257", "group_name": "g01"}},
@@ -48,22 +48,20 @@
   </template>
 </test-fixture>
 
-<!--TODO: test if we have more string types than there are colors-->
-<!--TODO: test if we have fewer string types than there are colors-->
-
 <script>
   describe('<three-contour>', () => {
 
     let element;
 
     it('instantiates the element', () => {
-      element = fixture('metadata-fields-of-type-number');
+      element = fixture('metadata-fields-of-type-string');
+
       expect(element.localName).to.equal('three-contour');
-      expect(element.by).to.equal('axial');
-      expect(element.colors).to.deep.equal(
-        ["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688", "#4CAF50",
-          "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"]
-      );
+      expect(element.by).to.equal('group_name');
+      expect(element.defaultColors).to.deep.equal([
+        "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688", "#4CAF50",
+        "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"
+      ]);
     });
 
     describe('contouring by field of type Number', () => {
@@ -73,40 +71,23 @@
         element = fixture('metadata-fields-of-type-number');
       });
 
-      it('calculates limits based on by', () => {
-        expect(element.limits).to.deep.equal([
-          16.9231, 23.8462, 30.7692, 37.6923, 44.6154, 51.5385,
-          58.4615, 65.3846, 72.3077, 79.2308, 86.1538, 93.0769, 100
-        ]);
+      it('has a <three-numerical-contour> child', (done) => {
+        flush(() => {
+
+          expect(element.shadowRoot.querySelector('three-numerical-contour')).to.exist;
+          expect(element.shadowRoot.querySelector('three-string-contour')).to.not.exist;
+
+          done();
+        });
+      });
+
+      it('calculates the bounds', () => {
+
         expect(element.bounds).to.deep.equal({min: 10, max: 100});
 
         element.by = "flexure";
 
-        expect(element.limits).to.deep.equal([
-          22.6923, 25.3846, 28.0769, 30.7692, 33.4615, 36.1538,
-          38.8462, 41.5385, 44.2308, 46.9231, 49.6154, 52.3077, 55
-        ]);
         expect(element.bounds).to.deep.equal({min: 20, max: 55});
-      });
-
-      it('calculates limits for a single line', () => {
-        element.data = [{"vertices": [[-10, 0, -10], [-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}}];
-
-        expect(element.limits).to.deep.equal([
-          10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10
-        ]);
-      });
-
-      it('updates the limits when it gets new data', () => {
-        element.data = [
-          {"vertices": [[-10, 0, -10], [-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}},
-          {"vertices": [[-10, 0, 10], [10, 0, 10]], "metadata": {"axial": 40, "flexure": 20}}
-        ];
-
-        expect(element.limits).to.deep.equal([
-          12.3077, 14.6154, 16.9231, 19.2308, 21.5385, 23.8462,
-          26.1538, 28.4615, 30.7692, 33.0769, 35.3846, 37.6923, 40
-        ]);
       });
     });
 
@@ -117,33 +98,26 @@
         element = fixture('metadata-fields-of-type-string');
       });
 
-      it('computes the orderedValueSet and bounds', () => {
+      it('has a <three-string-contour> child', (done) => {
+        flush(() => {
+
+          expect(element.shadowRoot.querySelector('three-string-contour')).to.exist;
+          expect(element.shadowRoot.querySelector('three-numerical-contour')).to.not.exist;
+
+          done();
+        });
+      });
+
+      it('computes the orderedValueSet', () => {
+
         expect(element.orderedValueSet).to.deep.equal([
-          "g01", "g02", "g03", "g04", "g05", "g06", "g07", "g08", "g09", "g10", "g11", "g12", "g13", "g14", "g15"
+          "g01", "g02", "g03", "g04", "g05", "g06", "g07", "g08",
+          "g09", "g10", "g11", "g12", "g13", "g14", "g15"
         ]);
-        expect(element.bounds).to.deep.equal({min: "g01", max: "g15"});
 
         element.by = "section_property_name";
 
         expect(element.orderedValueSet).to.deep.equal(["W14X257", "W14X500", "W27X102", "W27X84"]);
-        expect(element.bounds).to.deep.equal({min: "W14X257", max: "W27X84"});
-      });
-
-      it('calculates limits and colors when there are more unique values than default colors', () => {
-        expect(element.limits).to.deep.equal([
-          "g02", "g03", "g04", "g05", "g06", "g07", "g09", "g10", "g11", "g12", "g13", "g14", "g15"
-        ]);
-        expect(element.colors).to.deep.equal([
-          "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688", "#4CAF50",
-          "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"
-        ]);
-      });
-
-      it('calculates limits and colors when there are fewer unique values than default colors', () => {
-        element.by = "section_property_name";
-
-        expect(element.colors).to.deep.equal(["#9C27B0", "#00BCD4", "#FFEB3B", "#F44336"]);
-        expect(element.limits).to.deep.equal(["W14X257", "W14X500", "W27X102", "W27X84"]);
       });
 
     });

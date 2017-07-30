@@ -1,0 +1,49 @@
+<script src="../../lodash/lodash.js"></script>
+<link rel="import" href="../../polymer/polymer-element.html">
+
+<dom-module id="three-numerical-contour">
+  <template>
+  </template>
+  <script>
+    class ThreeNumericalContour extends Polymer.Element {
+
+      static get is() {
+        return 'three-numerical-contour';
+      }
+
+      static get properties() {
+        return {
+          colors: {
+            type: Array,
+            notify: true,
+            computed: '_computeColors(defaultColors)',
+          },
+          defaultColors: Array,
+          bounds: Object,
+          limits: {
+            type: Array,
+            notify: true,
+            computed: '_computeLimits(colors, bounds)',
+          },
+        }
+      }
+
+      _computeColors(defaultColors) {
+        return defaultColors
+      }
+
+      _computeLimits(colors, bounds) {
+        if (!(colors && bounds)) return;
+
+        const numberOfColors = colors.length;
+        const limits = [];
+        const step = (bounds.max - bounds.min) / numberOfColors;
+        for (let i = bounds.max; limits.length !== numberOfColors; i -= step) limits.push(_.round(i, 4));
+
+        return limits.reverse();
+      }
+    }
+
+    customElements.define(ThreeNumericalContour.is, ThreeNumericalContour);
+  </script>
+</dom-module>

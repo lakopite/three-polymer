@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-string-contour test</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <link rel="import" href="../../polymer/polymer.html">
+  <link rel="import" href="../three-contour/three-string-contour.html">
+</head>
+<body>
+
+<test-fixture id="more-set-values-than-colors">
+  <template>
+    <three-string-contour
+      bounds='{"min": "g01", "max": "g15"}'
+      default-colors='["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688",
+        "#4CAF50", "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"]'
+      ordered-value-set='["g01", "g02", "g03", "g04", "g05", "g06", "g07",
+        "g08", "g09", "g10", "g11", "g12", "g13", "g14", "g15"]'>
+    </three-string-contour>
+  </template>
+</test-fixture>
+
+<test-fixture id="fewer-set-values-than-colors">
+  <template>
+    <three-string-contour
+      default-colors='["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688",
+        "#4CAF50", "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"]'
+      ordered-value-set='["W14X257", "W14X500", "W27X102", "W27X84"]'>
+    </three-string-contour>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-string-contour>', () => {
+
+    let element;
+
+    it('instantiates the element with default properties', () => {
+      element = fixture('fewer-set-values-than-colors');
+
+      expect(element.localName).to.equal('three-string-contour');
+      expect(element.defaultColors).to.deep.equal(
+        ["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688", "#4CAF50",
+          "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"]
+      );
+      expect(element.orderedValueSet).to.deep.equal(["W14X257", "W14X500", "W27X102", "W27X84"]);
+    });
+
+    describe('contouring by field of type String', () => {
+
+      let element;
+
+      it('calculates limits and colors when there are more unique values than default colors', () => {
+        element = fixture("more-set-values-than-colors");
+
+        expect(element.limits).to.deep.equal([
+          "g02", "g03", "g04", "g05", "g06", "g07", "g09", "g10", "g11", "g12", "g13", "g14", "g15"
+        ]);
+        expect(element.colors).to.deep.equal([
+          "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688", "#4CAF50",
+          "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"
+        ]);
+      });
+
+      it('calculates limits and colors when there are fewer unique values than default colors', () => {
+        element = fixture("fewer-set-values-than-colors");
+
+        expect(element.colors).to.deep.equal(["#9C27B0", "#00BCD4", "#FFEB3B", "#F44336"]);
+        expect(element.limits).to.deep.equal(["W14X257", "W14X500", "W27X102", "W27X84"]);
+      });
+
+    });
+  });
+</script>
+</body>
+</html>

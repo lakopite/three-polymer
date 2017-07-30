@@ -1,0 +1,55 @@
+<script src="../../lodash/lodash.js"></script>
+<link rel="import" href="../../polymer/polymer-element.html">
+
+<dom-module id="three-string-contour">
+  <template>
+  </template>
+  <script>
+    class ThreeStringContour extends Polymer.Element {
+
+      static get is() {
+        return 'three-string-contour';
+      }
+
+      static get properties() {
+        return {
+          orderedValueSet: Array,
+          colors: {
+            type: Array,
+            notify: true,
+            computed: '_computeColors(orderedValueSet, defaultColors)',
+          },
+          defaultColors: Array,
+          limits: {
+            type: Array,
+            notify: true,
+            computed: '_computeLimits(colors, orderedValueSet)',
+          },
+        }
+      }
+
+      _computeColors(orderedValueSet, defaultColors) {
+
+        return orderedValueSet.length >= defaultColors.length
+          ? defaultColors
+          : new Array(Object.assign([], defaultColors).shift())
+            .concat(defaultColors.reduceEvenlyToLength(orderedValueSet.length - 1));
+      }
+
+      _computeLimits(colors, orderedValueSet) {
+        if (!(colors && orderedValueSet)) return;
+
+        return orderedValueSet.reduceEvenlyToLength(colors.length);
+      }
+    }
+
+    Array.prototype.reduceEvenlyToLength = function (targetLength) {
+      return this.reduce((reducedElements, element, index) => {
+        if (this.length / (index + 1) <= targetLength / (reducedElements.length + 1)) reducedElements.push(element);
+        return reducedElements;
+      }, []);
+    };
+
+    customElements.define(ThreeStringContour.is, ThreeStringContour);
+  </script>
+</dom-module>

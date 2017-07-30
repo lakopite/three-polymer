@@ -1,8 +1,26 @@
 <script src="../../lodash/lodash.js"></script>
 <link rel="import" href="../../polymer/polymer-element.html">
+<link rel="import" href="three-string-contour.html">
+<link rel="import" href="three-numerical-contour.html">
 
 <dom-module id="three-contour">
   <template>
+    <template is="dom-if" if="{{valueTypeIsString}}">
+      <three-string-contour
+        ordered-value-set="[[orderedValueSet]]"
+        default-colors="[[defaultColors]]"
+        colors="{{colors}}"
+        limits="{{limits}}">
+      </three-string-contour>
+    </template>
+    <template is="dom-if" if="{{!valueTypeIsString}}">
+      <three-numerical-contour
+        bounds="[[bounds]]"
+        default-colors="[[defaultColors]]"
+        colors="{{colors}}"
+        limits="{{limits}}">
+      </three-numerical-contour>
+    </template>
   </template>
   <script>
     class ThreeContour extends Polymer.Element {
@@ -15,29 +33,24 @@
         return {
           data: Array,
           by: String,
-          valueType: {type: String, computed: '_computeValueType(data, by)'},
+          valueTypeIsString: {type: Boolean, computed: '_computeValueTypeIsString(data, by)'},
           orderedValueSet: {type: Array, computed: '_computeOrderedValueSet(data, by)'},
-          colors: {
+          colors: {type: Array, notify: true},
+          defaultColors: {
             type: Array,
-            notify: true,
-            computed: '_computeColors(orderedValueSet, valueType)',
+            readOnly: true,
+            value: ["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688",
+              "#4CAF50", "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"]
           },
-          bounds: {
-            type: Object,
-            computed: '_computeBounds(orderedValueSet)',
-          },
-          limits: {
-            type: Array,
-            notify: true,
-            computed: '_computeLimits(colors, bounds, valueType, orderedValueSet)',
-          },
+          bounds: {type: Object, computed: '_computeBounds(orderedValueSet)'},
+          limits: {type: Array, notify: true},
         }
       }
 
-      _computeValueType(data, by) {
+      _computeValueTypeIsString(data, by) {
         if (!Array.isArray(data) || data.length === 0) return;
 
-        return typeof(data[0].metadata[by]);
+        return typeof(data[0].metadata[by]) === "string";
       }
 
       _computeOrderedValueSet(data, by) {
@@ -59,41 +72,7 @@
         if (!orderedValueSet) return;
         return {min: orderedValueSet[0], max: orderedValueSet[orderedValueSet.length - 1]};
       }
-
-      _computeColors(orderedValueSet, valueType) {
-        if (!orderedValueSet && !valueType) return;
-        const defaultColors = ["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688",
-          "#4CAF50", "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"];
-
-        return valueType === "number" || orderedValueSet.length >= defaultColors.length
-          ? defaultColors
-          : new Array(defaultColors.shift()).concat(defaultColors.reduceEvenlyToLength(orderedValueSet.length - 1));
-      }
-
-      _computeLimits(colors, bounds, valueType, orderedValueSet) {
-        if (!(colors && bounds && valueType && orderedValueSet)) return;
-        const numberOfColors = colors.length;
-
-        return valueType === "number"
-          ? this._computeNumericalLimits(bounds, numberOfColors)
-          : orderedValueSet.reduceEvenlyToLength(numberOfColors);
-      }
-
-      _computeNumericalLimits(bounds, numberOfColors) {
-        const limits = [];
-        const step = (bounds.max - bounds.min) / numberOfColors;
-        for (let i = bounds.max; limits.length !== numberOfColors; i -= step) limits.push(_.round(i, 4));
-
-        return limits.reverse();
-      }
     }
-
-    Array.prototype.reduceEvenlyToLength = function (targetLength) {
-      return this.reduce((reducedElements, element, index) => {
-        if (this.length / (index + 1) <= targetLength / (reducedElements.length + 1)) reducedElements.push(element);
-        return reducedElements;
-      }, []);
-    };
 
     customElements.define(ThreeContour.is, ThreeContour);
   </script>
