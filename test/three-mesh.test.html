@@ -52,6 +52,22 @@
 
         expect(element.color).to.equal("#FF5722");
       });
+
+      it('calculates the color of the line when the metadata value is greater than any contourColorLimit', () => {
+        element = fixture('basic');
+
+        element.contourColorLimits = [10, 14, 18, 22];
+
+        expect(element.color).to.equal("#FF5722");
+      });
+
+      it('calculates the color of the line when the metadata value is lesser than any contourColorLimit', () => {
+        element = fixture('basic');
+
+        element.contourColorLimits = [30, 32, 34, 36];
+
+        expect(element.color).to.equal("#9C27B0");
+      });
     });
 
     describe('interactions with parent', () => {

@@ -34,7 +34,11 @@
           data: Array,
           by: String,
           valueTypeIsString: {type: Boolean, computed: '_computeValueTypeIsString(data, by)'},
-          orderedValueSet: {type: Array, computed: '_computeOrderedValueSet(data, by)'},
+          orderedValueSet: {
+            type: Array,
+            computed: '_computeOrderedValueSet(data, by)',
+            observer: '_orderedValueSetChanged'
+          },
           colors: {type: Array, notify: true},
           defaultColors: {
             type: Array,
@@ -42,7 +46,7 @@
             value: ["#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#00BCD4", "#009688",
               "#4CAF50", "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"]
           },
-          bounds: {type: Object, computed: '_computeBounds(orderedValueSet)'},
+          bounds: {type: Object, notify: true},
           colorLimits: {type: Array, notify: true},
         }
       }
@@ -68,9 +72,11 @@
           }, []);
       }
 
-      _computeBounds(orderedValueSet) {
-        if (!orderedValueSet) return;
-        return {min: orderedValueSet[0], max: orderedValueSet[orderedValueSet.length - 1]};
+      _orderedValueSetChanged(orderedValueSet) {
+
+        this.bounds = orderedValueSet
+          ? {min: orderedValueSet[0], max: orderedValueSet[orderedValueSet.length - 1]}
+          : undefined;
       }
     }
 

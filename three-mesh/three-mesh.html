@@ -49,8 +49,11 @@
 
       _computeColor(contourColorLimits, contourColors, contourBy, metadata) {
         if (!(contourColorLimits && contourColors && contourBy && metadata)) return;
+
+        const maximumColor = contourColors[contourColors.length - 1];
         const index = contourColorLimits.findIndex(contourValue => metadata[contourBy] <= contourValue);
-        return contourColors[index];
+
+        return index === -1 ? maximumColor : contourColors[index];
       }
 
       _geometryChanged(geometry) {
