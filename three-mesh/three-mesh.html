@@ -20,7 +20,7 @@
 
       static get properties() {
         return {
-          contourLimits: Array,
+          contourColorLimits: Array,
           contourColors: Array,
           contourBy: String,
           metadata: Object,
@@ -29,7 +29,7 @@
             type: String,
             readOnly: true,
             observer: '_dispatchMeshChange',
-            computed: '_computeColor(contourLimits, contourColors, contourBy, metadata)',
+            computed: '_computeColor(contourColorLimits, contourColors, contourBy, metadata)',
           },
           geometry: {type: Object, observer: '_geometryChanged'},
           material: {type: Object, observer: '_materialChanged'},
@@ -47,9 +47,9 @@
         this._dispatchRemoveMesh();
       }
 
-      _computeColor(contourLimits, contourColors, contourBy, metadata) {
-        if (!(contourLimits && contourColors && contourBy && metadata)) return;
-        const index = contourLimits.findIndex(contourValue => metadata[contourBy] <= contourValue);
+      _computeColor(contourColorLimits, contourColors, contourBy, metadata) {
+        if (!(contourColorLimits && contourColors && contourBy && metadata)) return;
+        const index = contourColorLimits.findIndex(contourValue => metadata[contourBy] <= contourValue);
         return contourColors[index];
       }
 

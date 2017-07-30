@@ -10,7 +10,7 @@
         ordered-value-set="[[orderedValueSet]]"
         default-colors="[[defaultColors]]"
         colors="{{colors}}"
-        limits="{{limits}}">
+        color-limits="{{colorLimits}}">
       </three-string-contour>
     </template>
     <template is="dom-if" if="{{!valueTypeIsString}}">
@@ -18,7 +18,7 @@
         bounds="[[bounds]]"
         default-colors="[[defaultColors]]"
         colors="{{colors}}"
-        limits="{{limits}}">
+        color-limits="{{colorLimits}}">
       </three-numerical-contour>
     </template>
   </template>
@@ -43,7 +43,7 @@
               "#4CAF50", "#8BC34A", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#F44336"]
           },
           bounds: {type: Object, computed: '_computeBounds(orderedValueSet)'},
-          limits: {type: Array, notify: true},
+          colorLimits: {type: Array, notify: true},
         }
       }
 

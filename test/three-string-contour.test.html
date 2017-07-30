@@ -55,7 +55,7 @@
       it('calculates limits and colors when there are more unique values than default colors', () => {
         element = fixture("more-set-values-than-colors");
 
-        expect(element.limits).to.deep.equal([
+        expect(element.colorLimits).to.deep.equal([
           "g02", "g03", "g04", "g05", "g06", "g07", "g09", "g10", "g11", "g12", "g13", "g14", "g15"
         ]);
         expect(element.colors).to.deep.equal([
@@ -68,7 +68,7 @@
         element = fixture("fewer-set-values-than-colors");
 
         expect(element.colors).to.deep.equal(["#9C27B0", "#00BCD4", "#FFEB3B", "#F44336"]);
-        expect(element.limits).to.deep.equal(["W14X257", "W14X500", "W27X102", "W27X84"]);
+        expect(element.colorLimits).to.deep.equal(["W14X257", "W14X500", "W27X102", "W27X84"]);
       });
 
     });
