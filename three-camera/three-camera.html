@@ -72,7 +72,7 @@
       }
 
       _computeFrustum(modelRadius, viewWidth, viewHeight, distanceToTarget) {
-        if (!(modelRadius && viewWidth && viewHeight && distanceToTarget)) return;
+        if (!(modelRadius && viewWidth !== undefined && viewHeight !== undefined && distanceToTarget)) return;
 
         const aspectRatio = viewWidth / viewHeight;
         return [
