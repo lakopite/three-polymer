@@ -1,8 +1,8 @@
-<link rel="import" href="abstract-three-mesh.html">
+<link rel="import" href="abstract-three-element.html">
 <link rel="import" href="../three-material/three-material.html">
 <link rel="import" href="../three-line-geometry/three-line-geometry.html">
 
-<dom-module id="three-mesh">
+<dom-module id="three-element">
   <template>
     <three-line-geometry
       stroke="[[stroke]]"
@@ -17,10 +17,10 @@
     </three-material>
   </template>
   <script>
-    class ThreeMesh extends AbstractThreeMesh {
+    class ThreeElement extends AbstractThreeElement {
 
       static get is() {
-        return 'three-mesh';
+        return 'three-element';
       }
 
       static get properties() {
@@ -36,7 +36,7 @@
           color: {
             type: String,
             readOnly: true,
-            observer: '_dispatchMeshChange',
+            observer: '_dispatchElementChange',
             computed: '_computeColor(contourColorLimits, contourColors, contouredValue)',
           },
           boundingBox: {type: Object, computed: '_computeBoundingBox(vertices)'},
@@ -58,7 +58,7 @@
           object: {
             type: Object,
             value: () => new THREE.Mesh(),
-            observer: '_dispatchNewMesh',
+            observer: '_dispatchNewElement',
           },
           stroke: Number,
         }
@@ -114,19 +114,19 @@
 
       _geometryChanged(geometry) {
         this.object.geometry = geometry;
-        this._dispatchMeshChange();
+        this._dispatchElementChange();
       }
 
       _materialChanged(material) {
         this.object.material = material;
-        this._dispatchMeshChange();
+        this._dispatchElementChange();
       }
 
       _isVisibleChanged() {
-        this._dispatchMeshChange();
+        this._dispatchElementChange();
       }
     }
 
-    customElements.define(ThreeMesh.is, ThreeMesh);
+    customElements.define(ThreeElement.is, ThreeElement);
   </script>
 </dom-module>

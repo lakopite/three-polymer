@@ -1,11 +1,11 @@
-<link rel="import" href="abstract-three-mesh.html">
+<link rel="import" href="abstract-three-element.html">
 
-<dom-module id="fake-three-mesh">
+<dom-module id="fake-three-element">
   <script>
-    class FakeThreeMesh extends AbstractThreeMesh {
+    class FakeThreeElement extends AbstractThreeElement {
 
       static get is() {
-        return 'fake-three-mesh';
+        return 'fake-three-element';
       }
 
       static get properties() {
@@ -16,6 +16,6 @@
       }
     }
 
-    customElements.define(FakeThreeMesh.is, FakeThreeMesh);
+    customElements.define(FakeThreeElement.is, FakeThreeElement);
   </script>
 </dom-module>

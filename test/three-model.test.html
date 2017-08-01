@@ -9,7 +9,7 @@
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../three-model/three-model.html">
   <link rel="import" href="../three-view/fake-three-view.html">
-  <link rel="import" href="../three-mesh/fake-three-mesh.html">
+  <link rel="import" href="../three-element/fake-three-element.html">
 </head>
 <body>
 <test-fixture id="basic">
@@ -131,7 +131,7 @@
 
 //      TODO: make this pass
       xit('removes a mesh', (done) => {
-        replace('three-mesh').with('fake-three-mesh');
+        replace('three-element').with('fake-three-element');
         element = fixture('medium');
 
         flush(() => {
@@ -165,7 +165,7 @@
       });
 
       it('tells the view when it gets a new mesh', (done) => {
-        replace('three-mesh').with('fake-three-mesh');
+        replace('three-element').with('fake-three-element');
         parent = fixture('parent');
         threeModel = parent.querySelector('three-model');
 
@@ -173,7 +173,7 @@
           const fakeThreeMesh = threeModel.shadowRoot.querySelector('#line-0');
           expect(parent.modelNeedsRenderCount).to.equal(0);
 
-          fakeThreeMesh._dispatchNewMesh();
+          fakeThreeMesh._dispatchNewElement();
 
           expect(parent.modelNeedsRenderCount).to.equal(1);
 
@@ -182,7 +182,7 @@
       });
 
       it('tells the view if the model requires a re-render', (done) => {
-        replace('three-mesh').with('fake-three-mesh');
+        replace('three-element').with('fake-three-element');
         parent = fixture('parent');
         threeModel = parent.querySelector('three-model');
 
@@ -190,7 +190,7 @@
           const fakeThreeMesh = threeModel.shadowRoot.querySelector('#line-0');
           expect(parent.modelNeedsRenderCount).to.equal(0);
 
-          fakeThreeMesh._dispatchMeshChange();
+          fakeThreeMesh._dispatchElementChange();
 
           expect(parent.modelNeedsRenderCount).to.equal(1);
 
@@ -199,7 +199,7 @@
       });
 
       it('tells the view when it removes a mesh', (done) => {
-        replace('three-mesh').with('fake-three-mesh');
+        replace('three-element').with('fake-three-element');
         parent = fixture('parent');
         threeModel = parent.querySelector('three-model');
 

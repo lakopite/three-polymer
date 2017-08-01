@@ -21,16 +21,16 @@
 
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('new-mesh', this._handleNewMesh);
-        this.addEventListener('mesh-change', this._handleMeshChange);
-        this.addEventListener('remove-mesh', this._handleRemoveMesh);
+        this.addEventListener('new-element', this._handleNewMesh);
+        this.addEventListener('element-change', this._handleMeshChange);
+        this.addEventListener('remove-element', this._handleRemoveMesh);
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        this.removeEventListener('new-mesh', this._handleNewMesh);
-        this.removeEventListener('mesh-change', this._handleMeshChange);
-        this.removeEventListener('remove-mesh', this._handleRemoveMesh);
+        this.removeEventListener('new-element', this._handleNewMesh);
+        this.removeEventListener('element-change', this._handleMeshChange);
+        this.removeEventListener('remove-element', this._handleRemoveMesh);
       }
 
       _handleNewMesh() {

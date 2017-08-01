@@ -6,40 +6,40 @@
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
   <script src="../../threejs/build/three.min.js"></script>
-  <link rel="import" href="../three-mesh/three-mesh.html">
+  <link rel="import" href="../three-element/three-element.html">
   <link rel="import" href="../three-model/fake-three-model.html">
 </head>
 <body>
 <test-fixture id="basic">
   <template>
-    <three-mesh
+    <three-element
       vertices="[[0, 0, 0],[4, 8, 12]]"
       metadata='{"axial": 27, "flexure": 37, "group": "g03"}'
       stroke="2"
       contour-by="axial"
       contour-color-limits="[10, 20, 30, 40]"
       contour-colors='["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]'>
-    </three-mesh>
+    </three-element>
   </template>
 </test-fixture>
 
 <test-fixture id="parent">
   <template>
     <fake-three-model>
-      <three-mesh
+      <three-element
         vertices="[[-10, 0, -10],[-10, 0, 10]]"
         metadata='{"axial": 27, "flexure": 37}'
         stroke="2"
         contour-by="axial"
         contour-color-limits="[10, 20, 30, 40]"
         contour-colors='["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]'>
-      </three-mesh>
+      </three-element>
     </fake-three-model>
   </template>
 </test-fixture>
 
 <script>
-  describe('<three-mesh>', () => {
+  describe('<three-element>', () => {
 
     let element, parent;
 
@@ -50,7 +50,7 @@
       });
 
       it('instantiates the element with initial properties', () => {
-        expect(element.localName).to.equal('three-mesh');
+        expect(element.localName).to.equal('three-element');
         expect(element.stroke).to.equal(2);
         expect(element.contourBy).to.equal("axial");
         expect(element.vertices).to.deep.equal([[0, 0, 0], [4, 8, 12]]);
@@ -114,7 +114,7 @@
     describe('interactions with parent', () => {
       it('tells the model when the mesh gets instantiated', () => {
         parent = fixture('parent');
-        const threeMesh = parent.querySelector('three-mesh');
+        const threeMesh = parent.querySelector('three-element');
         expect(parent.handleNewMeshCount).to.equal(1);
 
         threeMesh.object = new THREE.Mesh();
@@ -124,7 +124,7 @@
 
       it('tells the model when its geometry changes', () => {
         parent = fixture('parent');
-        const threeMesh = parent.querySelector('three-mesh');
+        const threeMesh = parent.querySelector('three-element');
         expect(parent.handleMeshChangeCount).to.equal(4);
 
         threeMesh.geometry = new THREE.Geometry();
@@ -134,7 +134,7 @@
 
       it('tells the model when its material changes', () => {
         parent = fixture('parent');
-        const threeMesh = parent.querySelector('three-mesh');
+        const threeMesh = parent.querySelector('three-element');
         expect(parent.handleMeshChangeCount).to.equal(4);
 
         threeMesh.material = new THREE.MeshBasicMaterial();
@@ -144,7 +144,7 @@
 
       it('tells the model when its color changes', () => {
         parent = fixture('parent');
-        const threeMesh = parent.querySelector('three-mesh');
+        const threeMesh = parent.querySelector('three-element');
         expect(parent.handleMeshChangeCount).to.equal(4);
 
         threeMesh.contourBy = "flexure";
