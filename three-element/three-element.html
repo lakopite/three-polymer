@@ -1,21 +1,6 @@
 <link rel="import" href="abstract-three-element.html">
-<link rel="import" href="../three-material/three-material.html">
-<link rel="import" href="../three-line-geometry/three-line-geometry.html">
 
 <dom-module id="three-element">
-  <template>
-    <three-line-geometry
-      stroke="[[stroke]]"
-      vertices="[[vertices]]"
-      object="{{geometry}}">
-    </three-line-geometry>
-    <three-material
-      id="material"
-      is-visible="[[isVisible]]"
-      object="{{material}}"
-      color="[[color]]">
-    </three-material>
-  </template>
   <script>
     class ThreeElement extends AbstractThreeElement {
 
@@ -60,21 +45,18 @@
             value: () => new THREE.Mesh(),
             observer: '_dispatchNewElement',
           },
-          stroke: Number,
         }
       }
 
       _computeBoundingBox(vertices) {
-        const v0 = vertices[0];
-        const v1 = vertices[1];
 
         return {
-          xMin: _.min([v0[0], v1[0]]),
-          yMin: _.min([v0[1], v1[1]]),
-          zMin: _.min([v0[2], v1[2]]),
-          xMax: _.max([v0[0], v1[0]]),
-          yMax: _.max([v0[1], v1[1]]),
-          zMax: _.max([v0[2], v1[2]])
+          xMin: vertices.reduce((min, vertex) => vertex[0] <= min ? vertex[0] : min, null),
+          yMin: vertices.reduce((min, vertex) => vertex[1] <= min ? vertex[1] : min, null),
+          zMin: vertices.reduce((min, vertex) => vertex[2] <= min ? vertex[2] : min, null),
+          xMax: vertices.reduce((max, vertex) => vertex[0] >= max ? vertex[0] : max, null),
+          yMax: vertices.reduce((max, vertex) => vertex[1] >= max ? vertex[1] : max, null),
+          zMax: vertices.reduce((max, vertex) => vertex[2] >= max ? vertex[2] : max, null)
         };
       }
 

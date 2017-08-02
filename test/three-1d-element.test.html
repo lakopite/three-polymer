@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-line-geometry test</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../threejs/build/three.min.js"></script>
+  <link rel="import" href="../three-element/three-1d-element.html">
+  <link rel="import" href="../three-model/fake-three-model.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-1d-element
+      vertices="[[0, 0, 0],[4, 8, 12]]"
+      metadata='{"axial": 27, "flexure": 37, "group": "g03"}'
+      stroke="2"
+      contour-by="axial"
+      contour-color-limits="[10, 20, 30, 40]"
+      contour-colors='["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]'>
+    </three-1d-element>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-1d-element>', () => {
+
+    let element;
+
+    describe('itself', () => {
+
+      beforeEach(() => {
+        element = fixture('basic');
+      });
+
+      it('instantiates the element with initial properties', () => {
+        expect(element.localName).to.equal('three-1d-element');
+        expect(element.stroke).to.equal(2);
+      });
+
+      it('computes visibility when it is excluded from the geometryFilter', () => {
+        element.geometryFilter = {xMin: 0, yMin: 0, zMin: 0, xMax: 6, yMax: 6};
+
+        expect(element.isVisible).to.be.false;
+        expect(element.shadowRoot.querySelector('three-material').isVisible).to.be.false;
+      });
+
+      it('computes visibility when it is included within the geometryFilter', () => {
+        element.geometryFilter = {xMin: 0, yMin: 0, zMin: 0, xMax: 4, yMax: 8};
+
+        expect(element.isVisible).to.be.true;
+        expect(element.shadowRoot.querySelector('three-material').isVisible).to.be.true;
+      });
+
+      it('computes visibility when it is excluded from the metadataValueFilter', () => {
+        element.contourBy = "group";
+        element.metadataValueFilter = ["g01", "g02", "g04"];
+
+        expect(element.isVisible).to.be.false;
+        expect(element.shadowRoot.querySelector('three-material').isVisible).to.be.false;
+      });
+
+      it('computes visibility when it is included within the metadataValueFilter', () => {
+        element.contourBy = "group";
+        element.metadataValueFilter = ["g01", "g02", "g03"];
+
+        expect(element.isVisible).to.be.true;
+        expect(element.shadowRoot.querySelector('three-material').isVisible).to.be.true;
+      });
+
+    });
+  });
+</script>
+</body>
+</html>

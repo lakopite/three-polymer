@@ -1,0 +1,35 @@
+<link rel="import" href="three-element.html">
+<link rel="import" href="../three-line-geometry/three-line-geometry.html">
+<link rel="import" href="../three-material/three-material.html">
+
+<dom-module id="three-1d-element">
+  <template>
+    <three-line-geometry
+      stroke="[[stroke]]"
+      vertices="[[vertices]]"
+      object="{{geometry}}">
+    </three-line-geometry>
+    <three-material
+      id="material"
+      is-visible="[[isVisible]]"
+      object="{{material}}"
+      color="[[color]]">
+    </three-material>
+  </template>
+  <script>
+    class Three1dElement extends ThreeElement {
+
+      static get is() {
+        return 'three-1d-element';
+      }
+
+      static get properties() {
+        return {
+          stroke: Number,
+        }
+      }
+    }
+
+    customElements.define(Three1dElement.is, Three1dElement, {extends: 'three-element'});
+  </script>
+</dom-module>
