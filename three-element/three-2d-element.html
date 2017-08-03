@@ -1,14 +1,14 @@
 <link rel="import" href="three-element.html">
-<link rel="import" href="../three-line-geometry/three-line-geometry.html">
+<link rel="import" href="../three-quad-geometry/three-quad-geometry.html">
 <link rel="import" href="../three-material/three-material.html">
 
-<dom-module id="three-1d-element">
+<dom-module id="three-2d-element">
   <template>
-    <three-line-geometry
-      stroke="[[stroke]]"
+    <three-quad-geometry
       vertices="[[vertices]]"
+      face-vertices="[[faceVertices]]"
       object="{{geometry}}">
-    </three-line-geometry>
+    </three-quad-geometry>
     <three-material
       id="material"
       is-visible="[[isVisible]]"
@@ -17,10 +17,10 @@
     </three-material>
   </template>
   <script>
-    class Three1dElement extends ThreeElement {
+    class Three2dElement extends ThreeElement {
 
       static get is() {
-        return 'three-1d-element';
+        return 'three-2d-element';
       }
 
       static get properties() {
@@ -30,6 +30,6 @@
       }
     }
 
-    customElements.define(Three1dElement.is, Three1dElement);
+    customElements.define(Three2dElement.is, Three2dElement);
   </script>
 </dom-module>

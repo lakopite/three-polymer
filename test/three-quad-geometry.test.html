@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-quad-geometry test</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../threejs/build/three.min.js"></script>
+  <link rel="import" href="../three-quad-geometry/three-quad-geometry.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-quad-geometry
+      vertices="[[0, 0, 0], [0, 10, 0], [10, 0, 0], [10, 10, 0]]"
+      face-vertices="[0, 1, 3, 2]">
+    </three-quad-geometry>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-quad-geometry>', () => {
+
+    let element;
+
+    beforeEach(() => {
+      element = fixture('basic');
+    });
+
+    it('instantiates the element', () => {
+      expect(element.localName).to.equal('three-quad-geometry');
+      expect(element.vertices).to.deep.equal([[0, 0, 0], [0, 10, 0], [10, 0, 0], [10, 10, 0]]);
+      expect(element.faceVertices).to.deep.equal([0, 1, 3, 2]);
+    });
+
+    it('gets calculated correctly', () => {
+      const vertices = element.object.vertices.map((vector3) => vector3.toArray());
+      const faces = element.object.faces.map(face3 => [face3.a, face3.b, face3.c]);
+
+      expect(vertices).to.include.deep.members([
+        [0, 0, 0], [0, 0, 0], [0, 10, 0], [10, 0, 0], [10, 10, 0], [10, 10, 0]
+      ]);
+
+      expect(faces).to.include.deep.members([[0, 1, 3], [3, 2, 0]]);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<script src="../../lodash/lodash.js"></script>
+<link rel="import" href="../../polymer/polymer-element.html">
+
+<dom-module id="three-quad-geometry">
+  <script>
+    class ThreeQuadGeometry extends Polymer.Element {
+
+      static get is() {
+        return 'three-quad-geometry';
+      }
+
+      static get properties() {
+        return {
+          faceVertices: Array,
+          vertices: Array,
+          object: {
+            type: Object,
+            computed: '_computeGeometry(vertices, faceVertices)',
+            notify: true,
+          },
+        }
+      }
+
+      _computeGeometry(vertices, faceVertices) {
+        if (!(vertices && faceVertices)) return;
+
+        let v = [
+          [faceVertices[0], faceVertices[1], faceVertices[2]],
+          [faceVertices[2], faceVertices[3], faceVertices[0]]
+        ];
+
+        const geometry = new THREE.Geometry();
+        geometry.vertices.push(...vertices.map(a => new THREE.Vector3(...a)));
+        geometry.faces.push(...v.map(a => new THREE.Face3(...a)));
+
+        return geometry;
+      }
+    }
+
+    customElements.define(ThreeQuadGeometry.is, ThreeQuadGeometry);
+  </script>
+</dom-module>

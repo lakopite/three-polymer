@@ -27,8 +27,8 @@
           <three-model
             id="frame"
             slot="model"
-            contour-by="beamnum"
-            data='[]'>
+            contour-by="axial"
+            data="{}">
           </three-model>
         </three-view>
       </div>
@@ -37,6 +37,6 @@
 </div>
 </body>
 <script>
-  $.getJSON("frame-five.json", data => document.getElementById("frame").setAttribute("data", JSON.stringify(data)));
+  $.getJSON("frame-one.json", data => document.getElementById("frame").setAttribute("data", JSON.stringify(data)));
 </script>
 </html>
