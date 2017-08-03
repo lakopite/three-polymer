@@ -294,6 +294,17 @@
           done();
         });
       });
+
+      it('is false if it has not received any data yet', (done) => {
+
+        const element = new ThreeModel();
+
+        flush(() => {
+
+          expect(element.isLoading).to.be.false;
+          done();
+        });
+      });
     });
   });
 </script>
