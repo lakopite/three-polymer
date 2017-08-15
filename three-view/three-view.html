@@ -97,9 +97,9 @@
         this.root.appendChild(newCanvas);
       }
 
-      _handleResize(e) {
-        this.height = e.target.clientHeight;
-        this.width = e.target.clientWidth;
+      _handleResize(event) {
+        this.height = event.target.clientHeight;
+        this.width = event.target.clientWidth;
         this._render();
       }
 
