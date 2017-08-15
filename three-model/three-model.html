@@ -8,11 +8,11 @@
     <three-contour
       data="[[data]]"
       by="{{contourBy}}"
+      colors="{{contourColors}}"
       color-limits="{{contourColorLimits}}"
       numeric-bounds="{{contourNumericBounds}}"
       ordered-value-set="{{metadataValueFilter}}"
-      string-value-set="[[contourStringValueSet]]"
-      colors="{{contourColors}}">
+      string-value-set="[[contourStringValueSet]]">
     </three-contour>
     <template
       id="meshes"
@@ -49,6 +49,8 @@
         return {
           data: {type: Array, observer: '_dataChanged'},
           contourBy: String,
+          contourColors: {type: Array, observer: '_contourChanged'},
+          contourColorLimits: {type: Array, observer: '_contourChanged'},
           geometryFilter: {
             type: Object,
             value: {},
@@ -167,6 +169,10 @@
 
       _handleMeshChange() {
         this._dispatchModelNeedsRender();
+      }
+
+      _contourChanged() {
+        this._dispatchContourChange();
       }
     }
 

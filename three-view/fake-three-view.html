@@ -15,6 +15,8 @@
           modelNeedsRenderCount: {type: Number, value: 0},
           modelReadyCount: {type: Number, value: 0},
           modelReadyEvent: Object,
+          contourChangeCount: {type: Number, value: 0},
+          contourChangeEvent: Object,
         }
       }
 
@@ -31,6 +33,11 @@
         this.modelReadyCount += 1;
         this.modelReadyEvent = event;
       }
+
+      _handleContourChange(event) {
+        this.contourChangeCount += 1;
+        this.contourChangeEvent = event;
+      };
     }
 
     customElements.define(FakeThreeView.is, FakeThreeView);

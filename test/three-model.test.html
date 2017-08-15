@@ -215,6 +215,41 @@
         });
       });
 
+      it('tells the view when the contour colors change', (done) => {
+        replace('three-1d-element').with('fake-three-element');
+        parent = fixture('parent');
+        threeModel = parent.querySelector('three-model');
+
+        flush(() => {
+          expect(parent.contourChangeCount).to.equal(2);
+
+          threeModel.contourColors = ["red", "blue", "yellow"];
+
+          expect(parent.contourChangeCount).to.equal(3);
+          expect(parent.contourChangeEvent.target.contourColors)
+            .to.deep.equal(["red", "blue", "yellow"]);
+
+          done();
+        });
+      });
+
+      it('tells the view when the contour color limits change', (done) => {
+        replace('three-1d-element').with('fake-three-element');
+        parent = fixture('parent');
+        threeModel = parent.querySelector('three-model');
+
+        flush(() => {
+          expect(parent.contourChangeCount).to.equal(2);
+
+          threeModel.contourColorLimits = [1, 2, 3, 4];
+
+          expect(parent.contourChangeCount).to.equal(3);
+          expect(parent.contourChangeEvent.target.contourColorLimits).to.deep.equal([1, 2, 3, 4]);
+
+          done();
+        });
+      });
+
       it('tells the view when the model is ready', (done) => {
         parent = fixture('parent');
         threeModel = parent.querySelector('three-model');

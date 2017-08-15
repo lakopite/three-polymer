@@ -19,6 +19,10 @@
       _dispatchModelNeedsRender() {
         this.dispatchEvent(new CustomEvent('model-needs-render', {bubbles: true}));
       }
+
+      _dispatchContourChange() {
+        this.dispatchEvent(new CustomEvent('contour-change', {bubbles: true}));
+      }
     }
 
     customElements.define(AbstractThreeModel.is, AbstractThreeModel);

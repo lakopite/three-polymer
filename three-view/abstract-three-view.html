@@ -14,6 +14,7 @@
         this.addEventListener('model-ready', this._handleModelReady);
         this.addEventListener('model-needs-render', this._handleModelNeedsRender);
         this.addEventListener('iron-resize', this._handleResize);
+        this.addEventListener('contour-change', this._handleContourChange);
       }
 
       disconnectedCallback() {
@@ -22,6 +23,7 @@
         this.removeEventListener('model-ready', this._handleModelReady);
         this.removeEventListener('model-needs-render', this._handleModelNeedsRender);
         this.removeEventListener('iron-resize', this._handleResize);
+        this.removeEventListener('contour-change', this._handleContourChange);
       }
 
       _handleResize() {}
