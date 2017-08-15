@@ -119,6 +119,23 @@
       expect(fakeThreeRenderer.renderCount).to.equal(1);
     });
 
+    it('updates the contour when the model says so', () => {
+      replace('three-renderer').with('fake-three-renderer');
+      replace('three-controls').with('fake-three-controls');
+      replace('three-model').with('fake-three-model');
+      replace('three-scene').with('fake-three-scene');
+      element = fixture('basic');
+      const fakeThreeModel = document.getElementsByTagName('fake-three-model')[0];
+
+      fakeThreeModel.contourColors = ["red", "yellow", "blue"];
+      fakeThreeModel.contourColorLimits = [1, 2, 3];
+
+      fakeThreeModel._dispatchContourChange();
+
+      expect(element.contourColorLimits).to.deep.equal([1, 2, 3]);
+      expect(element.contourColors).to.deep.equal(["red", "yellow", "blue"]);
+    });
+
     // TODO: the model should not be firing the event if it has no object
     // TODO: this is polluting the view
     it('does not add the model to the scene if there is nothing to add', () => {

@@ -73,6 +73,8 @@
           showStats: {type: Boolean, value: false},
           modelIsReady: {type: Boolean, value: false},
           initialRenderIsComplete: {type: Boolean, value: false},
+          contourColors: {type: Array},
+          contourColorLimits: {type: Array},
         }
       }
 
@@ -118,6 +120,11 @@
         };
         this.modelIsReady = true;
         this._render();
+      }
+
+      _handleContourChange(event) {
+        this.contourColors = event.target.contourColors;
+        this.contourColorLimits = event.target.contourColorLimits;
       }
 
       _handleModelNeedsRender() {
