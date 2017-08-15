@@ -1,0 +1,63 @@
+<link rel="import" href="../../polymer/polymer-element.html">
+<script src="../../lodash/lodash.js"></script>
+
+<dom-module id="three-legend">
+  <template>
+    <style>
+      :host {
+        width: 100%;
+        display: block;
+        position: relative;
+        font-size: 12px;
+        color: #424242;
+      }
+
+      table {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+
+      table > tr > td {
+        width: 14px;
+        height: 14px;
+      }
+    </style>
+    <table>
+      <template
+        is="dom-repeat"
+        items="[[items]]">
+        <tr>
+          <td>[[item.value]]</td>
+          <td style$="background-color: [[item.color]]"></td>
+        </tr>
+      </template>
+    </table>
+  </template>
+  <script>
+    class ThreeLegend extends Polymer.Element {
+
+      static get is() {
+        return 'three-legend';
+      }
+
+      static get properties() {
+        return {
+          contourColors: Array,
+          contourColorLimits: Array,
+          items: {type: Object, computed: '_computeItems(contourColors, contourColorLimits)'}
+        }
+      }
+
+      _computeItems(contourColors, contourColorLimits) {
+
+        return _.zipWith(contourColorLimits, contourColors, (value, color) => {
+          return {value: value, color: color}
+        });
+      }
+
+    }
+
+    customElements.define(ThreeLegend.is, ThreeLegend);
+  </script>
+</dom-module>

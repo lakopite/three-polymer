@@ -6,6 +6,7 @@
 <link rel="import" href="../three-controls/three-controls.html">
 <link rel="import" href="../three-renderer/three-renderer.html">
 <link rel="import" href="../three-scene/three-scene.html">
+<link rel="import" href="../three-legend/three-legend.html">
 
 <!--
 `three-view`
@@ -19,12 +20,17 @@
         display: block;
         height: 100%;
         width: 100%;
+        font-family: "Roboto Mono for Powerline";
       }
     </style>
     <three-stats
       id="stats"
       show-stats="[[showStats]]">
     </three-stats>
+    <three-legend
+      contour-colors="[[contourColors]]"
+      contour-color-limits="[[contourColorLimits]]">
+    </three-legend>
     <three-controls
       id="controls"
       camera="{{camera}}"

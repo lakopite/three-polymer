@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-legend test</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <link rel="import" href="../three-legend/three-legend.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-legend
+      contour-colors='["red", "yellow", "blue"]'
+      contour-color-limits='[1, 2, 3]'>
+    </three-legend>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-legend>', () => {
+
+    let element;
+
+    beforeEach(() => {
+      element = fixture('basic');
+    });
+
+    it('instantiates the element with its basic properties', () => {
+      expect(element.localName).to.equal('three-legend');
+      expect(element.contourColors).to.deep.equal(["red", "yellow", "blue"]);
+      expect(element.contourColorLimits).to.deep.equal([1, 2, 3]);
+    });
+
+    it('computes its items', () => {
+      expect(element.items).to.deep.equal([
+        {color: "red", value: 1}, {color: "yellow", value: 2}, {color: "blue", value: 3}
+      ]);
+    });
+  });
+</script>
+</body>
+</html>
