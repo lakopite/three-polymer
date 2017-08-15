@@ -23,6 +23,18 @@
   </template>
 </test-fixture>
 
+<test-fixture id="metadata-fields-of-both-types">
+  <template>
+    <three-contour
+      data='[
+      {"vertices":[[-10, 0, -10],[-10, 0, 10]], "metadata": {"axial": 10, "name": "Ben"}},
+      {"vertices":[[-10, 0, 10],[10, 0, 10]], "metadata": {"axial": 40, "name": "Harold"}},
+      {"vertices":[[10, 0, 10],[10, 0, -10]], "metadata": {"axial": 100, "name": "Alfred"}}
+      ]'>
+    </three-contour>
+  </template>
+</test-fixture>
+
 <test-fixture id="metadata-fields-of-type-string">
   <template>
     <three-contour
@@ -65,11 +77,26 @@
     });
 
     it('makes the numericBounds undefined when there is no data', () => {
-      element = fixture('metadata-fields-of-type-string');
+      element = fixture('metadata-fields-of-both-types');
 
       element.data = [];
 
       expect(element.numericBounds).to.be.undefined;
+    });
+
+    it('can switch between numeric and string contours', (done) => {
+      element = fixture('metadata-fields-of-both-types');
+
+      setTimeout(() => {element.by = "axial"}, 0);
+      setTimeout(() => {element.by = "name"}, 0);
+      setTimeout(() => {element.by = "axial"}, 0);
+
+      flush(() => {
+
+        expect(element.colors).to.deep.equal(element.defaultColors);
+
+        done();
+      });
     });
 
     describe('contouring by field of type Number', () => {

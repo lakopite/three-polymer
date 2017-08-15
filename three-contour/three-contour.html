@@ -5,7 +5,7 @@
 
 <dom-module id="three-contour">
   <template>
-    <template is="dom-if" if="{{valueTypeIsString}}">
+    <template is="dom-if" if="{{valueTypeIsString}}" restamp="true">
       <three-string-contour
         ordered-value-set="[[orderedValueSet]]"
         default-colors="[[defaultColors]]"
@@ -13,7 +13,7 @@
         color-limits="{{colorLimits}}">
       </three-string-contour>
     </template>
-    <template is="dom-if" if="{{!valueTypeIsString}}">
+    <template is="dom-if" if="{{!valueTypeIsString}}" restamp="true">
       <three-numeric-contour
         bounds="[[numericBounds]]"
         default-colors="[[defaultColors]]"
