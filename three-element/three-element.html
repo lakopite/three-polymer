@@ -50,13 +50,17 @@
 
       _computeBoundingBox(vertices) {
 
+        const xVertices = vertices.map(vertex => vertex[0]);
+        const yVertices = vertices.map(vertex => vertex[1]);
+        const zVertices = vertices.map(vertex => vertex[2]);
+
         return {
-          xMin: vertices.reduce((min, vertex) => vertex[0] <= min ? vertex[0] : min, null),
-          yMin: vertices.reduce((min, vertex) => vertex[1] <= min ? vertex[1] : min, null),
-          zMin: vertices.reduce((min, vertex) => vertex[2] <= min ? vertex[2] : min, null),
-          xMax: vertices.reduce((max, vertex) => vertex[0] >= max ? vertex[0] : max, null),
-          yMax: vertices.reduce((max, vertex) => vertex[1] >= max ? vertex[1] : max, null),
-          zMax: vertices.reduce((max, vertex) => vertex[2] >= max ? vertex[2] : max, null)
+          xMin: xVertices.reduce((min, vertex) => vertex <= min ? vertex : min),
+          yMin: yVertices.reduce((min, vertex) => vertex <= min ? vertex : min),
+          zMin: zVertices.reduce((min, vertex) => vertex <= min ? vertex : min),
+          xMax: xVertices.reduce((max, vertex) => vertex >= max ? vertex : max),
+          yMax: yVertices.reduce((max, vertex) => vertex >= max ? vertex : max),
+          zMax: zVertices.reduce((max, vertex) => vertex >= max ? vertex : max)
         };
       }
 

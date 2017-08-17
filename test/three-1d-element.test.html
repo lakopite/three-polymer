@@ -10,10 +10,22 @@
   <link rel="import" href="../three-model/fake-three-model.html">
 </head>
 <body>
-<test-fixture id="basic">
+<test-fixture id="first">
   <template>
     <three-1d-element
       vertices="[[0, 0, 0],[4, 8, 12]]"
+      metadata='{"axial": 27, "flexure": 37, "group": "g03"}'
+      stroke="2"
+      contour-by="axial"
+      contour-color-limits="[10, 20, 30, 40]"
+      contour-colors='["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]'>
+    </three-1d-element>
+  </template>
+</test-fixture>
+<test-fixture id="second">
+  <template>
+    <three-1d-element
+      vertices="[[-10, 0, 0],[-10, 0, 10]]"
       metadata='{"axial": 27, "flexure": 37, "group": "g03"}'
       stroke="2"
       contour-by="axial"
@@ -31,7 +43,7 @@
     describe('itself', () => {
 
       beforeEach(() => {
-        element = fixture('basic');
+        element = fixture('first');
       });
 
       it('instantiates the element with initial properties', () => {
@@ -48,6 +60,14 @@
 
       it('computes visibility when it is included within the geometryFilter', () => {
         element.geometryFilter = {xMin: 0, yMin: 0, zMin: 0, xMax: 4, yMax: 8};
+
+        expect(element.isVisible).to.be.true;
+        expect(element.shadowRoot.querySelector('three-material').isVisible).to.be.true;
+      });
+
+      it('computes visibility when the element has a bounding box of negative maximums', () => {
+        element = fixture('second');
+        element.geometryFilter = {xMin: -15, xMax: -5};
 
         expect(element.isVisible).to.be.true;
         expect(element.shadowRoot.querySelector('three-material').isVisible).to.be.true;
