@@ -3,6 +3,7 @@
   "ignore": [
     "three-camera",
     "three-contour",
+    "three-controls",
     "three-element",
     "three-legend",
     "three-line-geometry",
