@@ -1,7 +1,6 @@
 # \<three-polymer\>
-[![slack](http://slackin-xfuuoewxii.now.sh/badge.svg)](https://slackin-xfuuoewxii.now.sh)
-
 [![webcomponents](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/lakopite/three-polymer)
+[![slack](http://slackin-xfuuoewxii.now.sh/badge.svg)](https://slackin-xfuuoewxii.now.sh)
 
 Polymer web components for rendering 3D geometry in the browser
 
