@@ -21,14 +21,16 @@
     <template>
       <div style="height: 500px; width: 100%">
         <three-view
-          id="view"
           show-stats="true"
           scene-background-color="#F5F5F5">
           <three-model
-            id="frame"
             slot="model"
-            contour-by="beamnum"
-            data='[]'>
+            contour-by="id"
+            data='[
+              {"vertices":[[0, 0, 0],[0, 0, 10]], "metadata": {"id": 1, "section_property_name": "W14X257"}},
+              {"vertices":[[0, 0, 10],[10, 0, 10]], "metadata": {"id": 2, "section_property_name": "W27X84"}},
+              {"vertices":[[10, 0, 0],[10, 0, 10]], "metadata": {"id": 3, "section_property_name": "W14X257"}}
+            ]'>
           </three-model>
         </three-view>
       </div>
