@@ -1,6 +1,8 @@
 {
   "name": "three-polymer",
-  "main": "three-view/three-view.html",
+  "ignore": [
+    "three-camera"
+  ],
   "description": "reusable polymer element for three.js geometry rendering",
   "dependencies": {
     "polymer": "2.0.1",
