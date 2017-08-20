@@ -8,27 +8,30 @@ Polymer web components for rendering 3D geometry in the browser
 ```
 <custom-element-demo>
   <template>
-    <link rel="import" href="three-model/three-model.html">
-    <link rel="import" href="three-view/three-view.html">
+	<script src="https://rawgit.com/mrdoob/stats.js/master/build/stats.min.js"></script>
+	<link rel="import" href="three-view/three-view.html">
+	<link rel="import" href="three-model/three-model.html">
     <next-code-block></next-code-block>
   </template>
 </custom-element-demo>
 ```
 -->
 ```html
-<three-view
-  show-stats="true"
-  scene-background-color="#F5F5F5">
-  <three-model
-    slot="model"
-    contour-by="id"
-    data='[
-      {"vertices":[[0, 0, 0],[0, 0, 10]], "metadata": {"id": 1, "section_property_name": "W14X257"}},
-      {"vertices":[[0, 0, 10],[10, 0, 10]], "metadata": {"id": 2, "section_property_name": "W27X84"}},
-      {"vertices":[[10, 0, 0],[10, 0, 10]], "metadata": {"id": 3, "section_property_name": "W14X257"}}
-    ]'>
-  </three-model>
-</three-view>
+<div style="height: 500px; width: 100%">
+  <three-view
+    show-stats="true"
+    scene-background-color="#F5F5F5">
+    <three-model
+      slot="model"
+      contour-by="id"
+      data='[
+              {"vertices":[[0, 0, 0],[0, 0, 10]], "metadata": {"id": 1, "section_property_name": "W14X257"}},
+              {"vertices":[[0, 0, 10],[10, 0, 10]], "metadata": {"id": 2, "section_property_name": "W27X84"}},
+              {"vertices":[[10, 0, 0],[10, 0, 10]], "metadata": {"id": 3, "section_property_name": "W14X257"}}
+            ]'>
+    </three-model>
+  </three-view>
+</div>
 ```
 
 ## Element \<three-model\>
