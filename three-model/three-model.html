@@ -47,6 +47,10 @@
 
       static get properties() {
         return {
+          /**
+           * Client data that composes the `three-model`
+           * @type {{"vertices": Array<Array<number>>, "metadata": Object<string, (number|string)>}}
+           */
           data: {type: Array, observer: '_dataChanged'},
           contourBy: String,
           contourColors: {type: Array, observer: '_contourChanged'},
