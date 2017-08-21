@@ -112,10 +112,12 @@
           /** Whether or not the model has completed its initial render */
           initialRenderIsComplete: {type: Boolean, value: false},
 
-          /** The range of colors, represented in hexadecimal format */
+          /** The range of colors, represented in hexadecimal format
+           * @type {Array<string>} */
           contourColors: {type: Array},
 
-          /** Metadata values corresponding to each one of the `contourColors`. These values can be of type `String` or `Number` */
+          /** Metadata values corresponding to each one of the `contourColors`. These values can be of type `String` or `Number`
+           * @type {Array<number|string>} */
           contourColorLimits: {type: Array},
         }
       }

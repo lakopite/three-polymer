@@ -59,10 +59,12 @@
           /** The `metadata` field from which contours will be calculated. This field may be any of the fields within `metadataFields` */
           contourBy: String,
 
-          /** The range of colors, represented in hexadecimal format */
+          /** The range of colors, represented in hexadecimal format
+           * @type {Array<string>} */
           contourColors: {type: Array, observer: '_contourChanged'},
 
-          /** Metadata values corresponding to each one of the `contourColors`. These values can be of type `String` or `Number` */
+          /** Metadata values corresponding to each one of the `contourColors`. These values can be of type `String` or `Number`
+           * @type {Array<number|string>} */
           contourColorLimits: {type: Array, observer: '_contourChanged'},
 
           /** A bounding box object to filter which model elements are visible to the user.
@@ -82,7 +84,8 @@
             notify: true
           },
 
-          /** The set of fields of which you can specify to contour the model */
+          /** The set of fields of which you can specify to contour the model
+           * @type {Array<string>} */
           metadataFields: {
             type: Array,
             computed: '_computeMetadataFields(data)',
