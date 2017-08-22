@@ -60,6 +60,12 @@
     </slot>
   </template>
   <script>
+
+    /**
+     * a viewport for a `<three-model>`
+     * @customElement
+     * @polymer
+     */
     class ThreeView extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], AbstractThreeView) {
 
       static get is() {
@@ -68,18 +74,50 @@
 
       static get properties() {
         return {
+          /** The camera
+           * @type {THREE.Camera} */
           camera: Object,
+
+          /** The scene
+           * @type {THREE.Scene} */
           scene: Object,
+
+          /** The background color of the viewport, represented in hexadecimal format */
           sceneBackgroundColor: String,
+
+          /** The model within the viewport
+           * @type {THREE.Group} */
           model: Object,
+
+          /** The geometry of the model
+           * @type {THREE.Geometry} */
           modelGeometry: Object,
+
+          /** The width of the viewport, measured in pixels */
           width: Number,
+
+          /** The height of the viewport, measured in pixels */
           height: Number,
+
+          /** The `<canvas>` element produced by the renderer and passed to the controls
+           * @type {HTMLElement} */
           canvas: {type: Object, observer: '_canvasChanged'},
+
+          /** Whether or not to include a [performance monitor](https://github.com/mrdoob/stats.js) in the top-right corner of the viewport */
           showStats: {type: Boolean, value: false},
+
+          /** Whether or not the model is composed */
           modelIsReady: {type: Boolean, value: false},
+
+          /** Whether or not the model has completed its initial render */
           initialRenderIsComplete: {type: Boolean, value: false},
+
+          /** The range of colors, represented in hexadecimal format
+           * @type {Array<string>} */
           contourColors: {type: Array},
+
+          /** Metadata values corresponding to each one of the `contourColors`. These values can be of type `String` or `Number`
+           * @type {Array<number|string>} */
           contourColorLimits: {type: Array},
         }
       }
