@@ -33,10 +33,6 @@
       expect(element.vertices).to.deep.equal([[0, 0, 0], [0, 0, 10]]);
     });
 
-    it('calculates the midpoint correctly', () => {
-      expect(element.midpoint).to.deep.equal([0, 0, 5]);
-    });
-
     describe('the geometry', () => {
       it('gets calculated correctly for a vertical column', () => {
         element.stroke = 1;

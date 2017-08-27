@@ -45,6 +45,7 @@
             value: () => new THREE.Mesh(),
             observer: '_dispatchNewElement',
           },
+          position: {type: Array, computed: '_computePosition(vertices)'},
         }
       }
 
@@ -96,6 +97,10 @@
         const index = contourColorLimits.findIndex(contourColorLimit => contouredValue <= contourColorLimit);
 
         return index === -1 ? maximumColor : contourColors[index];
+      }
+
+      _computePosition(vertices) {
+        return _.zipWith(vertices[0], vertices[1], (c0, c1) => (c0 + c1) / 2);
       }
 
       _geometryChanged(geometry) {

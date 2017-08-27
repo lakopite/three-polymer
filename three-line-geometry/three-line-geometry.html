@@ -20,13 +20,11 @@
             notify: true,
           },
           unitOffsetVector: Array,
-          midpoint: {type: Array, computed: '_computeMidpoint(vertices)'},
         }
       }
 
       _computeGeometry(vertices, cameraNormal, stroke) {
         if (!(vertices && cameraNormal && stroke)) return;
-//        console.log("_computeGeometry with midpoint:", this._computeMidpoint(vertices), "stroke:", stroke);
 
         const centerLineVector = this._scaleVector(_.zipWith(vertices[1], vertices[0], (a, b) => a - b), 1);
         const projectedCenterLineVector = _.zipWith(centerLineVector, cameraNormal, (a, b) => a * (1 - b));
@@ -58,10 +56,6 @@
       _scaleVector(vector, magnitude) {
         const originalMagnitude = Math.pow(vector.map(a => a * a).reduce((a, b) => a + b, 0), 0.5);
         return vector.map(a => a * magnitude / originalMagnitude);
-      }
-
-      _computeMidpoint(vertices) {
-        return _.zipWith(vertices[0], vertices[1], (c0, c1) => (c0 + c1) / 2);
       }
     }
 

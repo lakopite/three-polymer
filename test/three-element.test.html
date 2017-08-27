@@ -62,6 +62,10 @@
         expect(element.isVisible).to.be.true;
       });
 
+      it('calculates the position correctly', () => {
+        expect(element.position).to.deep.equal([2, 4, 6]);
+      });
+
       it('calculates the color of the line when the contourBy changes', () => {
         element.contourBy = "flexure";
 
