@@ -2,7 +2,7 @@
 <link rel="import" href="../three-line-geometry/three-line-geometry.html">
 <link rel="import" href="../three-material/three-material.html">
 
-<dom-module id="three-1d-element">
+<dom-module id="three-linear-element">
   <template>
     <three-line-geometry
       stroke="[[stroke]]"
@@ -17,10 +17,10 @@
     </three-material>
   </template>
   <script>
-    class Three1dElement extends ThreeElement {
+    class ThreeLinearElement extends ThreeElement {
 
       static get is() {
-        return 'three-1d-element';
+        return 'three-linear-element';
       }
 
       static get properties() {
@@ -30,6 +30,6 @@
       }
     }
 
-    customElements.define(Three1dElement.is, Three1dElement);
+    customElements.define(ThreeLinearElement.is, ThreeLinearElement);
   </script>
 </dom-module>

@@ -1,7 +1,7 @@
 <script src="../../lodash/lodash.js"></script>
 <link rel="import" href="abstract-three-model.html">
-<link rel="import" href="../three-element/three-1d-element.html">
-<link rel="import" href="../three-element/three-2d-element.html">
+<link rel="import" href="../three-element/three-linear-element.html">
+<link rel="import" href="../three-element/three-planar-element.html">
 <link rel="import" href="../three-contour/three-contour.html">
 
 <dom-module id="three-model">
@@ -23,7 +23,7 @@
       initial-count="100"
       target-framerate="1"
       on-rendered-item-count-changed="_handleRenderedItemCountChanged">
-      <three-1d-element
+      <three-linear-element
         id="linear-element-{{index}}"
         on-new-element="_handleNewMesh"
         on-remove-element="_handleRemoveMesh"
@@ -36,7 +36,7 @@
         contour-color-limits="[[contourColorLimits]]"
         contour-colors="[[contourColors]]"
         stroke="[[stroke]]">
-      </three-1d-element>
+      </three-linear-element>
     </template>
     <template
       id="planarElements"
@@ -46,7 +46,7 @@
       initial-count="100"
       target-framerate="1"
       on-rendered-item-count-changed="_handleRenderedItemCountChanged">
-      <three-2d-element
+      <three-planar-element
         id="planar-element-{{index}}"
         on-new-element="_handleNewMesh"
         on-remove-element="_handleRemoveMesh"
@@ -59,7 +59,7 @@
         contour-by="[[contourBy]]"
         contour-color-limits="[[contourColorLimits]]"
         contour-colors="[[contourColors]]">
-      </three-2d-element>
+      </three-planar-element>
     </template>
   </template>
   <script>

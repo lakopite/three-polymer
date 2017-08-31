@@ -6,37 +6,37 @@
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
   <script src="../../threejs/build/three.min.js"></script>
-  <link rel="import" href="../three-element/three-1d-element.html">
+  <link rel="import" href="../three-element/three-linear-element.html">
   <link rel="import" href="../three-model/fake-three-model.html">
 </head>
 <body>
 <test-fixture id="first">
   <template>
-    <three-1d-element
+    <three-linear-element
       vertices="[[0, 0, 0],[4, 8, 12]]"
       metadata='{"axial": 27, "flexure": 37, "group": "g03"}'
       stroke="2"
       contour-by="axial"
       contour-color-limits="[10, 20, 30, 40]"
       contour-colors='["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]'>
-    </three-1d-element>
+    </three-linear-element>
   </template>
 </test-fixture>
 <test-fixture id="second">
   <template>
-    <three-1d-element
+    <three-linear-element
       vertices="[[-10, 0, 0],[-10, 0, 10]]"
       metadata='{"axial": 27, "flexure": 37, "group": "g03"}'
       stroke="2"
       contour-by="axial"
       contour-color-limits="[10, 20, 30, 40]"
       contour-colors='["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]'>
-    </three-1d-element>
+    </three-linear-element>
   </template>
 </test-fixture>
 
 <script>
-  describe('<three-1d-element>', () => {
+  describe('<three-linear-element>', () => {
 
     let element;
 
@@ -47,7 +47,7 @@
       });
 
       it('instantiates the element with initial properties', () => {
-        expect(element.localName).to.equal('three-1d-element');
+        expect(element.localName).to.equal('three-linear-element');
         expect(element.stroke).to.equal(2);
       });
 

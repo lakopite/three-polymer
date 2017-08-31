@@ -2,7 +2,7 @@
 <link rel="import" href="../three-quad-geometry/three-quad-geometry.html">
 <link rel="import" href="../three-material/three-material.html">
 
-<dom-module id="three-2d-element">
+<dom-module id="three-planar-element">
   <template>
     <three-quad-geometry
       vertices="[[vertices]]"
@@ -17,10 +17,10 @@
     </three-material>
   </template>
   <script>
-    class Three2dElement extends ThreeElement {
+    class ThreePlanarElement extends ThreeElement {
 
       static get is() {
-        return 'three-2d-element';
+        return 'three-planar-element';
       }
 
       static get properties() {
@@ -30,6 +30,6 @@
       }
     }
 
-    customElements.define(Three2dElement.is, Three2dElement);
+    customElements.define(ThreePlanarElement.is, ThreePlanarElement);
   </script>
 </dom-module>
