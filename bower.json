@@ -1,22 +1,11 @@
 {
   "name": "three-polymer",
-  "ignore": [
-    "three-camera",
-    "three-contour",
-    "three-controls",
-    "three-element",
-    "three-legend",
-    "three-line-geometry",
-    "three-material",
-    "three-model/abstract-three-model.html",
-    "three-model/fake-three-model.html",
-    "three-renderer",
-    "three-scene",
-    "three-stats",
-    "three-view/abstract-three-view.html",
-    "three-view/fake-three-view.html"
-  ],
   "description": "reusable polymer element for three.js geometry rendering",
+  "main": [
+    "three-view/three-view.html",
+    "three-model/three-model.html"
+  ],
+  "ignore": [],
   "dependencies": {
     "polymer": "2.0.1",
     "threejs": "r84",
