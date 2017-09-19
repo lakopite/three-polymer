@@ -1,17 +1,19 @@
-[
-  {"vertices": [[0, 0, 0], [0, 0, 10]], "metadata": {"id": 1}},
-  {"vertices": [[10, 10, 0], [10, 10, 10]], "metadata": {"id": 2}},
-  {"vertices": [[0, 0, 10], [10, 10, 10]], "metadata": {"id": 3}},
-  {"vertices": [[0, 0, 0], [5, 5, 10]], "metadata": {"id": 4}},
-  {"vertices": [[10, 10, 0], [5, 5, 10]], "metadata": {"id": 5}},
-  {"vertices": [[0, 0, 10], [0, 0, 20]], "metadata": {"id": 6}},
-  {"vertices": [[10, 10, 10], [10, 10, 20]], "metadata": {"id": 7}},
-  {"vertices": [[0, 0, 20], [10, 10, 20]], "metadata": {"id": 8}},
-  {"vertices": [[0, 0, 10], [5, 5, 20]], "metadata": {"id": 9}},
-  {"vertices": [[10, 10, 10], [5, 5, 20]], "metadata": {"id": 10}},
-  {"vertices": [[0, 0, 20], [0, 0, 30]], "metadata": {"id": 11}},
-  {"vertices": [[10, 10, 20], [10, 10, 30]], "metadata": {"id": 12}},
-  {"vertices": [[0, 0, 30], [10, 10, 30]], "metadata": {"id": 13}},
-  {"vertices": [[0, 0, 20], [5, 5, 30]], "metadata": {"id": 14}},
-  {"vertices": [[10, 10, 20], [5, 5, 30]], "metadata": {"id": 15}}
-]
+{
+  "linearElements": [
+    {"vertices": [[0, 0, 0], [0, 0, 10]], "metadata": {"id": 1}},
+    {"vertices": [[10, 10, 0], [10, 10, 10]], "metadata": {"id": 2}},
+    {"vertices": [[0, 0, 10], [10, 10, 10]], "metadata": {"id": 3}},
+    {"vertices": [[0, 0, 0], [5, 5, 10]], "metadata": {"id": 4}},
+    {"vertices": [[10, 10, 0], [5, 5, 10]], "metadata": {"id": 5}},
+    {"vertices": [[0, 0, 10], [0, 0, 20]], "metadata": {"id": 6}},
+    {"vertices": [[10, 10, 10], [10, 10, 20]], "metadata": {"id": 7}},
+    {"vertices": [[0, 0, 20], [10, 10, 20]], "metadata": {"id": 8}},
+    {"vertices": [[0, 0, 10], [5, 5, 20]], "metadata": {"id": 9}},
+    {"vertices": [[10, 10, 10], [5, 5, 20]], "metadata": {"id": 10}},
+    {"vertices": [[0, 0, 20], [0, 0, 30]], "metadata": {"id": 11}},
+    {"vertices": [[10, 10, 20], [10, 10, 30]], "metadata": {"id": 12}},
+    {"vertices": [[0, 0, 30], [10, 10, 30]], "metadata": {"id": 13}},
+    {"vertices": [[0, 0, 20], [5, 5, 30]], "metadata": {"id": 14}},
+    {"vertices": [[10, 10, 20], [5, 5, 30]], "metadata": {"id": 15}}
+  ], "planarElements": []
+}

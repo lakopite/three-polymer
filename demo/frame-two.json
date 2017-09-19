@@ -1,7 +1,19 @@
-[
-  {"vertices": [[-10, 0, -10], [-10, 0, 10]], "metadata": {"axial": 10, "flexure": 40}},
-  {"vertices": [[-10, 0, 10], [10, 0, 10]], "metadata": {"axial": 40, "flexure": 20}},
-  {"vertices": [[-30, 0, 10], [-10, 0, 10]], "metadata": {"axial": 30, "flexure": 30}},
-  {"vertices": [[-30, 0, -10], [-30, 0, 10]], "metadata": {"axial": 60, "flexure": 10}},
-  {"vertices": [[10, 0, 10], [10, 0, -10]], "metadata": {"axial": 100, "flexure": 55}}
-]
+{
+  "linearElements": [
+    {"vertices": [[0, 0, 0], [0, 0, 100]], "metadata": {"id": 1}},
+    {"vertices": [[100, 100, 0], [100, 100, 100]], "metadata": {"id": 2}},
+    {"vertices": [[0, 0, 100], [100, 100, 100]], "metadata": {"id": 3}},
+    {"vertices": [[0, 0, 0], [50, 50, 100]], "metadata": {"id": 4}},
+    {"vertices": [[100, 100, 0], [50, 50, 100]], "metadata": {"id": 5}},
+    {"vertices": [[0, 0, 100], [0, 0, 200]], "metadata": {"id": 6}},
+    {"vertices": [[100, 100, 100], [100, 100, 200]], "metadata": {"id": 7}},
+    {"vertices": [[0, 0, 200], [100, 100, 200]], "metadata": {"id": 8}},
+    {"vertices": [[0, 0, 100], [50, 50, 200]], "metadata": {"id": 9}},
+    {"vertices": [[100, 100, 100], [50, 50, 200]], "metadata": {"id": 10}},
+    {"vertices": [[0, 0, 200], [0, 0, 300]], "metadata": {"id": 11}},
+    {"vertices": [[100, 100, 200], [100, 100, 300]], "metadata": {"id": 12}},
+    {"vertices": [[0, 0, 300], [100, 100, 300]], "metadata": {"id": 13}},
+    {"vertices": [[0, 0, 200], [50, 50, 300]], "metadata": {"id": 14}},
+    {"vertices": [[100, 100, 200], [50, 50, 300]], "metadata": {"id": 15}}
+  ], "planarElements": []
+}
