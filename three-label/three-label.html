@@ -1,0 +1,54 @@
+<link rel="import" href="../../polymer/polymer-element.html">
+
+<dom-module id="three-label">
+  <script>
+    class ThreeLabel extends Polymer.Element {
+
+      static get is() {
+        return 'three-label';
+      }
+
+      static get properties() {
+        return {
+          fontSize: Number,
+          position: Array,
+          text: String,
+          object: {
+            type: Object,
+            computed: '_computeObject(position, text, fontSize)',
+            notify: true,
+          },
+        };
+      }
+
+      _computeObject(position, text, fontSize) {
+
+        const fontFace = "Arial";
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 300;
+        canvas.height = 300;
+
+        const context = canvas.getContext('2d');
+        const contextFontSize = 290;
+        context.font = contextFontSize + 'px ' + fontFace;
+        context.textAlign = 'left';
+        context.fillText(text, 0, contextFontSize);
+
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.minFilter = THREE.LinearFilter;
+
+        const spriteMaterial = new THREE.SpriteMaterial({map: texture});
+
+        const sprite = new THREE.Sprite(spriteMaterial);
+        sprite.scale.set(1.4 * fontSize, 1.4 * fontSize, 1);
+        sprite.position.set(...position);
+        sprite.up.set(...[0, 0, 1]);
+
+        return sprite;
+      }
+    }
+
+    customElements.define(ThreeLabel.is, ThreeLabel);
+  </script>
+</dom-module>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-label test</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../threejs/build/three.min.js"></script>
+  <link rel="import" href="../three-label/three-label.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-label
+      position='[4, 8, 12]'
+      text="hello label"
+      font-size="20">
+    </three-label>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-label>', () => {
+
+    let element;
+    beforeEach(() => {
+      element = fixture('basic');
+    });
+
+    it('instantiates the element with initial properties', () => {
+      expect(element.localName).to.equal('three-label');
+      expect(element.position).to.deep.equal([4, 8, 12]);
+      expect(element.fontSize).to.equal(20);
+    });
+
+    it('makes a sprite', () => {
+      expect(element.object).to.be.an.instanceOf(THREE.Sprite);
+      expect(element.object.up.toArray()).to.deep.equal([0, 0, 1]);
+      expect(element.object.position.toArray()).to.deep.equal([4, 8, 12]);
+      expect(element.object.scale.toArray()).to.deep.equal([28, 28, 1]);
+    });
+  });
+</script>
+</body>
+</html>

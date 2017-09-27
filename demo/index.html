@@ -27,7 +27,8 @@
           <three-model
             id="frame"
             slot="model"
-            contour-by="axial"
+            show-element-labels="true"
+            contour-by="id"
             data='[]'>
           </three-model>
         </three-view>
@@ -37,6 +38,6 @@
 </div>
 </body>
 <script>
-  $.getJSON("frame-one.json", data => document.getElementById("frame").setAttribute("data", JSON.stringify(data)));
+  $.getJSON("frame-three.json", data => document.getElementById("frame").setAttribute("data", JSON.stringify(data)));
 </script>
 </html>

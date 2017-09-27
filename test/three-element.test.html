@@ -18,6 +18,7 @@
       stroke="2"
       contour-by="axial"
       contour-color-limits="[10, 20, 30, 40]"
+      model-radius="12"
       contour-colors='["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]'>
     </three-element>
   </template>
@@ -64,6 +65,10 @@
 
       it('calculates the position correctly', () => {
         expect(element.position).to.deep.equal([2, 4, 6]);
+      });
+
+      it('calculates the labelFontSize', () => {
+        expect(element.labelFontSize).to.equal(0.6);
       });
 
       it('calculates the color of the line when the contourBy changes', () => {

@@ -17,6 +17,7 @@
           vertices: Array,
           geometryFilter: Object,
           metadataValueFilter: Set,
+          modelRadius: Number,
           contouredValue: {computed: '_computeContouredValue(contourBy, metadata)'},
           color: {
             type: String,
@@ -46,6 +47,7 @@
             observer: '_dispatchNewElement',
           },
           position: {type: Array, computed: '_computePosition(vertices)'},
+          labelFontSize: {type: Number, computed: '_computeLabelFontSize(modelRadius)'},
         }
       }
 
@@ -101,6 +103,10 @@
 
       _computePosition(vertices) {
         return _.zipWith(vertices[0], vertices[1], (c0, c1) => (c0 + c1) / 2);
+      }
+
+      _computeLabelFontSize(modelRadius) {
+        return modelRadius / 20;
       }
 
       _geometryChanged(geometry) {

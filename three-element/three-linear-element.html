@@ -1,6 +1,8 @@
 <link rel="import" href="three-element.html">
 <link rel="import" href="../three-line-geometry/three-line-geometry.html">
 <link rel="import" href="../three-material/three-material.html">
+<link rel="import" href="../three-label/three-label.html">
+<link rel="import" href="../../polymer/lib/elements/dom-if.html">
 
 <dom-module id="three-linear-element">
   <template>
@@ -15,6 +17,14 @@
       object="{{material}}"
       color="[[color]]">
     </three-material>
+    <template is="dom-if" if="{{showLabel}}">
+      <three-label
+        object="{{label}}"
+        font-size="[[labelFontSize]]"
+        text="[[contouredValue]]"
+        position="[[position]]">
+      </three-label>
+    </template>
   </template>
   <script>
     class ThreeLinearElement extends ThreeElement {
@@ -26,7 +36,20 @@
       static get properties() {
         return {
           stroke: Number,
+          label: {type: Object, observer: '_labelChanged'},
+          showLabel: {type: Boolean, value: false, observer: '_showLabelChanged'}
         }
+      }
+
+      _showLabelChanged(showLabel) {
+        if (!this.label) return;
+
+        showLabel ? this._dispatchNewLabel() : this._dispatchRemoveLabel()
+      }
+
+      _labelChanged() {
+
+        this.showLabel ? this._dispatchNewLabel() : null
       }
     }
 

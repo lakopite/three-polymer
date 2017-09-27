@@ -16,6 +16,8 @@
           handleNewMeshCount: {type: Number, value: 0},
           handleMeshChangeCount: {type: Number, value: 0},
           handleRemoveMeshCount: {type: Number, value: 0},
+          handleNewLabelCount: {type: Number, value: 0},
+          handleRemoveLabelCount: {type: Number, value: 0},
         }
       }
 
@@ -24,6 +26,8 @@
         this.addEventListener('new-element', this._handleNewMesh);
         this.addEventListener('element-change', this._handleMeshChange);
         this.addEventListener('remove-element', this._handleRemoveMesh);
+        this.addEventListener('new-label', this._handleNewLabel);
+        this.addEventListener('remove-label', this._handleRemoveLabel);
       }
 
       disconnectedCallback() {
@@ -31,6 +35,8 @@
         this.removeEventListener('new-element', this._handleNewMesh);
         this.removeEventListener('element-change', this._handleMeshChange);
         this.removeEventListener('remove-element', this._handleRemoveMesh);
+        this.removeEventListener('new-label', this._handleNewLabel);
+        this.removeEventListener('remove-label', this._handleRemoveLabel);
       }
 
       _handleNewMesh() {
@@ -43,6 +49,14 @@
 
       _handleRemoveMesh() {
         this.handleRemoveMeshCount += 1;
+      }
+
+      _handleNewLabel() {
+        this.handleNewLabelCount += 1;
+      }
+
+      _handleRemoveLabel() {
+        this.handleRemoveLabelCount += 1;
       }
     }
 

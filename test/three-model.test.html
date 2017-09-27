@@ -69,6 +69,7 @@
         element = fixture('basic');
         expect(element.localName).to.equal('three-model');
         expect(element.contourBy).to.equal('axial');
+        expect(element.showElementLabels).to.be.false;
         expect(element.geometryFilter).to.deep.equal({});
       });
 
@@ -215,6 +216,24 @@
           expect(parent.modelNeedsRenderCount).to.equal(0);
 
           fakeThreeMesh._dispatchRemoveMesh();
+
+          expect(parent.modelNeedsRenderCount).to.equal(1);
+
+          done();
+        });
+      });
+
+      it('tells the view when it adds an element label', (done) => {
+        replace('three-linear-element').with('fake-three-element');
+        replace('three-planar-element').with('fake-three-element');
+        parent = fixture('parent');
+        threeModel = parent.querySelector('three-model');
+
+        flush(() => {
+          const fakeThreeElement = threeModel.shadowRoot.querySelector('#linear-element-0');
+          expect(parent.modelNeedsRenderCount).to.equal(0);
+
+          fakeThreeElement._dispatchNewLabel();
 
           expect(parent.modelNeedsRenderCount).to.equal(1);
 

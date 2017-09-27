@@ -1,0 +1,24 @@
+<link rel="import" href="../../polymer/polymer-element.html">
+
+<dom-module id="fake-three-label">
+  <script>
+    class FakeThreeLabel extends Polymer.Element {
+
+      static get is() {
+        return 'fake-three-label';
+      }
+
+      static get properties() {
+        return {
+          object: {
+            type: Object,
+            value: () => new THREE.Sprite(),
+            notify: true,
+          }
+        }
+      }
+    }
+
+    customElements.define(FakeThreeLabel.is, FakeThreeLabel);
+  </script>
+</dom-module>

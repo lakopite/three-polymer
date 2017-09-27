@@ -19,6 +19,14 @@
       _dispatchRemoveMesh() {
         this.dispatchEvent(new CustomEvent('remove-element', {bubbles: true}));
       }
+
+      _dispatchNewLabel() {
+        this.dispatchEvent(new CustomEvent('new-label', {bubbles: true, detail: this.label}));
+      }
+
+      _dispatchRemoveLabel() {
+        this.dispatchEvent(new CustomEvent('remove-label', {bubbles: true, detail: this.label}));
+      }
     }
 
     customElements.define(AbstractThreeElement.is, AbstractThreeElement);

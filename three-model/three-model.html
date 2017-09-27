@@ -26,6 +26,8 @@
       <three-linear-element
         id="linear-element-{{index}}"
         on-new-element="_handleNewMesh"
+        on-new-label="_handleNewLabel"
+        on-remove-label="_handleRemoveLabel"
         on-remove-element="_handleRemoveMesh"
         on-element-change="_handleMeshChange"
         geometry-filter="[[geometryFilter]]"
@@ -35,7 +37,9 @@
         contour-by="[[contourBy]]"
         contour-color-limits="[[contourColorLimits]]"
         contour-colors="[[contourColors]]"
-        stroke="[[stroke]]">
+        stroke="[[stroke]]"
+        model-radius="[[radius]]"
+        show-label="[[showElementLabels]]">
       </three-linear-element>
     </template>
     <template
@@ -102,6 +106,13 @@
             type: Object,
             value: {},
             notify: true
+          },
+
+          /** Whether or not labels should be drawn over elements with the value of the `contourBy` field.
+           * Setting this to `true` for large models will significantly impact performance. */
+          showElementLabels: {
+            type: Boolean,
+            value: false,
           },
 
           /** Indicates whether or not the model is in the process of stamping out or removing any of its children */
@@ -269,6 +280,16 @@
       }
 
       _handleMeshChange() {
+        this._dispatchModelNeedsRender();
+      }
+
+      _handleNewLabel(event) {
+        this.object.add(event.detail);
+        this._dispatchModelNeedsRender();
+      }
+
+      _handleRemoveLabel(event) {
+        this.object.remove(event.detail);
         this._dispatchModelNeedsRender();
       }
 

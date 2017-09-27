@@ -8,9 +8,10 @@
   <script src="../../threejs/build/three.min.js"></script>
   <link rel="import" href="../three-element/three-linear-element.html">
   <link rel="import" href="../three-model/fake-three-model.html">
+  <link rel="import" href="../three-label/fake-three-label.html">
 </head>
 <body>
-<test-fixture id="first">
+<test-fixture id="element">
   <template>
     <three-linear-element
       vertices="[[0, 0, 0],[4, 8, 12]]"
@@ -22,7 +23,8 @@
     </three-linear-element>
   </template>
 </test-fixture>
-<test-fixture id="second">
+
+<test-fixture id="element-with-bounding-box-of-negative-maximums">
   <template>
     <three-linear-element
       vertices="[[-10, 0, 0],[-10, 0, 10]]"
@@ -35,6 +37,37 @@
   </template>
 </test-fixture>
 
+<test-fixture id="model-with-labels">
+  <template>
+    <fake-three-model>
+      <three-linear-element
+        vertices="[[0, 0, 0],[4, 8, 12]]"
+        metadata='{"axial": 27, "flexure": 37, "group": "g03"}'
+        stroke="2"
+        show-label="true"
+        contour-by="axial"
+        contour-color-limits="[10, 20, 30, 40]"
+        contour-colors='["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]'>
+      </three-linear-element>
+    </fake-three-model>
+  </template>
+</test-fixture>
+
+<test-fixture id="model-without-labels">
+  <template>
+    <fake-three-model>
+      <three-linear-element
+        vertices="[[-10, 0, 0],[-10, 0, 10]]"
+        metadata='{"axial": 27, "flexure": 37, "group": "g03"}'
+        stroke="2"
+        contour-by="axial"
+        contour-color-limits="[10, 20, 30, 40]"
+        contour-colors='["#9C27B0", "#00BCD4", "#CDDC39", "#FF5722"]'>
+      </three-linear-element>
+    </fake-three-model>
+  </template>
+</test-fixture>
+
 <script>
   describe('<three-linear-element>', () => {
 
@@ -43,7 +76,7 @@
     describe('itself', () => {
 
       beforeEach(() => {
-        element = fixture('first');
+        element = fixture('element');
       });
 
       it('instantiates the element with initial properties', () => {
@@ -66,7 +99,7 @@
       });
 
       it('computes visibility when the element has a bounding box of negative maximums', () => {
-        element = fixture('second');
+        element = fixture('element-with-bounding-box-of-negative-maximums');
         element.geometryFilter = {xMin: -15, xMax: -5};
 
         expect(element.isVisible).to.be.true;
@@ -89,6 +122,95 @@
         expect(element.shadowRoot.querySelector('three-material').isVisible).to.be.true;
       });
 
+      describe('labels', () => {
+
+        let fakeModel, element;
+
+        it('creates a label', (done) => {
+          replace('three-label').with('fake-three-label');
+          fakeModel = fixture('model-with-labels');
+          element = fakeModel.querySelector('three-linear-element');
+
+          expect(element.showLabel).to.be.true;
+
+          flush(() => {
+            expect(fakeModel.handleNewLabelCount).to.equal(1);
+            expect(fakeModel.handleRemoveLabelCount).to.equal(0);
+            expect(element.shadowRoot.querySelector('fake-three-label')).to.exist;
+
+            done();
+          });
+        });
+
+        it('does not create a label', (done) => {
+          replace('three-label').with('fake-three-label');
+          fakeModel = fixture('model-without-labels');
+          element = fakeModel.querySelector('three-linear-element');
+
+          expect(element.showLabel).to.be.false;
+
+          flush(() => {
+            expect(fakeModel.handleNewLabelCount).to.equal(0);
+            expect(fakeModel.handleRemoveLabelCount).to.equal(0);
+            expect(element.shadowRoot.querySelector('fake-three-label')).to.not.exist;
+
+            done();
+          });
+        });
+
+        it('tells the model to remove the label after creating it', (done) => {
+          replace('three-label').with('fake-three-label');
+          fakeModel = fixture('model-with-labels');
+          element = fakeModel.querySelector('three-linear-element');
+
+          expect(element.showLabel).to.be.true;
+
+          flush(() => {
+            element.showLabel = false;
+
+            expect(fakeModel.handleNewLabelCount).to.equal(1);
+            expect(fakeModel.handleRemoveLabelCount).to.equal(1);
+
+            done();
+          });
+        });
+
+        it('hides a label after creating it', (done) => {
+          replace('three-label').with('fake-three-label');
+          fakeModel = fixture('model-with-labels');
+          element = fakeModel.querySelector('three-linear-element');
+
+          expect(element.showLabel).to.be.true;
+
+          element.showLabel = false;
+
+          flush(() => {
+
+            expect(element.shadowRoot.querySelector('fake-three-label')).to.not.exist;
+
+            done();
+          });
+        });
+
+        it('creates a label after not creating one initially', (done) => {
+          replace('three-label').with('fake-three-label');
+          fakeModel = fixture('model-without-labels');
+          element = fakeModel.querySelector('three-linear-element');
+
+          expect(element.showLabel).to.be.false;
+
+          element.showLabel = true;
+
+          flush(() => {
+
+            expect(fakeModel.handleNewLabelCount).to.equal(1);
+            expect(fakeModel.handleRemoveLabelCount).to.equal(0);
+            expect(element.shadowRoot.querySelector('fake-three-label')).to.exist;
+
+            done();
+          });
+        });
+      });
     });
   });
 </script>
