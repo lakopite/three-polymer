@@ -13,9 +13,9 @@
           object: Object,
           position: Array,
           radius: Number,
-          handleNewMeshCount: {type: Number, value: 0},
-          handleMeshChangeCount: {type: Number, value: 0},
-          handleRemoveMeshCount: {type: Number, value: 0},
+          handleNewElementCount: {type: Number, value: 0},
+          handleElementChangeCount: {type: Number, value: 0},
+          handleRemoveElementCount: {type: Number, value: 0},
           handleNewLabelCount: {type: Number, value: 0},
           handleRemoveLabelCount: {type: Number, value: 0},
         }
@@ -23,32 +23,32 @@
 
       connectedCallback() {
         super.connectedCallback();
-        this.addEventListener('new-element', this._handleNewMesh);
-        this.addEventListener('element-change', this._handleMeshChange);
-        this.addEventListener('remove-element', this._handleRemoveMesh);
+        this.addEventListener('new-element', this._handleNewElement);
+        this.addEventListener('element-change', this._handleElementChange);
+        this.addEventListener('remove-element', this._handleRemoveElement);
         this.addEventListener('new-label', this._handleNewLabel);
         this.addEventListener('remove-label', this._handleRemoveLabel);
       }
 
       disconnectedCallback() {
         super.disconnectedCallback();
-        this.removeEventListener('new-element', this._handleNewMesh);
-        this.removeEventListener('element-change', this._handleMeshChange);
-        this.removeEventListener('remove-element', this._handleRemoveMesh);
+        this.removeEventListener('new-element', this._handleNewElement);
+        this.removeEventListener('element-change', this._handleElementChange);
+        this.removeEventListener('remove-element', this._handleRemoveElement);
         this.removeEventListener('new-label', this._handleNewLabel);
         this.removeEventListener('remove-label', this._handleRemoveLabel);
       }
 
-      _handleNewMesh() {
-        this.handleNewMeshCount += 1;
+      _handleNewElement() {
+        this.handleNewElementCount += 1;
       }
 
-      _handleMeshChange() {
-        this.handleMeshChangeCount += 1;
+      _handleElementChange() {
+        this.handleElementChangeCount += 1;
       }
 
-      _handleRemoveMesh() {
-        this.handleRemoveMeshCount += 1;
+      _handleRemoveElement() {
+        this.handleRemoveElementCount += 1;
       }
 
       _handleNewLabel() {
