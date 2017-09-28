@@ -8,11 +8,19 @@
   <link rel="import" href="../three-legend/three-legend.html">
 </head>
 <body>
-<test-fixture id="basic">
+<test-fixture id="numeric-values">
   <template>
     <three-legend
       contour-colors='["red", "yellow", "blue"]'
       contour-color-limits='[1, 2, 3]'>
+    </three-legend>
+  </template>
+</test-fixture>
+<test-fixture id="string-values">
+  <template>
+    <three-legend
+      contour-colors='["red", "yellow", "blue"]'
+      contour-color-limits='["cat", "mouse", "dog"]'>
     </three-legend>
   </template>
 </test-fixture>
@@ -22,20 +30,47 @@
 
     let element;
 
-    beforeEach(() => {
-      element = fixture('basic');
+    describe('numeric-values', () => {
+
+      beforeEach(() => {
+        element = fixture('numeric-values');
+      });
+
+      it('instantiates the element with its properties', () => {
+        expect(element.localName).to.equal('three-legend');
+        expect(element.contourColors).to.deep.equal([undefined, "red", "yellow", "blue"]);
+        expect(element.contourColorLimits).to.deep.equal([0, 1, 2, 3]);
+      });
+
+      it('computes items with numeric values', () => {
+        expect(element.items).to.deep.equal([
+          {color: undefined, value: 0},
+          {color: "red", value: 1},
+          {color: "yellow", value: 2},
+          {color: "blue", value: 3}
+        ]);
+      });
     });
 
-    it('instantiates the element with its basic properties', () => {
-      expect(element.localName).to.equal('three-legend');
-      expect(element.contourColors).to.deep.equal(["red", "yellow", "blue"]);
-      expect(element.contourColorLimits).to.deep.equal([1, 2, 3]);
-    });
+    describe('string-values', () => {
 
-    it('computes its items', () => {
-      expect(element.items).to.deep.equal([
-        {color: "red", value: 1}, {color: "yellow", value: 2}, {color: "blue", value: 3}
-      ]);
+      beforeEach(() => {
+        element = fixture('string-values');
+      });
+
+      it('instantiates the element with its properties', () => {
+        expect(element.localName).to.equal('three-legend');
+        expect(element.contourColors).to.deep.equal(["red", "yellow", "blue"]);
+        expect(element.contourColorLimits).to.deep.equal(["cat", "mouse", "dog"]);
+      });
+
+      it('computes items with string values', () => {
+        expect(element.items).to.deep.equal([
+          {color: "red", value: "cat"},
+          {color: "yellow", value: "mouse"},
+          {color: "blue", value: "dog"}
+        ]);
+      });
     });
   });
 </script>

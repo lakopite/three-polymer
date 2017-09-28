@@ -45,7 +45,25 @@
         return {
           contourColors: Array,
           contourColorLimits: Array,
+          valueTypeIsString: {
+            type: Boolean,
+            computed: '_computeValueTypeIsString(contourColorLimits)',
+            observer: '_valueTypeIsStringChanged',
+          },
           items: {type: Object, computed: '_computeItems(contourColors, contourColorLimits)'}
+        }
+      }
+
+      _computeValueTypeIsString(contourColorLimits) {
+        return typeof(contourColorLimits[0]) === "string";
+      }
+
+      _valueTypeIsStringChanged(valueTypeIsString) {
+
+        if (!valueTypeIsString) {
+          const minimumValue = _.round(2 * this.contourColorLimits[0] - this.contourColorLimits[1], 4);
+          this.contourColorLimits = [minimumValue].concat(this.contourColorLimits);
+          this.contourColors = [undefined].concat(this.contourColors);
         }
       }
 
@@ -55,7 +73,6 @@
           return {value: value, color: color}
         });
       }
-
     }
 
     customElements.define(ThreeLegend.is, ThreeLegend);
