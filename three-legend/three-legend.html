@@ -48,28 +48,40 @@
           valueTypeIsString: {
             type: Boolean,
             computed: '_computeValueTypeIsString(contourColorLimits)',
-            observer: '_valueTypeIsStringChanged',
           },
-          items: {type: Object, computed: '_computeItems(contourColors, contourColorLimits)'}
+          contourColorsWithMinimum: {
+            type: Array,
+            computed: '_computeContourColorsWithMinimum(valueTypeIsString, contourColors)'
+          },
+          contourColorLimitsWithMinimum: {
+            type: Array,
+            computed: '_computeContourColorLimitsWithMinimum(valueTypeIsString, contourColorLimits)'
+          },
+          items: {type: Object, computed: '_computeItems(contourColorsWithMinimum, contourColorLimitsWithMinimum)'}
         }
+      }
+
+      _computeContourColorsWithMinimum(valueTypeIsString, contourColors) {
+        if (valueTypeIsString) return contourColors;
+
+        return [undefined].concat(contourColors);
+      }
+
+      _computeContourColorLimitsWithMinimum(valueTypeIsString, contourColorLimits) {
+        if (valueTypeIsString || !contourColorLimits) return contourColorLimits;
+
+        const minimumValue = _.round(2 * contourColorLimits[0] - contourColorLimits[1], 4);
+        return [minimumValue].concat(contourColorLimits);
       }
 
       _computeValueTypeIsString(contourColorLimits) {
+        if (!contourColorLimits) return;
         return typeof(contourColorLimits[0]) === "string";
       }
 
-      _valueTypeIsStringChanged(valueTypeIsString) {
+      _computeItems(contourColorsWithMinimum, contourColorLimitsWithMinimum) {
 
-        if (!valueTypeIsString) {
-          const minimumValue = _.round(2 * this.contourColorLimits[0] - this.contourColorLimits[1], 4);
-          this.contourColorLimits = [minimumValue].concat(this.contourColorLimits);
-          this.contourColors = [undefined].concat(this.contourColors);
-        }
-      }
-
-      _computeItems(contourColors, contourColorLimits) {
-
-        return _.zipWith(contourColorLimits, contourColors, (value, color) => {
+        return _.zipWith(contourColorLimitsWithMinimum, contourColorsWithMinimum, (value, color) => {
           return {value: value, color: color}
         });
       }

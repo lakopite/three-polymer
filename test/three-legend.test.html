@@ -38,8 +38,8 @@
 
       it('instantiates the element with its properties', () => {
         expect(element.localName).to.equal('three-legend');
-        expect(element.contourColors).to.deep.equal([undefined, "red", "yellow", "blue"]);
-        expect(element.contourColorLimits).to.deep.equal([0, 1, 2, 3]);
+        expect(element.contourColorsWithMinimum).to.deep.equal([undefined, "red", "yellow", "blue"]);
+        expect(element.contourColorLimitsWithMinimum).to.deep.equal([0, 1, 2, 3]);
       });
 
       it('computes items with numeric values', () => {
@@ -49,6 +49,22 @@
           {color: "yellow", value: 2},
           {color: "blue", value: 3}
         ]);
+      });
+
+      it('recomputes the items with numeric values', (done) => {
+
+        element.contourColorLimits = [7, 8, 9];
+
+        flush(() => {
+          expect(element.items).to.deep.equal([
+            {color: undefined, value: 6},
+            {color: "red", value: 7},
+            {color: "yellow", value: 8},
+            {color: "blue", value: 9}
+          ]);
+
+          done();
+        });
       });
     });
 
@@ -60,8 +76,8 @@
 
       it('instantiates the element with its properties', () => {
         expect(element.localName).to.equal('three-legend');
-        expect(element.contourColors).to.deep.equal(["red", "yellow", "blue"]);
-        expect(element.contourColorLimits).to.deep.equal(["cat", "mouse", "dog"]);
+        expect(element.contourColorsWithMinimum).to.deep.equal(["red", "yellow", "blue"]);
+        expect(element.contourColorLimitsWithMinimum).to.deep.equal(["cat", "mouse", "dog"]);
       });
 
       it('computes items with string values', () => {
