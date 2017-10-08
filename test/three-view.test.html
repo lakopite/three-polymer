@@ -48,6 +48,16 @@
       expect(element.initialRenderIsComplete).to.be.true;
     });
 
+    it('binds properties to a legend', () => {
+
+      element = fixture('basic');
+      const legend = element.root.querySelector('three-legend');
+
+      expect(legend.position).to.equal(element.legendPosition);
+      expect(legend.contourColors).to.equal(element.contourColors);
+      expect(legend.contourColorLimits).to.equal(element.contourColorLimits);
+    });
+
     it('appends the renderer DOM element to the view', () => {
       replace('three-controls').with('fake-three-controls');
       replace('three-renderer').with('fake-three-renderer');

@@ -14,8 +14,6 @@
 
       table {
         position: absolute;
-        top: 0;
-        right: 0;
       }
 
       table > tr > td {
@@ -45,6 +43,7 @@
         return {
           contourColors: Array,
           contourColorLimits: Array,
+          position: {type: String, value: 'top-right', observer: '_positionChanged'},
           valueTypeIsString: {
             type: Boolean,
             computed: '_computeValueTypeIsString(contourColorLimits)',
@@ -59,6 +58,21 @@
           },
           items: {type: Object, computed: '_computeItems(contourColorsWithMinimum, contourColorLimitsWithMinimum)'}
         }
+      }
+
+      _positionChanged(newPosition, oldPosition) {
+
+        const style = this.root.querySelector('table').style;
+
+        if (oldPosition) {
+          const [oldVerticalPosition, oldHorizontalPosition] = oldPosition.split('-');
+          style[oldVerticalPosition] = '';
+          style[oldHorizontalPosition] = '';
+        }
+
+        const [verticalPosition, horizontalPosition] = newPosition.split('-');
+        style[verticalPosition] = 0;
+        style[horizontalPosition] = 0;
       }
 
       _computeContourColorsWithMinimum(valueTypeIsString, contourColors) {

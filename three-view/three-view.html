@@ -28,6 +28,7 @@
       show-stats="[[showStats]]">
     </three-stats>
     <three-legend
+      position="[[legendPosition]]"
       contour-colors="[[contourColors]]"
       contour-color-limits="[[contourColorLimits]]">
     </three-legend>
@@ -98,6 +99,9 @@
 
           /** The height of the viewport, measured in pixels */
           height: Number,
+
+          /** The position of the legend within the viewport. Values can be `top-right` or `top-left` */
+          legendPosition: {type: String, value: 'top-right'},
 
           /** The `<canvas>` element produced by the renderer and passed to the controls
            * @type {HTMLElement} */

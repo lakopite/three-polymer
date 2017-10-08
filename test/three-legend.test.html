@@ -38,6 +38,7 @@
 
       it('instantiates the element with its properties', () => {
         expect(element.localName).to.equal('three-legend');
+        expect(element.position).to.equal('top-right');
         expect(element.contourColorsWithMinimum).to.deep.equal([undefined, "red", "yellow", "blue"]);
         expect(element.contourColorLimitsWithMinimum).to.deep.equal([0, 1, 2, 3]);
       });
@@ -70,22 +71,58 @@
 
     describe('string-values', () => {
 
-      beforeEach(() => {
-        element = fixture('string-values');
-      });
-
-      it('instantiates the element with its properties', () => {
-        expect(element.localName).to.equal('three-legend');
-        expect(element.contourColorsWithMinimum).to.deep.equal(["red", "yellow", "blue"]);
-        expect(element.contourColorLimitsWithMinimum).to.deep.equal(["cat", "mouse", "dog"]);
-      });
-
       it('computes items with string values', () => {
+        element = fixture('string-values');
+
         expect(element.items).to.deep.equal([
           {color: "red", value: "cat"},
           {color: "yellow", value: "mouse"},
           {color: "blue", value: "dog"}
         ]);
+      });
+    });
+
+    describe('positioning', () => {
+
+      beforeEach(() => {
+        element = fixture('numeric-values');
+      });
+
+      it('places the legend in the top-right corner by default', () => {
+
+        const tableStyle = getComputedStyle(element.root.querySelector('table'));
+
+        expect(tableStyle.top).to.equal('0px');
+        expect(tableStyle.right).to.equal('0px');
+        expect(tableStyle.bottom).to.not.equal('0px');
+        expect(tableStyle.left).to.not.equal('0px');
+      });
+
+      it('places the legend in the top-left corner when told to do so', () => {
+
+        const tableStyle = getComputedStyle(element.root.querySelector('table'));
+
+        element.position = 'top-left';
+
+        expect(tableStyle.top).to.equal('0px');
+        expect(tableStyle.left).to.equal('0px');
+        expect(tableStyle.bottom).to.not.equal('0px');
+        expect(tableStyle.right).to.not.equal('0px');
+      });
+
+      it('moves the legend from corner to corner', () => {
+
+        const tableStyle = getComputedStyle(element.root.querySelector('table'));
+
+        element.position = 'top-left';
+
+        expect(tableStyle.left).to.equal('0px');
+        expect(tableStyle.right).to.not.equal('0px');
+
+        element.position = 'top-right';
+
+        expect(tableStyle.left).to.not.equal('0px');
+        expect(tableStyle.right).to.equal('0px');
       });
     });
   });
