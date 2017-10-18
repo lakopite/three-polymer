@@ -1,18 +1,17 @@
 {
   "linearElements": [
-    {"vertices": [[0, 0, 0], [0, 10, 10]], "metadata": {"axial": 10, "flexure": 60}},
-    {"vertices": [[0, 0, 10], [0, 10, 0]], "metadata": {"axial": 30, "flexure": 40}},
-    {"vertices": [[10, 0, 0], [10, 10, 10]], "metadata": {"axial": 100, "flexure": 10}},
-    {"vertices": [[10, 0, 10], [10, 10, 0]], "metadata": {"axial": 50, "flexure": 80}}
+    {"vertices": [[0, 0, 0], [0, 10, 10]], "metadata": {"id": 1, "axial": 10, "flexure": 60}},
+    {"vertices": [[0, 0, 10], [0, 10, 0]], "metadata": {"id": 2, "axial": 30, "flexure": 40}},
+    {"vertices": [[10, 0, 0], [10, 10, 10]], "metadata": {"id": 3, "axial": 100, "flexure": 10}},
+    {"vertices": [[10, 0, 10], [10, 10, 0]], "metadata": {"id": 4, "axial": 50, "flexure": 80}}
   ],
   "planarElements": [
     {
-      "vertices": [[0, 10, 0], [0, 10, 10], [10, 10, 0], [10, 10, 10]], "faceVertices": [0, 1, 3, 2],
-      "metadata": {"axial": 80, "flexure": 70}
-    },
-    {
-      "vertices": [[0, 0, 0], [0, 0, 10], [10, 0, 0], [10, 0, 10]], "faceVertices": [0, 1, 3, 2],
-      "metadata": {"axial": 20, "flexure": 50}
+      "vertices": [[0, 10, 0], [0, 10, 10], [10, 10, 0], [10, 10, 10]], "faceVertices": [[0, 1, 3], [3, 2, 0]],
+      "metadata": {"id": 5, "axial": 80, "flexure": 70}
+    }, {
+      "vertices": [[0, 0, 0], [0, 0, 10], [10, 0, 0], [10, 0, 10]], "faceVertices": [[0, 1, 3], [3, 2, 0]],
+      "metadata": {"id": 6, "axial": 20, "flexure": 50}
     }
   ]
 }

@@ -24,14 +24,9 @@
       _computeGeometry(vertices, faceVertices) {
         if (!(vertices && faceVertices)) return;
 
-        let v = [
-          [faceVertices[0], faceVertices[1], faceVertices[2]],
-          [faceVertices[2], faceVertices[3], faceVertices[0]]
-        ];
-
         const geometry = new THREE.Geometry();
-        geometry.vertices.push(...vertices.map(a => new THREE.Vector3(...a)));
-        geometry.faces.push(...v.map(a => new THREE.Face3(...a)));
+        geometry.vertices.push(...vertices.map(vertex => new THREE.Vector3(...vertex)));
+        geometry.faces.push(...faceVertices.map(faceVertexIndices => new THREE.Face3(...faceVertexIndices)));
 
         return geometry;
       }
