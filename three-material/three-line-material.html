@@ -1,0 +1,44 @@
+<link rel="import" href="../../polymer/polymer-element.html">
+
+<dom-module id="three-line-material">
+  <script>
+    class ThreeLineMaterial extends Polymer.Element {
+
+      static get is() {
+        return 'three-line-material';
+      }
+
+      static get properties() {
+        return {
+          color: {type: String, observer: '_colorChanged'},
+          isVisible: {type: Boolean, observer: '_isVisibleChanged'},
+          stroke: {type: Number},
+          object: {
+            type: Object,
+            notify: true,
+            computed: '_computeObject(stroke)',
+          },
+        };
+      }
+
+      _computeObject(stroke) {
+        return new THREE.LineBasicMaterial({
+          linewidth: stroke,
+          transparent: false,
+          opacity: 1.0,
+          visible: true,
+        })
+      }
+
+      _colorChanged(color) {
+        this.object.color = new THREE.Color().setStyle(color);
+      }
+
+      _isVisibleChanged(isVisible) {
+        this.object.visible = isVisible;
+      }
+    }
+
+    customElements.define(ThreeLineMaterial.is, ThreeLineMaterial);
+  </script>
+</dom-module>

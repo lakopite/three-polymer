@@ -1,22 +1,22 @@
 <link rel="import" href="three-element.html">
 <link rel="import" href="../three-line-geometry/three-line-geometry.html">
-<link rel="import" href="../three-material/three-material.html">
+<link rel="import" href="../three-material/three-line-material.html">
 <link rel="import" href="../three-label/three-label.html">
 <link rel="import" href="../../polymer/lib/elements/dom-if.html">
 
 <dom-module id="three-linear-element">
   <template>
     <three-line-geometry
-      stroke="[[stroke]]"
       vertices="[[vertices]]"
       object="{{geometry}}">
     </three-line-geometry>
-    <three-material
+    <three-line-material
       id="material"
+      stroke="[[stroke]]"
       is-visible="[[isVisible]]"
       object="{{material}}"
       color="[[color]]">
-    </three-material>
+    </three-line-material>
     <template is="dom-if" if="{{showLabel}}">
       <three-label
         object="{{label}}"
@@ -37,7 +37,12 @@
         return {
           stroke: Number,
           label: {type: Object, observer: '_labelChanged'},
-          showLabel: {type: Boolean, value: false, observer: '_showLabelChanged'}
+          showLabel: {type: Boolean, value: false, observer: '_showLabelChanged'},
+          object: {
+            type: Object,
+            value: () => new THREE.Line(),
+            observer: '_dispatchNewElement',
+          },
         }
       }
 

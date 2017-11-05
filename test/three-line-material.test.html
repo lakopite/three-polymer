@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>three-material test</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../threejs/build/three.min.js"></script>
+  <link rel="import" href="../three-material/three-line-material.html">
+</head>
+<body>
+<test-fixture id="basic">
+  <template>
+    <three-line-material
+      stroke="7"
+      color="#696969">
+    </three-line-material>
+  </template>
+</test-fixture>
+
+<script>
+  describe('<three-line-material>', () => {
+
+    let element;
+    beforeEach(() => {
+      element = fixture('basic');
+    });
+
+    it('instantiates the element with initial properties', () => {
+      expect(element.localName).to.equal('three-line-material');
+      expect(element.object.opacity).to.equal(1.0);
+      expect(element.object.visible).to.be.true;
+      expect(element.object.transparent).to.be.false;
+      expect(element.object.linewidth).to.equal(7);
+      expect(element.object.color.getHexString()).to.equal("696969");
+    });
+
+    it('updates the opacity', () => {
+      element.isVisible = false;
+
+      expect(element.object.visible).to.be.false;
+    });
+
+    it('changes colors', () => {
+      element.color = "#FFFFFF";
+
+      expect(element.object.color.getHexString()).to.equal("ffffff");
+    });
+  });
+</script>
+</body>
+</html>

@@ -41,11 +41,6 @@
           },
           geometry: {type: Object, observer: '_geometryChanged'},
           material: {type: Object, observer: '_materialChanged'},
-          object: {
-            type: Object,
-            value: () => new THREE.Mesh(),
-            observer: '_dispatchNewElement',
-          },
           position: {type: Array, computed: '_computePosition(vertices)'},
           labelFontSize: {type: Number, computed: '_computeLabelFontSize(modelRadius)'},
         }

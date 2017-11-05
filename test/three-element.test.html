@@ -91,35 +91,6 @@
     });
 
     describe('interactions with parent', () => {
-      it('tells the model when the mesh gets instantiated', () => {
-        parent = fixture('parent');
-        const threeMesh = parent.querySelector('three-element');
-        expect(parent.handleNewElementCount).to.equal(1);
-
-        threeMesh.object = new THREE.Mesh();
-
-        expect(parent.handleNewElementCount).to.equal(2);
-      });
-
-      it('tells the model when its geometry changes', () => {
-        parent = fixture('parent');
-        const threeMesh = parent.querySelector('three-element');
-        expect(parent.handleElementChangeCount).to.equal(2);
-
-        threeMesh.geometry = new THREE.Geometry();
-
-        expect(parent.handleElementChangeCount).to.equal(3);
-      });
-
-      it('tells the model when its material changes', () => {
-        parent = fixture('parent');
-        const threeMesh = parent.querySelector('three-element');
-        expect(parent.handleElementChangeCount).to.equal(2);
-
-        threeMesh.material = new THREE.MeshBasicMaterial();
-
-        expect(parent.handleElementChangeCount).to.equal(3);
-      });
 
       it('tells the model when its color changes', () => {
         parent = fixture('parent');

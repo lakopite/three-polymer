@@ -7,16 +7,6 @@
       static get is() {
         return 'fake-three-line-geometry';
       }
-
-      fireObjectChanged(geometry) {
-        const eventInitDict = {bubbles: true, composed: true, detail: geometry};
-        this.dispatchEvent(new CustomEvent('three-line-geometry-changed', eventInitDict));
-      }
-
-      fireDomChange() {
-        this.dispatchEvent(new CustomEvent('dom-change'));
-      }
-
     }
 
     customElements.define(FakeThreeLineGeometry.is, FakeThreeLineGeometry);

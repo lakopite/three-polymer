@@ -25,7 +25,11 @@
 
       static get properties() {
         return {
-          stroke: Number,
+          object: {
+            type: Object,
+            value: () => new THREE.Mesh(),
+            observer: '_dispatchNewElement',
+          },
         }
       }
     }

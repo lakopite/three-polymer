@@ -22,49 +22,12 @@
 
     let element;
 
-    beforeEach(() => {
-      element = fixture('basic');
-    });
-
     it('instantiates the element', () => {
+      element = fixture('basic');
+
       expect(element.localName).to.equal('three-line-geometry');
-      expect(element.cameraNormal).to.deep.equal([0, 1, 0]);
-      expect(element.stroke).to.be.undefined;
       expect(element.vertices).to.deep.equal([[0, 0, 0], [0, 0, 10]]);
-    });
-
-    describe('the geometry', () => {
-      it('gets calculated correctly for a vertical column', () => {
-        element.stroke = 1;
-        const vertices = element.object.vertices.map((vector3) => vector3.toArray());
-
-        expect(vertices).to.include.deep.members([
-          [-0.5, 0, 0], [0.5, 0, 0], [-0.5, 0, 10], [0.5, 0, 10]
-        ]);
-      });
-
-      it('gets calculated correctly for a beam not perpendicular to the camera', () => {
-        element.stroke = 1;
-        element.vertices = [[0, 0, 20], [10, 10, 20]];
-        const vertices = element.object.vertices.map((vector3) => vector3.toArray());
-
-        expect(element.unitOffsetVector).to.deep.equal([0, 0, -1]);
-        expect(vertices).to.include.deep.members([
-          [0, 0, 19.5], [0, 0, 20.5], [10, 10, 19.5], [10, 10, 20.5]
-        ]);
-      });
-
-      it('gets calculated correctly for a slanted column not perpendicular to the camera', () => {
-        element.stroke = 1.5;
-        element.vertices = [[0, 0, 0], [10, 10, 10]];
-        const vertices = element.object.vertices.map((vector3) => vector3.toArray());
-
-        expect(element.unitOffsetVector).to.deep.equal([0.7071, 0, -0.7071]);
-
-        expect(vertices).to.include.deep.members([
-          [0.5303, 0, -0.5303], [-0.5303, 0, 0.5303], [9.47, 10, 10.53], [10.53, 10, 9.47]
-        ]);
-      });
+      expect(element.object).to.be.an.instanceOf(THREE.Geometry);
     });
   });
 </script>

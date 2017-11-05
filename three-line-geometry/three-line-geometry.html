@@ -11,51 +11,22 @@
 
       static get properties() {
         return {
-          cameraNormal: {type: Array, value: [0, 1, 0]},
-          stroke: Number,
           vertices: Array,
           object: {
             type: Object,
-            computed: '_computeGeometry(vertices, cameraNormal, stroke)',
+            computed: '_computeGeometry(vertices)',
             notify: true,
           },
-          unitOffsetVector: Array,
         }
       }
 
-      _computeGeometry(vertices, cameraNormal, stroke) {
-        if (!(vertices && cameraNormal && stroke)) return;
-
-        const centerLineVector = this._scaleVector(_.zipWith(vertices[1], vertices[0], (a, b) => a - b), 1);
-        const projectedCenterLineVector = _.zipWith(centerLineVector, cameraNormal, (a, b) => a * (1 - b));
-
-        this.unitOffsetVector = new THREE.Vector3(...projectedCenterLineVector)
-          .applyAxisAngle(new THREE.Vector3(...cameraNormal), Math.PI / 2)
-          .normalize()
-          .toArray()
-          .map(this._toSignificantFigures);
-
-        const scaledOffsetVector = this._scaleVector(this.unitOffsetVector, stroke / 2);
-
-        const v0l = _.zipWith(vertices[0], scaledOffsetVector, (a, b) => a + b).map(this._toSignificantFigures);
-        const v0r = _.zipWith(vertices[0], scaledOffsetVector, (a, b) => a - b).map(this._toSignificantFigures);
-        const v1l = _.zipWith(vertices[1], scaledOffsetVector, (a, b) => a + b).map(this._toSignificantFigures);
-        const v1r = _.zipWith(vertices[1], scaledOffsetVector, (a, b) => a - b).map(this._toSignificantFigures);
+      _computeGeometry(vertices) {
+        if (!vertices) return;
 
         const geometry = new THREE.Geometry();
-        geometry.vertices.push(...[v0l, v0r, v1r, v1l].map(a => new THREE.Vector3(...a)));
-        geometry.faces.push(...[[0, 1, 2], [0, 2, 3]].map(a => new THREE.Face3(...a)));
+        geometry.vertices.push(...vertices.map(a => new THREE.Vector3(...a)));
 
         return geometry;
-      }
-
-      _toSignificantFigures(coordinate) {
-        return parseFloat(_.round(coordinate, 5).toPrecision(4))
-      }
-
-      _scaleVector(vector, magnitude) {
-        const originalMagnitude = Math.pow(vector.map(a => a * a).reduce((a, b) => a + b, 0), 0.5);
-        return vector.map(a => a * magnitude / originalMagnitude);
       }
     }
 
