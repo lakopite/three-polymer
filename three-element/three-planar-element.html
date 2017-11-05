@@ -1,6 +1,6 @@
 <link rel="import" href="three-element.html">
 <link rel="import" href="../three-quad-geometry/three-quad-geometry.html">
-<link rel="import" href="../three-material/three-material.html">
+<link rel="import" href="../three-material/three-planar-material.html">
 
 <dom-module id="three-planar-element">
   <template>
@@ -9,12 +9,12 @@
       face-vertices="[[faceVertices]]"
       object="{{geometry}}">
     </three-quad-geometry>
-    <three-material
+    <three-planar-material
       id="material"
       is-visible="[[isVisible]]"
       object="{{material}}"
       color="[[color]]">
-    </three-material>
+    </three-planar-material>
   </template>
   <script>
     class ThreePlanarElement extends ThreeElement {

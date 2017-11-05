@@ -2,21 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>three-material test</title>
+  <title>three-planar-material test</title>
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
   <script src="../../threejs/build/three.min.js"></script>
-  <link rel="import" href="../three-material/three-material.html">
+  <link rel="import" href="../three-material/three-planar-material.html">
 </head>
 <body>
 <test-fixture id="basic">
   <template>
-    <three-material color="#696969"></three-material>
+    <three-planar-material color="#696969"></three-planar-material>
   </template>
 </test-fixture>
 
 <script>
-  describe('<three-material>', () => {
+  describe('<three-planar-material>', () => {
 
     let element;
     beforeEach(() => {
@@ -24,7 +24,8 @@
     });
 
     it('instantiates the element with initial properties', () => {
-      expect(element.localName).to.equal('three-material');
+      expect(element.localName).to.equal('three-planar-material');
+      expect(element.object).to.be.an.instanceOf(THREE.MeshBasicMaterial);
       expect(element.object.opacity).to.equal(1.0);
       expect(element.object.visible).to.be.true;
       expect(element.object.transparent).to.be.false;

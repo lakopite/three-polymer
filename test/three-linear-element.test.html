@@ -9,7 +9,7 @@
   <link rel="import" href="../three-element/three-linear-element.html">
   <link rel="import" href="../three-model/fake-three-model.html">
   <link rel="import" href="../three-label/fake-three-label.html">
-  <link rel="import" href="../three-material/fake-three-line-material.html">
+  <link rel="import" href="../three-material/fake-three-linear-material.html">
   <link rel="import" href="../three-line-geometry/fake-three-line-geometry.html">
 </head>
 <body>
@@ -90,14 +90,14 @@
         element.geometryFilter = {xMin: 0, yMin: 0, zMin: 0, xMax: 6, yMax: 6};
 
         expect(element.isVisible).to.be.false;
-        expect(element.shadowRoot.querySelector('three-line-material').isVisible).to.be.false;
+        expect(element.shadowRoot.querySelector('three-linear-material').isVisible).to.be.false;
       });
 
       it('computes visibility when it is included within the geometryFilter', () => {
         element.geometryFilter = {xMin: 0, yMin: 0, zMin: 0, xMax: 4, yMax: 8};
 
         expect(element.isVisible).to.be.true;
-        expect(element.shadowRoot.querySelector('three-line-material').isVisible).to.be.true;
+        expect(element.shadowRoot.querySelector('three-linear-material').isVisible).to.be.true;
       });
 
       it('computes visibility when the element has a bounding box of negative maximums', () => {
@@ -105,7 +105,7 @@
         element.geometryFilter = {xMin: -15, xMax: -5};
 
         expect(element.isVisible).to.be.true;
-        expect(element.shadowRoot.querySelector('three-line-material').isVisible).to.be.true;
+        expect(element.shadowRoot.querySelector('three-linear-material').isVisible).to.be.true;
       });
 
       it('computes visibility when it is excluded from the metadataValueFilter', () => {
@@ -113,7 +113,7 @@
         element.metadataValueFilter = ["g01", "g02", "g04"];
 
         expect(element.isVisible).to.be.false;
-        expect(element.shadowRoot.querySelector('three-line-material').isVisible).to.be.false;
+        expect(element.shadowRoot.querySelector('three-linear-material').isVisible).to.be.false;
       });
 
       it('computes visibility when it is included within the metadataValueFilter', () => {
@@ -121,13 +121,13 @@
         element.metadataValueFilter = ["g01", "g02", "g03"];
 
         expect(element.isVisible).to.be.true;
-        expect(element.shadowRoot.querySelector('three-line-material').isVisible).to.be.true;
+        expect(element.shadowRoot.querySelector('three-linear-material').isVisible).to.be.true;
       });
 
       describe('interactions with parent', () => {
 
         it('tells the model when the line gets instantiated', () => {
-          replace('three-line-material').with('fake-three-line-material');
+          replace('three-linear-material').with('fake-three-linear-material');
           replace('three-line-geometry').with('fake-three-line-geometry');
           parent = fixture('model-without-labels');
           const threeLine = parent.querySelector('three-linear-element');
@@ -139,7 +139,7 @@
         });
 
         it('tells the model when its geometry changes', () => {
-          replace('three-line-material').with('fake-three-line-material');
+          replace('three-linear-material').with('fake-three-linear-material');
           replace('three-line-geometry').with('fake-three-line-geometry');
           parent = fixture('model-without-labels');
           const threeLine = parent.querySelector('three-linear-element');
@@ -151,7 +151,7 @@
         });
 
         it('tells the model when its material changes', () => {
-          replace('three-line-material').with('fake-three-line-material');
+          replace('three-linear-material').with('fake-three-linear-material');
           replace('three-line-geometry').with('fake-three-line-geometry');
           parent = fixture('model-without-labels');
           const threeLine = parent.querySelector('three-linear-element');

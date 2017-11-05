@@ -1,31 +1,33 @@
 <link rel="import" href="../../polymer/polymer-element.html">
 
-<dom-module id="three-material">
+<dom-module id="three-linear-material">
   <script>
-    class ThreeMaterial extends Polymer.Element {
+    class ThreeLinearMaterial extends Polymer.Element {
 
       static get is() {
-        return 'three-material';
+        return 'three-linear-material';
       }
 
       static get properties() {
         return {
           color: {type: String, observer: '_colorChanged'},
           isVisible: {type: Boolean, observer: '_isVisibleChanged'},
+          stroke: {type: Number},
           object: {
             type: Object,
             notify: true,
-            value: () => new THREE.MeshBasicMaterial(
-              {
-                side: THREE.DoubleSide,
-                vertexColors: THREE.NoColors,
-                transparent: false,
-                opacity: 1.0,
-                visible: true,
-              }
-            ),
+            computed: '_computeObject(stroke)',
           },
         };
+      }
+
+      _computeObject(stroke) {
+        return new THREE.LineBasicMaterial({
+          linewidth: stroke,
+          transparent: false,
+          opacity: 1.0,
+          visible: true,
+        })
       }
 
       _colorChanged(color) {
@@ -37,6 +39,6 @@
       }
     }
 
-    customElements.define(ThreeMaterial.is, ThreeMaterial);
+    customElements.define(ThreeLinearMaterial.is, ThreeLinearMaterial);
   </script>
 </dom-module>

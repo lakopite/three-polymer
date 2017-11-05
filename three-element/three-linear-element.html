@@ -1,6 +1,6 @@
 <link rel="import" href="three-element.html">
 <link rel="import" href="../three-line-geometry/three-line-geometry.html">
-<link rel="import" href="../three-material/three-line-material.html">
+<link rel="import" href="../three-material/three-linear-material.html">
 <link rel="import" href="../three-label/three-label.html">
 <link rel="import" href="../../polymer/lib/elements/dom-if.html">
 
@@ -10,13 +10,13 @@
       vertices="[[vertices]]"
       object="{{geometry}}">
     </three-line-geometry>
-    <three-line-material
+    <three-linear-material
       id="material"
       stroke="[[stroke]]"
       is-visible="[[isVisible]]"
       object="{{material}}"
       color="[[color]]">
-    </three-line-material>
+    </three-linear-material>
     <template is="dom-if" if="{{showLabel}}">
       <three-label
         object="{{label}}"
